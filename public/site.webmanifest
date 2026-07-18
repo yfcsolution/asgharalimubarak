@@ -1,0 +1,21 @@
+{
+  "name": "Asghar Ali Mubarak",
+  "short_name": "AAM News",
+  "description": "Bilingual English and Urdu news by Asghar Ali Mubarak",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f8fa",
+  "theme_color": "#0f5c56",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

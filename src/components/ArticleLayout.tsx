@@ -74,10 +74,12 @@ export async function ArticleLayout({
       name: SITE_NAME,
       logo: {
         "@type": "ImageObject",
-        url: image?.src || `${getSiteUrl()}/file.svg`,
+        url: `${getSiteUrl()}/images/asghar-ali-mubarak.jpg`,
       },
     },
-    image: image?.src ? [image.src] : undefined,
+    image: image?.src
+      ? [image.src]
+      : [`${getSiteUrl()}/images/asghar-ali-mubarak.jpg`],
     mainEntityOfPage: shareUrl,
     inLanguage: display.lang === "ur" ? "ur" : "en",
   };

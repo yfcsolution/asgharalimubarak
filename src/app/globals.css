@@ -74,16 +74,6 @@ img {
   flex: 1;
 }
 
-.page-shell,
-.page-wrap,
-.masthead-inner,
-.nav-bar-inner,
-.footer-inner,
-.breaking-strip-inner {
-  width: min(var(--max), calc(100% - 2rem));
-  margin-inline: auto;
-}
-
 .content-with-sidebar {
   display: grid;
   gap: 2rem;
@@ -109,26 +99,29 @@ img {
 }
 
 .masthead-inner {
-  padding: 1rem 0 1.1rem;
+  padding: 0.85rem 0 0.95rem;
 }
 
 .masthead-brand-row {
   display: grid;
-  gap: 1rem;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.75rem 0.9rem;
   align-items: center;
 }
 
 .author-photo-link {
   width: fit-content;
+  flex-shrink: 0;
 }
 
 .author-photo {
-  width: 64px;
-  height: 64px;
+  width: 56px;
+  height: 56px;
   border-radius: 999px;
   object-fit: cover;
   border: 2px solid white;
   box-shadow: 0 0 0 1px var(--line);
+  background: #d7e1e8;
 }
 
 .author-photo-sm {
@@ -136,15 +129,20 @@ img {
   height: 40px;
 }
 
+.about-hero-photo {
+  width: 88px;
+  height: 88px;
+}
+
 .masthead-copy {
   min-width: 0;
 }
 
 .masthead-kicker {
-  margin: 0 0 0.35rem;
+  margin: 0 0 0.3rem;
   color: var(--muted);
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -153,43 +151,52 @@ img {
   flex-direction: column;
   gap: 0.1rem;
   text-decoration: none;
+  max-width: 100%;
 }
 
 .brand-name {
   font-family: var(--font-display);
-  font-size: clamp(1.7rem, 4vw, 2.6rem);
+  font-size: clamp(1.35rem, 5.4vw, 2.6rem);
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1.05;
+  overflow-wrap: anywhere;
 }
 
 .brand-name-ur {
   font-family: var(--font-urdu);
-  font-size: clamp(1rem, 2.2vw, 1.35rem);
+  font-size: clamp(0.95rem, 3.4vw, 1.35rem);
   color: var(--accent);
 }
 
 .masthead-tagline {
-  margin: 0.45rem 0 0;
+  margin: 0.4rem 0 0;
   color: var(--muted);
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   max-width: 36rem;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
 .masthead-meta {
+  grid-column: 1 / -1;
   display: grid;
-  gap: 0.65rem;
+  gap: 0.55rem;
+  min-width: 0;
 }
 
 .masthead-date {
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .masthead-search {
   display: flex;
   gap: 0.4rem;
   min-width: 0;
+  width: 100%;
 }
 
 .masthead-search input {
@@ -197,8 +204,9 @@ img {
   min-width: 0;
   border: 1px solid var(--line);
   background: var(--surface);
-  padding: 0.55rem 0.7rem;
+  padding: 0.65rem 0.75rem;
   font: inherit;
+  font-size: 1rem;
 }
 
 .masthead-search button,
@@ -207,12 +215,13 @@ img {
   background: var(--accent);
   color: white;
   font-weight: 700;
-  padding: 0.55rem 0.9rem;
+  padding: 0.65rem 0.9rem;
   cursor: pointer;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
 }
 
 .masthead-search button:hover,
@@ -227,7 +236,7 @@ img {
 .share-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.55rem 0.85rem;
+  gap: 0.4rem 0.55rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -237,9 +246,28 @@ img {
 .footer-social a,
 .share-links a {
   color: var(--accent);
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.82rem;
+  font-weight: 700;
   text-decoration: none;
+}
+
+.social-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.25rem;
+  min-width: 2.25rem;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.social-label-full {
+  display: none;
+}
+
+.social-label-short {
+  display: inline;
 }
 
 .social-links a:hover,
@@ -250,6 +278,18 @@ img {
 .share-links a:focus-visible {
   text-decoration: underline;
 }
+
+.page-shell,
+.page-wrap,
+.masthead-inner,
+.nav-bar-inner,
+.footer-inner,
+.breaking-strip-inner,
+.article-page-shell {
+  width: min(var(--max), calc(100% - 1.25rem));
+  margin-inline: auto;
+}
+
 
 .nav-bar-inner {
   display: flex;
@@ -461,7 +501,9 @@ img {
   gap: 0.25rem;
   text-align: center;
   color: white;
-  background: linear-gradient(135deg, #1c3344, #0f5c56);
+  background:
+    linear-gradient(135deg, rgba(20, 33, 43, 0.55), rgba(15, 92, 86, 0.72)),
+    url("/images/asghar-ali-mubarak.jpg") center / cover no-repeat;
   min-height: 100%;
 }
 
@@ -781,11 +823,6 @@ img {
   margin: 0.35rem 0 0.55rem;
   color: var(--muted);
   font-size: 0.92rem;
-}
-
-.article-page-shell {
-  width: min(var(--max), calc(100% - 2rem));
-  margin-inline: auto;
 }
 
 .article-layout {
@@ -1127,15 +1164,58 @@ img {
   }
 }
 
+@media (min-width: 480px) {
+  .author-photo {
+    width: 64px;
+    height: 64px;
+  }
+
+  .social-label-full {
+    display: inline;
+  }
+
+  .social-label-short {
+    display: none;
+  }
+
+  .social-links a {
+    border: 0;
+    background: transparent;
+    min-height: auto;
+    min-width: auto;
+    padding: 0;
+  }
+
+  .page-shell,
+  .page-wrap,
+  .masthead-inner,
+  .nav-bar-inner,
+  .footer-inner,
+  .breaking-strip-inner,
+  .article-page-shell {
+    width: min(var(--max), calc(100% - 2rem));
+  }
+}
+
 @media (min-width: 768px) {
   .masthead-brand-row {
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     gap: 1.25rem;
+  }
+
+  .masthead-meta {
+    grid-column: auto;
+    width: min(260px, 100%);
   }
 
   .author-photo {
     width: 88px;
     height: 88px;
+  }
+
+  .masthead-tagline {
+    -webkit-line-clamp: 3;
+    font-size: 0.95rem;
   }
 
   .primary-nav {
@@ -1200,3 +1280,21 @@ img {
     grid-template-columns: 1.25fr 0.95fr;
   }
 }
+
+@media (max-width: 389px) {
+  .brand-name {
+    font-size: 1.28rem;
+  }
+
+  .breaking-strip a {
+    max-width: 14rem;
+  }
+
+  .lead-story-image,
+  .lead-story-media .media-link,
+  .lead-story-media .post-image-frame,
+  .lead-story-media .image-fallback {
+    min-height: 180px;
+  }
+}
+

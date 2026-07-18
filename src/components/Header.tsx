@@ -96,6 +96,7 @@ export async function Header() {
                   type="search"
                   placeholder="Search news"
                   autoComplete="off"
+                  enterKeyHint="search"
                 />
                 <button type="submit">Search</button>
               </form>
@@ -106,8 +107,12 @@ export async function Header() {
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label={link.label}
                     >
-                      {link.label}
+                      <span className="social-label-full">{link.label}</span>
+                      <span className="social-label-short" aria-hidden="true">
+                        {link.label.slice(0, 2)}
+                      </span>
                     </a>
                   </li>
                 ))}

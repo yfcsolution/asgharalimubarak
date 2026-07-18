@@ -15,6 +15,7 @@ export interface WpFeaturedMedia {
   id: number;
   source_url: string;
   alt_text?: string;
+  caption?: WpRendered;
   media_details?: {
     width?: number;
     height?: number;
@@ -43,12 +44,12 @@ export interface WpAuthor {
 export interface WpPost {
   id: number;
   date: string;
-  date_gmt: string;
+  date_gmt?: string;
   modified: string;
-  modified_gmt: string;
+  modified_gmt?: string;
   slug: string;
   status: string;
-  type: string;
+  type?: string;
   link: string;
   title: WpRendered;
   content?: WpRendered;
@@ -76,6 +77,16 @@ export interface WpCategory {
   parent: number;
 }
 
+export interface WpTag {
+  id: number;
+  count: number;
+  description: string;
+  link: string;
+  name: string;
+  slug: string;
+  taxonomy: string;
+}
+
 export interface PaginatedPosts {
   posts: WpPost[];
   total: number;
@@ -89,4 +100,14 @@ export interface FeaturedImageData {
   alt: string;
   width?: number;
   height?: number;
+  caption?: string;
+}
+
+export interface AuthorProfile {
+  id: number;
+  name: string;
+  description: string;
+  shortBio: string;
+  avatarUrl: string | null;
+  localPhotoAvailable: boolean;
 }

@@ -50,25 +50,17 @@ export function PostImage({
 
 type LinkedPostImageProps = PostImageProps & {
   href: string;
-  fillParent?: boolean;
 };
 
-export function LinkedPostImage({
-  href,
-  fillParent = false,
-  ...props
-}: LinkedPostImageProps) {
+export function LinkedPostImage({ href, className, ...props }: LinkedPostImageProps) {
   return (
     <Link
       href={href}
-      className={cn(
-        "block overflow-hidden",
-        fillParent && "absolute inset-0 h-full w-full",
-      )}
+      className={cn("block overflow-hidden media-link", className)}
       tabIndex={-1}
       aria-hidden="true"
     >
-      <PostImage {...props} />
+      <PostImage {...props} className="h-full w-full" />
     </Link>
   );
 }

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { SITE_NAME, SITE_NAME_UR, SITE_TAGLINE } from "@/lib/site";
+import { SITE_NAME, SITE_NAME_UR, SITE_TAGLINE, SOCIAL_LINKS } from "@/lib/site";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -29,6 +29,16 @@ export function Footer() {
             </li>
           </ul>
         </nav>
+
+        <ul className="footer-social" aria-label="Social profiles">
+          {SOCIAL_LINKS.map((link) => (
+            <li key={link.href}>
+              <a href={link.href} target="_blank" rel="noopener noreferrer">
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
 
         <p className="footer-legal">
           © {year} {SITE_NAME}. All rights reserved.

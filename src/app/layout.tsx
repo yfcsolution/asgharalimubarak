@@ -42,6 +42,15 @@ export const metadata: Metadata = {
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
   authors: [{ name: SITE_NAME }],
+  manifest: "/site.webmanifest",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icons/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180" }],
+  },
   openGraph: {
     type: "website",
     locale: "en_PK",
@@ -50,11 +59,20 @@ export const metadata: Metadata = {
     title: `${SITE_NAME} | ${SITE_NAME_UR}`,
     description: SITE_DESCRIPTION,
     url: siteUrl,
+    images: [
+      {
+        url: "/images/asghar-ali-mubarak.jpg",
+        width: 900,
+        height: 900,
+        alt: `${SITE_NAME} portrait`,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: `${SITE_NAME} | ${SITE_NAME_UR}`,
     description: SITE_DESCRIPTION,
+    images: ["/images/asghar-ali-mubarak.jpg"],
   },
   alternates: {
     canonical: siteUrl,

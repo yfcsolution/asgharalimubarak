@@ -1,5 +1,13 @@
+import { cache } from "react";
+
+import { getPostImage } from "@/lib/images";
 import { POSTS_PER_PAGE, REVALIDATE_SECONDS, getWordPressApiUrl } from "@/lib/site";
-import type { PaginatedPosts, WpCategory, WpPost } from "@/lib/types";
+import type {
+  PaginatedPosts,
+  WpCategory,
+  WpPost,
+  WpTag,
+} from "@/lib/types";
 import { normalizeSlug } from "@/lib/utils";
 
 type QueryValue = string | number | boolean | undefined;
@@ -13,6 +21,7 @@ const LIST_FIELDS = [
   "link",
   "title",
   "excerpt",
+  "content",
   "author",
   "featured_media",
   "categories",
@@ -53,7 +62,31 @@ async function wpFetch<T>(
   return { data, headers: response.headers };
 }
 
-export async function getPosts(options: {
+function stripHeavyContent(posts: WpPost[]): WpPost[] {
+  return posts.map((post) => {
+    // Keep enough HTML for image extraction, then drop bulky content from RSC payloads.
+    const imageProbe = getPostImage(post);
+    void imageProbe;
+    return {
+      ...post,
+      content: post.content
+        ? {
+            rendered: summarizeContentForImages(post.content.rendered),
+            protected: post.content.protected,
+          }
+        : undefined,
+    };
+  });
+}
+
+function summarizeContentForImages(html: string): string {
+  const images = html.match(/<img\b[^>]*>/gi) ?? [];
+  if (images.length === 0) return "";
+  // Preserve image tags (with attrs) so getPostImage can still resolve URLs.
+  return images.slice(0, 8).join("\n");
+}
+
+export const getPosts = cache(async function getPosts(options: {
   page?: number;
   perPage?: number;
   categories?: number | string;
@@ -77,15 +110,17 @@ export async function getPosts(options: {
   });
 
   return {
-    posts: data,
+    posts: mode === "list" ? stripHeavyContent(data) : data,
     total: Number(headers.get("X-WP-Total") ?? data.length),
     totalPages: Number(headers.get("X-WP-TotalPages") ?? 1),
     page,
     perPage,
   };
-}
+});
 
-export async function getPostBySlug(slug: string): Promise<WpPost | null> {
+export const getPostBySlug = cache(async function getPostBySlug(
+  slug: string,
+): Promise<WpPost | null> {
   const normalized = normalizeSlug(slug);
   const candidates = Array.from(
     new Set([normalized, encodeURIComponent(normalized), slug]),
@@ -103,9 +138,11 @@ export async function getPostBySlug(slug: string): Promise<WpPost | null> {
   }
 
   return null;
-}
+});
 
-export async function getCategories(): Promise<WpCategory[]> {
+export const getCategories = cache(async function getCategories(): Promise<
+  WpCategory[]
+> {
   const { data } = await wpFetch<WpCategory[]>("/categories", {
     per_page: 100,
     hide_empty: true,
@@ -113,9 +150,21 @@ export async function getCategories(): Promise<WpCategory[]> {
     order: "desc",
   });
   return data;
-}
+});
 
-export async function getCategoryBySlug(
+export const getTags = cache(async function getTags(
+  limit = 20,
+): Promise<WpTag[]> {
+  const { data } = await wpFetch<WpTag[]>("/tags", {
+    per_page: limit,
+    hide_empty: true,
+    orderby: "count",
+    order: "desc",
+  });
+  return data;
+});
+
+export const getCategoryBySlug = cache(async function getCategoryBySlug(
   slug: string,
 ): Promise<WpCategory | null> {
   const normalized = normalizeSlug(slug);
@@ -123,7 +172,7 @@ export async function getCategoryBySlug(
     slug: normalized,
   });
   return data[0] ?? null;
-}
+});
 
 export async function getAllPostSlugs(limit = 24): Promise<string[]> {
   const { posts } = await getPosts({
@@ -139,4 +188,16 @@ export async function getPostsForSitemap(
   perPage = 100,
 ): Promise<PaginatedPosts> {
   return getPosts({ page, perPage, mode: "sitemap" });
+}
+
+export async function getNavCategories(): Promise<WpCategory[]> {
+  const categories = await getCategories();
+  return categories.filter((category) => {
+    const name = category.name.trim().toLowerCase();
+    const slug = category.slug.trim().toLowerCase();
+    if (category.count <= 0) return false;
+    if (slug === "uncategorized" || name === "uncategorized") return false;
+    if (!name || name === "-" || name.includes("http")) return false;
+    return true;
+  });
 }

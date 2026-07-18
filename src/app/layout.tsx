@@ -3,6 +3,7 @@ import { Newsreader, Noto_Nastaliq_Urdu, Source_Sans_3 } from "next/font/google"
 
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import {
   SITE_DESCRIPTION,
   SITE_NAME,
@@ -99,6 +100,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <WhatsAppFloat />
       </body>
     </html>
   );

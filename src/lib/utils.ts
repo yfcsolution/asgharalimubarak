@@ -1,5 +1,12 @@
 import he from "he";
 
+import {
+  formatPakistanCompactDate,
+  formatPakistanDate,
+  formatPakistanDateTime,
+  getLatestContentTimestamp,
+  isMeaningfullyUpdated,
+} from "@/lib/datetime";
 import { getFeaturedImage, getPostImage } from "@/lib/images";
 import {
   detectPrimaryScript,
@@ -16,6 +23,11 @@ export {
   getDisplayExcerpt,
   getDisplayTitle,
   readingTimeMinutes,
+  formatPakistanDate,
+  formatPakistanDateTime,
+  formatPakistanCompactDate,
+  isMeaningfullyUpdated,
+  getLatestContentTimestamp,
 };
 
 export function decodeHtml(value: string): string {
@@ -42,20 +54,15 @@ export function categoryPath(slug: string): string {
   return `/category/${encodeURIComponent(normalizeSlug(slug))}`;
 }
 
+/** @deprecated Prefer formatPakistanDate */
 export function formatDate(date: string, locale: string = "en-PK"): string {
-  return new Intl.DateTimeFormat(locale, {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(new Date(date));
+  return formatPakistanDate(date, undefined, locale);
 }
 
+/** @deprecated Prefer formatPakistanCompactDate */
 export function formatCompactDate(date: string, locale: string = "en-PK"): string {
-  return new Intl.DateTimeFormat(locale, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  }).format(new Date(date));
+  void locale;
+  return formatPakistanCompactDate(date);
 }
 
 export function getPostCategories(post: WpPost) {

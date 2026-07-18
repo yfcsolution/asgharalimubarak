@@ -1,12 +1,15 @@
 import Link from "next/link";
 
 import { ArticleCard } from "@/components/ArticleCard";
-import { BreakingStrip } from "@/components/BreakingStrip";
+import { EditorialBanner } from "@/components/EditorialBanner";
 import { LeadStory } from "@/components/LeadStory";
+import { LatestNewsTicker } from "@/components/latest-news-ticker";
 import { NewsSidebar } from "@/components/news-sidebar";
 import { SITE_NAME } from "@/lib/site";
 import {
   displayTitleForPost,
+  formatPakistanDateTime,
+  getLatestContentTimestamp,
   postPath,
 } from "@/lib/utils";
 import {
@@ -30,9 +33,10 @@ export default async function HomePage() {
   const sidebarLatest = posts.slice(0, 5);
   const picks = posts.slice(1, 6);
 
-  const stripItems = posts.slice(0, 6).map((post) => {
+  const tickerHeadlines = posts.slice(0, 12).map((post) => {
     const title = displayTitleForPost(post);
     return {
+      id: post.id,
       href: postPath(post.slug),
       label: title.text,
       dir: title.dir,
@@ -40,9 +44,19 @@ export default async function HomePage() {
     };
   });
 
+  const updatedIso =
+    getLatestContentTimestamp(posts) ?? new Date().toISOString();
+  const updatedLabel = formatPakistanDateTime(updatedIso);
+
   return (
     <>
-      <BreakingStrip items={stripItems} />
+      <LatestNewsTicker
+        headlines={tickerHeadlines}
+        updatedIso={updatedIso}
+        updatedLabel={updatedLabel}
+      />
+
+      <EditorialBanner />
 
       <div className="page-shell content-with-sidebar">
         <div className="main-column">

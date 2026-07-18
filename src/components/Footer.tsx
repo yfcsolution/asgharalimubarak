@@ -1,9 +1,18 @@
 import Link from "next/link";
 
-import { SITE_NAME, SITE_NAME_UR, SITE_TAGLINE, SOCIAL_LINKS } from "@/lib/site";
+import { ContactQuickLinks } from "@/components/WhatsAppFloat";
+import { SocialLinksList } from "@/components/SocialIcons";
+import {
+  DEVELOPER_CREDIT,
+  SITE_NAME,
+  SITE_NAME_UR,
+  SITE_TAGLINE,
+  getActiveSocialLinks,
+} from "@/lib/site";
 
 export function Footer() {
   const year = new Date().getFullYear();
+  const socialLinks = getActiveSocialLinks();
 
   return (
     <footer className="site-footer">
@@ -14,12 +23,16 @@ export function Footer() {
             {SITE_NAME_UR}
           </p>
           <p className="footer-copy">{SITE_TAGLINE}</p>
+          <ContactQuickLinks className="footer-contact-links" />
         </div>
 
         <nav aria-label="Footer">
           <ul className="footer-links">
             <li>
-              <Link href="/latest">Latest News</Link>
+              <Link href="/">Home</Link>
+            </li>
+            <li>
+              <Link href="/latest">Latest</Link>
             </li>
             <li>
               <Link href="/about">About</Link>
@@ -30,19 +43,28 @@ export function Footer() {
           </ul>
         </nav>
 
-        <ul className="footer-social" aria-label="Social profiles">
-          {SOCIAL_LINKS.map((link) => (
-            <li key={link.href}>
-              <a href={link.href} target="_blank" rel="noopener noreferrer">
-                {link.label}
-              </a>
-            </li>
-          ))}
-        </ul>
+        <div className="footer-follow">
+          <p className="footer-follow-label">Follow</p>
+          <SocialLinksList links={socialLinks} className="footer-social" showLabels />
+        </div>
 
-        <p className="footer-legal">
-          © {year} {SITE_NAME}. All rights reserved.
-        </p>
+        <div className="footer-legal-block">
+          <p className="footer-legal">
+            © {year} {SITE_NAME}. All rights reserved.
+          </p>
+          <p className="footer-credit">
+            Website developed by {DEVELOPER_CREDIT.name} at{" "}
+            <a
+              href={DEVELOPER_CREDIT.companyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {DEVELOPER_CREDIT.company}
+            </a>
+            .
+          </p>
+          <p className="footer-credit-desc">{DEVELOPER_CREDIT.descriptor}</p>
+        </div>
       </div>
     </footer>
   );

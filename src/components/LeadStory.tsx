@@ -6,10 +6,11 @@ import type { WpPost } from "@/lib/types";
 import {
   categoryPath,
   displayTitleForPost,
-  formatDate,
+  formatPakistanDate,
   getDisplayExcerpt,
   getPostCategories,
   getPostImage,
+  isMeaningfullyUpdated,
   postPath,
   stripHtml,
 } from "@/lib/utils";
@@ -71,7 +72,15 @@ export function LeadStory({ post }: { post: WpPost }) {
 
         <div className="lead-meta">
           {author?.name ? <span>By {author.name}</span> : null}
-          <time dateTime={post.date}>{formatDate(post.date)}</time>
+          <time dateTime={post.date}>{formatPakistanDate(post.date)}</time>
+          {isMeaningfullyUpdated(post.date, post.modified) ? (
+            <span>
+              · Updated{" "}
+              <time dateTime={post.modified}>
+                {formatPakistanDate(post.modified)}
+              </time>
+            </span>
+          ) : null}
         </div>
 
         <Link href={href} className="btn-primary">

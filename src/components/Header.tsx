@@ -2,14 +2,15 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { DesktopNav, MobileNav, type NavItem } from "@/components/SiteNav";
+import { SocialLinksList } from "@/components/SocialIcons";
 import { getSiteAuthor, resolveAuthorPhoto } from "@/lib/author";
 import {
   SITE_NAME,
   SITE_NAME_UR,
   SITE_TAGLINE,
-  SOCIAL_LINKS,
+  getActiveSocialLinks,
 } from "@/lib/site";
-import { categoryPath, decodeHtml, formatDate } from "@/lib/utils";
+import { categoryPath, decodeHtml, formatPakistanDate } from "@/lib/utils";
 import { getNavCategories } from "@/lib/wordpress";
 
 function buildNavItems(
@@ -49,7 +50,8 @@ export async function Header() {
   ]);
   const photo = resolveAuthorPhoto(author);
   const nav = buildNavItems(categories);
-  const today = formatDate(new Date().toISOString());
+  const socialLinks = getActiveSocialLinks();
+  const today = formatPakistanDate(new Date().toISOString());
 
   return (
     <header className="site-header">
@@ -100,23 +102,7 @@ export async function Header() {
                 />
                 <button type="submit">Search</button>
               </form>
-              <ul className="social-links" aria-label="Social profiles">
-                {SOCIAL_LINKS.map((link) => (
-                  <li key={link.href}>
-                    <a
-                      href={link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={link.label}
-                    >
-                      <span className="social-label-full">{link.label}</span>
-                      <span className="social-label-short" aria-hidden="true">
-                        {link.label.slice(0, 2)}
-                      </span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
+              <SocialLinksList links={socialLinks} className="social-links" />
             </div>
           </div>
         </div>

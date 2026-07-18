@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Asghar Ali Mubarak — Bilingual News
 
-## Getting Started
+Production-ready Next.js App Router frontend for the WordPress.com newsroom at
+`asgharalimubarakblog.wordpress.com`.
 
-First, run the development server:
+Production domain: https://asgharalimubarak.com
+
+## Stack
+
+- Next.js App Router + TypeScript (strict)
+- Tailwind CSS + `@tailwindcss/typography`
+- Server Components with WordPress REST API fetching
+- Incremental Static Regeneration (`revalidate = 60`)
+- Vercel / GitHub compatible
+
+## Environment
+
+### Local (`.env.local`)
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+WORDPRESS_API_URL=https://public-api.wordpress.com/wp/v2/sites/asgharalimubarakblog.wordpress.com
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Production / Preview / Development (Vercel)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+WORDPRESS_API_URL=https://public-api.wordpress.com/wp/v2/sites/asgharalimubarakblog.wordpress.com
+NEXT_PUBLIC_SITE_URL=https://asgharalimubarak.com
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Apply the Vercel variables to **Production**, **Preview**, and **Development**.
 
-## Learn More
+## Vercel project settings
 
-To learn more about Next.js, take a look at the following resources:
+- **Production Branch:** `main`
+- **Framework Preset:** Next.js
+- **Root Directory:** `.` (repository root)
+- After merging to `main`, redeploy the latest `main` commit **without build cache**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm install
+npm run dev
+npm run lint
+npm run build
+npm start
+```
 
-## Deploy on Vercel
+## Routes
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `/` — homepage with lead story and latest reports
+- `/latest` — paginated archive
+- `/article/[slug]` — article detail
+- `/category/[slug]` — category archive
+- `/about` — about the publication
+- `/contact` — contact page
+- `/robots.txt` and `/sitemap.xml` — SEO
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Notes
+
+- Only published WordPress posts are fetched on the server.
+- Featured images use `next/image` with a branded fallback when missing.
+- Titles support English, Urdu, and mixed text via `dir="auto"`.

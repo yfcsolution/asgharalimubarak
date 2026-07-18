@@ -9,11 +9,11 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "*.wordpress.com",
+        hostname: "*.files.wordpress.com",
       },
       {
         protocol: "https",
-        hostname: "*.wp.com",
+        hostname: "*.wordpress.com",
       },
       {
         protocol: "https",
@@ -26,6 +26,14 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "i2.wp.com",
+      },
+      {
+        protocol: "https",
+        hostname: "secure.gravatar.com",
+      },
+      {
+        protocol: "https",
+        hostname: "gravatar.com",
       },
     ],
   },

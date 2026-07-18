@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 
 import { ArticleCard } from "@/components/ArticleCard";
+import { NewsSidebar } from "@/components/news-sidebar";
 import { Pagination } from "@/components/Pagination";
-import { getPosts } from "@/lib/wordpress";
+import { getPosts, getNavCategories, getTags } from "@/lib/wordpress";
 
 export const revalidate = 60;
 
@@ -19,25 +20,40 @@ type LatestPageProps = {
 export default async function LatestPage({ searchParams }: LatestPageProps) {
   const { page: pageParam } = await searchParams;
   const page = Math.max(1, Number(pageParam) || 1);
-  const { posts, totalPages } = await getPosts({ page });
+  const [{ posts, totalPages }, categories, tags, sidebarLatest] =
+    await Promise.all([
+      getPosts({ page }),
+      getNavCategories(),
+      getTags(10),
+      getPosts({ page: 1, perPage: 5 }),
+    ]);
 
   return (
-    <div className="page-wrap section">
-      <header className="page-hero">
-        <h1>Latest News</h1>
-        <p lang="ur" dir="rtl">
-          تازہ ترین انگریزی و اردو خبریں
-        </p>
-        <p>Every published report from the newsroom, newest first.</p>
-      </header>
+    <div className="page-shell content-with-sidebar">
+      <div className="main-column">
+        <header className="page-hero">
+          <h1>Latest News</h1>
+          <p lang="ur" dir="rtl">
+            تازہ ترین انگریزی و اردو خبریں
+          </p>
+          <p>Every published report from the newsroom, newest first.</p>
+        </header>
 
-      <div className="article-grid three-col">
-        {posts.map((post) => (
-          <ArticleCard key={post.id} post={post} />
-        ))}
+        <div className="article-grid three-col">
+          {posts.map((post) => (
+            <ArticleCard key={post.id} post={post} />
+          ))}
+        </div>
+
+        <Pagination currentPage={page} totalPages={totalPages} basePath="/latest" />
       </div>
 
-      <Pagination currentPage={page} totalPages={totalPages} basePath="/latest" />
+      <NewsSidebar
+        latest={sidebarLatest.posts}
+        categories={categories}
+        tags={tags}
+        picks={posts.slice(0, 5)}
+      />
     </div>
   );
 }

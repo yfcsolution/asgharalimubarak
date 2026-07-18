@@ -3,14 +3,20 @@ import { notFound } from "next/navigation";
 
 import { ArticleCard } from "@/components/ArticleCard";
 import { ArticleLayout } from "@/components/ArticleLayout";
+import { NewsSidebar } from "@/components/news-sidebar";
 import { getSiteUrl } from "@/lib/site";
 import {
-  decodeHtml,
+  displayTitleForPost,
   excerptText,
-  getFeaturedImage,
-  getPostCategories,
+  getPostImage,
 } from "@/lib/utils";
-import { getAllPostSlugs, getPostBySlug, getPosts } from "@/lib/wordpress";
+import {
+  getAllPostSlugs,
+  getNavCategories,
+  getPostBySlug,
+  getPosts,
+  getTags,
+} from "@/lib/wordpress";
 
 export const revalidate = 60;
 
@@ -35,20 +41,20 @@ export async function generateMetadata({
     };
   }
 
-  const title = decodeHtml(post.title.rendered);
+  const title = displayTitleForPost(post);
   const description = excerptText(post, 160);
-  const image = getFeaturedImage(post);
+  const image = getPostImage(post);
   const url = `${getSiteUrl()}/article/${encodeURIComponent(slug)}`;
 
   return {
-    title,
+    title: title.text,
     description,
     alternates: {
       canonical: url,
     },
     openGraph: {
       type: "article",
-      title,
+      title: title.text,
       description,
       url,
       publishedTime: post.date,
@@ -66,7 +72,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: title.text,
       description,
       images: image ? [image.src] : undefined,
     },
@@ -81,29 +87,39 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     notFound();
   }
 
-  const categories = getPostCategories(post);
-  const relatedCategory = categories[0]?.id;
-  const related = relatedCategory
-    ? (await getPosts({ page: 1, perPage: 4, categories: relatedCategory }))
-        .posts.filter((item) => item.id !== post.id)
-        .slice(0, 3)
-    : (await getPosts({ page: 1, perPage: 4 })).posts
-        .filter((item) => item.id !== post.id)
-        .slice(0, 3);
+  const [{ posts: relatedPool }, categories, tags, latestPack] =
+    await Promise.all([
+      getPosts({ page: 1, perPage: 8 }),
+      getNavCategories(),
+      getTags(10),
+      getPosts({ page: 1, perPage: 5 }),
+    ]);
+
+  const related = relatedPool
+    .filter((item) => item.id !== post.id)
+    .slice(0, 3);
 
   return (
     <ArticleLayout
       post={post}
+      sidebar={
+        <NewsSidebar
+          latest={latestPack.posts}
+          categories={categories}
+          tags={tags}
+          picks={relatedPool.slice(0, 5)}
+        />
+      }
       related={
         related.length > 0 ? (
-          <section className="section" aria-labelledby="related-heading">
+          <section className="section related-section" aria-labelledby="related-heading">
             <div className="section-heading">
               <div>
                 <h2 id="related-heading">Related coverage</h2>
                 <p>More reports you may want to read next.</p>
               </div>
             </div>
-            <div className="article-grid">
+            <div className="article-grid two-col">
               {related.map((item) => (
                 <ArticleCard key={item.id} post={item} />
               ))}

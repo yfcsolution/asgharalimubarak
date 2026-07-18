@@ -1,46 +1,75 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 
-import { SITE_NAME, SITE_NAME_UR } from "@/lib/site";
+import { getSiteAuthor, resolveAuthorPhoto } from "@/lib/author";
+import { SITE_NAME, SITE_NAME_UR, SOCIAL_LINKS } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "About",
   description: `About ${SITE_NAME} — bilingual English and Urdu news coverage.`,
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const author = await getSiteAuthor();
+  const photo = resolveAuthorPhoto(author);
+  const paragraphs = author.description
+    .split(/\n+/)
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .slice(0, 6);
+
   return (
-    <div className="page-wrap">
-      <header className="page-hero">
-        <h1>About {SITE_NAME}</h1>
-        <p lang="ur" dir="rtl">
-          {SITE_NAME_UR} کے بارے میں
-        </p>
+    <div className="page-shell">
+      <header className="page-hero about-hero">
+        {photo ? (
+          <Image
+            src={photo.src}
+            alt={photo.alt}
+            width={120}
+            height={120}
+            className="author-photo about-hero-photo"
+            priority
+          />
+        ) : null}
+        <div>
+          <h1>About {SITE_NAME}</h1>
+          <p lang="ur" dir="rtl">
+            {SITE_NAME_UR} کے بارے میں
+          </p>
+        </div>
       </header>
 
       <div className="prose-page">
-        <p>
-          {SITE_NAME} is an independent bilingual news publication covering
-          politics, sports, economy, diplomacy, and public affairs in English
-          and Urdu.
-        </p>
-        <p lang="ur" dir="rtl">
-          {SITE_NAME_UR} ایک آزاد دو لسانی نیوز پلیٹ فارم ہے جو سیاست، کھیل،
-          معیشت، سفارت کاری اور عوامی امور پر انگریزی و اردو میں رپورٹنگ پیش
-          کرتا ہے۔
-        </p>
-        <h2>Editorial approach</h2>
-        <p>
-          Stories are published through a WordPress newsroom and delivered here
-          as a fast, accessible reading experience. Titles and articles may
-          appear in English, Urdu, or both — the site preserves natural text
-          direction with <code>dir=&quot;auto&quot;</code>.
-        </p>
-        <h2>What you will find</h2>
-        <ul>
-          <li>Daily and breaking coverage from published WordPress posts</li>
-          <li>Category browsing and paginated latest-news archives</li>
-          <li>Readable article pages with galleries, embeds, and media</li>
+        {paragraphs.length > 0 ? (
+          paragraphs.map((paragraph) => <p key={paragraph.slice(0, 48)}>{paragraph}</p>)
+        ) : (
+          <>
+            <p>{author.shortBio}</p>
+            <p lang="ur" dir="rtl">
+              {SITE_NAME_UR} ایک آزاد دو لسانی نیوز پلیٹ فارم ہے جو سیاست، کھیل،
+              معیشت، سفارت کاری اور عوامی امور پر انگریزی و اردو میں رپورٹنگ پیش
+              کرتا ہے۔
+            </p>
+          </>
+        )}
+
+        <h2>Follow</h2>
+        <ul className="footer-social">
+          {SOCIAL_LINKS.map((link) => (
+            <li key={link.href}>
+              <a href={link.href} target="_blank" rel="noopener noreferrer">
+                {link.label}
+              </a>
+            </li>
+          ))}
         </ul>
+
+        <p>
+          <Link href="/contact" className="section-link">
+            Contact the newsroom
+          </Link>
+        </p>
       </div>
     </div>
   );

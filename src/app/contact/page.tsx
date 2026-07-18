@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { SITE_NAME } from "@/lib/site";
+import { SITE_NAME, SOCIAL_LINKS } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="page-wrap">
+    <div className="page-shell">
       <header className="page-hero">
         <h1>Contact</h1>
         <p lang="ur" dir="rtl">
@@ -23,14 +23,25 @@ export default function ContactPage() {
 
       <div className="prose-page">
         <p>
-          Email the newsroom at{" "}
-          <a href="mailto:asgharalimubarak@example.com">
-            asgharalimubarak@example.com
-          </a>
-          . Replace this address with your production inbox before launch.
+          Prefer social channels for the fastest response, or use the message
+          form below.
         </p>
 
-        <form className="contact-form" action="mailto:asgharalimubarak@example.com" method="get">
+        <ul className="footer-social">
+          {SOCIAL_LINKS.map((link) => (
+            <li key={link.href}>
+              <a href={link.href} target="_blank" rel="noopener noreferrer">
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <form
+          className="contact-form"
+          action="mailto:asgharalimubarak@example.com"
+          method="get"
+        >
           <label htmlFor="name">
             Name
             <input id="name" name="name" type="text" autoComplete="name" required />

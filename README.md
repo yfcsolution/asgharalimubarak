@@ -3,6 +3,8 @@
 Production-ready Next.js App Router frontend for the WordPress.com newsroom at
 `asgharalimubarakblog.wordpress.com`.
 
+Production domain: https://asgharalimubarak.com
+
 ## Stack
 
 - Next.js App Router + TypeScript (strict)
@@ -13,14 +15,28 @@ Production-ready Next.js App Router frontend for the WordPress.com newsroom at
 
 ## Environment
 
-Copy `.env.example` to `.env.local`:
+### Local (`.env.local`)
 
 ```bash
 WORDPRESS_API_URL=https://public-api.wordpress.com/wp/v2/sites/asgharalimubarakblog.wordpress.com
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
-On Vercel, set `NEXT_PUBLIC_SITE_URL` to your production domain.
+### Production / Preview / Development (Vercel)
+
+```bash
+WORDPRESS_API_URL=https://public-api.wordpress.com/wp/v2/sites/asgharalimubarakblog.wordpress.com
+NEXT_PUBLIC_SITE_URL=https://asgharalimubarak.com
+```
+
+Apply the Vercel variables to **Production**, **Preview**, and **Development**.
+
+## Vercel project settings
+
+- **Production Branch:** `main`
+- **Framework Preset:** Next.js
+- **Root Directory:** `.` (repository root)
+- After merging to `main`, redeploy the latest `main` commit **without build cache**
 
 ## Scripts
 

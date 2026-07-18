@@ -1,6 +1,15 @@
 import type { Metadata } from "next";
 
-import { SITE_NAME, SOCIAL_LINKS } from "@/lib/site";
+import { ContactQuickLinks } from "@/components/WhatsAppFloat";
+import { SocialLinksList } from "@/components/SocialIcons";
+import {
+  CONTACT_EMAIL,
+  CONTACT_PHONE_DISPLAY,
+  MAILTO_URL,
+  SITE_NAME,
+  WHATSAPP_URL,
+  getActiveSocialLinks,
+} from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -8,6 +17,8 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
+  const socialLinks = getActiveSocialLinks();
+
   return (
     <div className="page-shell">
       <header className="page-hero">
@@ -22,26 +33,23 @@ export default function ContactPage() {
       </header>
 
       <div className="prose-page">
+        <h2>Direct contact</h2>
+        <ContactQuickLinks />
         <p>
-          Prefer social channels for the fastest response, or use the message
-          form below.
+          Email{" "}
+          <a href={MAILTO_URL}>{CONTACT_EMAIL}</a>, call{" "}
+          <a href={`tel:+923334911786`}>{CONTACT_PHONE_DISPLAY}</a>, or message
+          on{" "}
+          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+            WhatsApp
+          </a>
+          .
         </p>
 
-        <ul className="footer-social">
-          {SOCIAL_LINKS.map((link) => (
-            <li key={link.href}>
-              <a href={link.href} target="_blank" rel="noopener noreferrer">
-                {link.label}
-              </a>
-            </li>
-          ))}
-        </ul>
+        <h2>Follow</h2>
+        <SocialLinksList links={socialLinks} className="footer-social" showLabels />
 
-        <form
-          className="contact-form"
-          action="mailto:asgharalimubarak@example.com"
-          method="get"
-        >
+        <form className="contact-form" action={MAILTO_URL} method="get">
           <label htmlFor="name">
             Name
             <input id="name" name="name" type="text" autoComplete="name" required />

@@ -15,10 +15,11 @@ import type { WpPost } from "@/lib/types";
 import {
   categoryPath,
   displayTitleForPost,
-  formatDate,
+  formatPakistanDate,
   getPostCategories,
   getPostImage,
   getPostTags,
+  isMeaningfullyUpdated,
   postPath,
   readingTimeMinutes,
 } from "@/lib/utils";
@@ -52,9 +53,7 @@ export async function ArticleLayout({
     localPhotoAvailable: siteAuthor.localPhotoAvailable,
   });
   const minutes = readingTimeMinutes(post.content?.rendered || "");
-  const modifiedDifferent =
-    post.modified &&
-    new Date(post.modified).toDateString() !== new Date(post.date).toDateString();
+  const showUpdated = isMeaningfullyUpdated(post.date, post.modified);
   const shareUrl = `${getSiteUrl()}${postPath(post.slug)}`;
 
   const jsonLd = {
@@ -151,15 +150,22 @@ export async function ArticleLayout({
             <div>
               {author?.name ? <p className="byline-author">By {author.name}</p> : null}
               <p className="byline-dates">
-                <time dateTime={post.date}>{formatDate(post.date)}</time>
-                {modifiedDifferent ? (
-                  <>
+                <span>
+                  Published{" "}
+                  <time dateTime={post.date}>{formatPakistanDate(post.date)}</time>
+                </span>
+                {showUpdated ? (
+                  <span>
                     {" · Updated "}
-                    <time dateTime={post.modified}>{formatDate(post.modified)}</time>
-                  </>
+                    <time dateTime={post.modified}>
+                      {formatPakistanDate(post.modified)}
+                    </time>
+                  </span>
                 ) : null}
-                {" · "}
-                {minutes} min read
+                <span>
+                  {" · "}
+                  {minutes} min read
+                </span>
               </p>
             </div>
           </div>

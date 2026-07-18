@@ -5,10 +5,11 @@ import type { WpPost } from "@/lib/types";
 import {
   categoryPath,
   displayTitleForPost,
-  formatDate,
+  formatPakistanCompactDate,
   getDisplayExcerpt,
   getPostCategories,
   getPostImage,
+  isMeaningfullyUpdated,
   postPath,
   stripHtml,
 } from "@/lib/utils";
@@ -85,9 +86,18 @@ export function ArticleCard({
           {excerpt.text}
         </p>
 
-        <time className="article-card-date" dateTime={post.date}>
-          {formatDate(post.date)}
-        </time>
+        <p className="article-card-date">
+          <time dateTime={post.date}>{formatPakistanCompactDate(post.date)}</time>
+          {isMeaningfullyUpdated(post.date, post.modified) ? (
+            <>
+              {" · "}
+              <span className="updated-label">Updated</span>{" "}
+              <time dateTime={post.modified}>
+                {formatPakistanCompactDate(post.modified)}
+              </time>
+            </>
+          ) : null}
+        </p>
       </div>
     </article>
   );

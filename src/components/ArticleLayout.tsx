@@ -58,7 +58,7 @@ export function ArticleLayout({ post, related }: ArticleLayoutProps) {
         />
       </div>
 
-      <WordPressContent html={post.content.rendered} />
+      <WordPressContent html={post.content?.rendered ?? ""} />
 
       {related}
     </article>

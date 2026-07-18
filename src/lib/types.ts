@@ -51,7 +51,7 @@ export interface WpPost {
   type: string;
   link: string;
   title: WpRendered;
-  content: WpRendered;
+  content?: WpRendered;
   excerpt: WpRendered;
   author: number;
   featured_media: number;

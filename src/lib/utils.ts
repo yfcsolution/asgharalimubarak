@@ -72,7 +72,9 @@ export function getFeaturedImage(post: WpPost): FeaturedImageData | null {
 }
 
 export function excerptText(post: WpPost, maxLength = 180): string {
-  const text = stripHtml(post.excerpt?.rendered || post.content?.rendered || "");
+  const text = stripHtml(
+    post.excerpt?.rendered || post.content?.rendered || "",
+  );
   if (text.length <= maxLength) return text;
   return `${text.slice(0, maxLength).trimEnd()}…`;
 }

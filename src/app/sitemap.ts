@@ -8,8 +8,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = getSiteUrl();
   const [categories, page1, page2] = await Promise.all([
     getCategories(),
-    getPosts({ page: 1, perPage: 100 }),
-    getPosts({ page: 2, perPage: 100 }),
+    getPosts({ page: 1, perPage: 100, mode: "sitemap" }),
+    getPosts({ page: 2, perPage: 100, mode: "sitemap" }),
   ]);
 
   const posts = [...page1.posts, ...page2.posts];

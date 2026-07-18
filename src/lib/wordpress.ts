@@ -4,6 +4,26 @@ import { normalizeSlug } from "@/lib/utils";
 
 type QueryValue = string | number | boolean | undefined;
 
+const LIST_FIELDS = [
+  "id",
+  "date",
+  "modified",
+  "slug",
+  "status",
+  "link",
+  "title",
+  "excerpt",
+  "author",
+  "featured_media",
+  "categories",
+  "tags",
+  "jetpack_featured_media_url",
+  "_links",
+  "_embedded",
+].join(",");
+
+const SITEMAP_FIELDS = ["id", "date", "modified", "slug"].join(",");
+
 async function wpFetch<T>(
   path: string,
   query: Record<string, QueryValue> = {},
@@ -38,13 +58,16 @@ export async function getPosts(options: {
   perPage?: number;
   categories?: number | string;
   search?: string;
+  mode?: "list" | "sitemap";
 } = {}): Promise<PaginatedPosts> {
   const page = Math.max(1, options.page ?? 1);
   const perPage = options.perPage ?? POSTS_PER_PAGE;
+  const mode = options.mode ?? "list";
 
   const { data, headers } = await wpFetch<WpPost[]>("/posts", {
     status: "publish",
-    _embed: true,
+    _embed: mode === "list" ? true : undefined,
+    _fields: mode === "sitemap" ? SITEMAP_FIELDS : LIST_FIELDS,
     page,
     per_page: perPage,
     categories: options.categories,
@@ -103,7 +126,11 @@ export async function getCategoryBySlug(
 }
 
 export async function getAllPostSlugs(limit = 24): Promise<string[]> {
-  const { posts } = await getPosts({ page: 1, perPage: Math.min(limit, 100) });
+  const { posts } = await getPosts({
+    page: 1,
+    perPage: Math.min(limit, 100),
+    mode: "sitemap",
+  });
   return posts.map((post) => normalizeSlug(post.slug));
 }
 
@@ -111,5 +138,5 @@ export async function getPostsForSitemap(
   page: number,
   perPage = 100,
 ): Promise<PaginatedPosts> {
-  return getPosts({ page, perPage });
+  return getPosts({ page, perPage, mode: "sitemap" });
 }

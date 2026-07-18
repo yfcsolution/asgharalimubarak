@@ -33,27 +33,44 @@ export const SOCIAL_LINKS = [
   {
     id: "youtube",
     label: "YouTube",
+    handle: "@AsgharaliMubarak",
     href: "https://www.youtube.com/@AsgharaliMubarak/",
   },
   {
     id: "instagram",
     label: "Instagram",
+    handle: "@Asgharali.Mubarak",
     href: "https://www.instagram.com/Asgharali.Mubarak/",
   },
   {
     id: "facebook",
     label: "Facebook",
+    handle: "Asgharali.Mubarak",
     href: "https://www.facebook.com/Asgharali.Mubarak/",
+  },
+  {
+    id: "x",
+    label: "X",
+    handle: "@asgharmubarak",
+    href: "https://x.com/asgharmubarak",
   },
   {
     id: "linkedin",
     label: "LinkedIn",
+    handle: "Asghar Ali Mubarak",
     href: "https://www.linkedin.com/in/asghar-ali-mubarak-a67abb29/",
   },
   {
     id: "tiktok",
     label: "TikTok",
+    handle: "@asgharalimubarak2",
     href: "https://www.tiktok.com/@asgharalimubarak2",
+  },
+  {
+    id: "pinterest",
+    label: "Pinterest",
+    handle: "@asgharmubarak",
+    href: "https://www.pinterest.com/asgharmubarak/",
   },
 ] as const;
 

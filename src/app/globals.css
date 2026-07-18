@@ -1235,6 +1235,143 @@ img {
   justify-self: start;
 }
 
+.contact-page {
+  display: grid;
+  gap: 1rem;
+  max-width: 52rem;
+}
+
+.contact-panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 1.15rem 1.2rem 1.25rem;
+}
+
+.contact-panel h2 {
+  margin-top: 0;
+}
+
+.contact-detail-list,
+.contact-social-grid {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.contact-detail-list li {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.contact-detail-label {
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--muted);
+}
+
+.contact-detail-list a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.contact-detail-list a:hover,
+.contact-detail-list a:focus-visible {
+  text-decoration: underline;
+}
+
+.contact-social-grid {
+  grid-template-columns: 1fr;
+}
+
+.contact-social-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  text-decoration: none;
+  color: inherit;
+  min-width: 0;
+}
+
+.contact-social-card:hover,
+.contact-social-card:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(15, 92, 86, 0.15);
+}
+
+.contact-social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink-soft);
+}
+
+.contact-social-copy {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.contact-social-copy strong {
+  font-size: 0.95rem;
+}
+
+.contact-social-copy span {
+  color: var(--muted);
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.contact-social-compact {
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--line);
+}
+
+.contact-social-compact-label {
+  margin: 0 0 0.55rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: var(--muted);
+}
+
+.social-handle {
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+@media (min-width: 640px) {
+  .contact-social-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .contact-detail-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 .pagination {
   display: flex;
   align-items: center;

@@ -83,6 +83,28 @@ export function TikTokIcon(props: IconProps) {
   );
 }
 
+export function XIcon(props: IconProps) {
+  return (
+    <SvgShell {...props}>
+      <path
+        fill="currentColor"
+        d="M3 3h4.2l4.1 5.7L16.5 3H21l-6.6 7.5L21.4 21h-4.2l-4.5-6.2L6 21H1.5l7-8L3 3zm3.3 1.7 10.8 14.6H18L7.2 4.7H6.3z"
+      />
+    </SvgShell>
+  );
+}
+
+export function PinterestIcon(props: IconProps) {
+  return (
+    <SvgShell {...props}>
+      <path
+        fill="currentColor"
+        d="M12 2a10 10 0 0 0-3.6 19.3c-.1-.8-.2-2 .1-2.9.2-.8 1.5-6.1 1.5-6.1s-.4-.8-.4-1.9c0-1.8 1-3.1 2.3-3.1 1.1 0 1.6.8 1.6 1.8 0 1.1-.7 2.7-1.1 4.2-.3 1.3.7 2.3 2 2.3 2.4 0 4-2.5 4-6.2 0-3.2-2.3-5.5-5.6-5.5A5.8 5.8 0 0 0 6.4 9.7c0 1.1.4 2.3 1 3 .1.1.1.3.1.4l-.4 1.5c-.1.2-.2.3-.4.2-1.6-.7-2.6-3-2.6-4.8A7.1 7.1 0 0 1 12.7 3.7c3.8 0 6.7 2.7 6.7 6.4 0 3.8-2.4 6.9-5.7 6.9-1.1 0-2.2-.6-2.5-1.3l-.7 2.6c-.3 1-1 2.2-1.5 3A10 10 0 1 0 12 2z"
+      />
+    </SvgShell>
+  );
+}
+
 export function WhatsAppIcon(props: IconProps) {
   return (
     <SvgShell {...props}>
@@ -98,8 +120,10 @@ const ICON_MAP = {
   youtube: YouTubeIcon,
   instagram: InstagramIcon,
   facebook: FacebookIcon,
+  x: XIcon,
   linkedin: LinkedInIcon,
   tiktok: TikTokIcon,
+  pinterest: PinterestIcon,
 } as const;
 
 export function SocialIcon({
@@ -117,10 +141,12 @@ export function SocialLinksList({
   links,
   className = "social-links",
   showLabels = false,
+  showHandles = false,
 }: {
   links: SocialLink[];
   className?: string;
   showLabels?: boolean;
+  showHandles?: boolean;
 }) {
   if (links.length === 0) return null;
 
@@ -132,12 +158,15 @@ export function SocialLinksList({
             href={link.href}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`Follow on ${link.label}`}
-            title={`Follow on ${link.label}`}
+            aria-label={`Follow on ${link.label}${link.handle ? ` (${link.handle})` : ""}`}
+            title={`Follow on ${link.label}${link.handle ? ` — ${link.handle}` : ""}`}
             className="social-icon-link"
           >
             <SocialIcon id={link.id} />
             {showLabels ? <span>{link.label}</span> : null}
+            {showHandles && link.handle ? (
+              <span className="social-handle">{link.handle}</span>
+            ) : null}
           </a>
         </li>
       ))}

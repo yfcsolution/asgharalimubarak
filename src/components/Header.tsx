@@ -1,40 +1,46 @@
 import { HeaderLayout } from "@/components/HeaderLayout";
 import { type NavItem } from "@/components/SiteNav";
+import { splitNavCategories } from "@/lib/category-config";
 import { getActiveSocialLinks } from "@/lib/site";
 import { categoryPath, decodeHtml } from "@/lib/utils";
 import { getNavCategories } from "@/lib/wordpress";
 
+function toNavItem(href: string, label: string, dir: "auto" = "auto"): NavItem {
+  return { href, label, dir };
+}
+
 function buildNavItems(
   categories: Awaited<ReturnType<typeof getNavCategories>>,
 ): { primary: NavItem[]; more: NavItem[]; all: NavItem[] } {
-  const fixedStart: NavItem[] = [
-    { href: "/", label: "Home" },
-    { href: "/latest", label: "Latest" },
+  const fixedStart = [
+    toNavItem("/", "Home"),
+    toNavItem("/latest", "Latest"),
   ];
-  const fixedEnd: NavItem[] = [
-    { href: "/about", label: "About" },
-    { href: "/contact", label: "Contact" },
+  const fixedEnd = [
+    toNavItem("/about", "About"),
+    toNavItem("/contact", "Contact"),
   ];
 
-  const categoryItems: NavItem[] = categories.map((category) => ({
-    href: categoryPath(category.slug),
-    label: decodeHtml(category.name),
-    dir: "auto" as const,
-  }));
+  const { primary: primaryCategories, more: moreCategories } =
+    splitNavCategories(categories);
 
-  const visibleCategoryCount = Math.min(5, categoryItems.length);
-  const primaryCategories = categoryItems.slice(0, visibleCategoryCount);
-  const moreCategories = categoryItems.slice(visibleCategoryCount);
+  const primaryCategoryItems = primaryCategories.map((category) =>
+    toNavItem(categoryPath(category.slug), decodeHtml(category.name)),
+  );
+  const moreCategoryItems = moreCategories.map((category) =>
+    toNavItem(categoryPath(category.slug), decodeHtml(category.name)),
+  );
+  const allCategoryItems = [...primaryCategoryItems, ...moreCategoryItems];
 
   return {
-    primary: [...fixedStart, ...primaryCategories, ...fixedEnd],
-    more: moreCategories,
-    all: [...fixedStart, ...categoryItems, ...fixedEnd],
+    primary: [...fixedStart, ...primaryCategoryItems, ...fixedEnd],
+    more: moreCategoryItems,
+    all: [...fixedStart, ...allCategoryItems, ...fixedEnd],
   };
 }
 
 export async function Header() {
-  const [categories] = await Promise.all([getNavCategories()]);
+  const categories = await getNavCategories();
   const nav = buildNavItems(categories);
   const socialLinks = getActiveSocialLinks();
 

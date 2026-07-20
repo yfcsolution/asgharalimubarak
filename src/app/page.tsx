@@ -7,8 +7,9 @@ import { LeadStory } from "@/components/LeadStory";
 import { LatestNewsTicker } from "@/components/latest-news-ticker";
 import { NewsSidebar } from "@/components/news-sidebar";
 import { SnapshotNotice } from "@/components/SnapshotNotice";
+import { getHomepageSectionCategories } from "@/lib/category-config";
 import { SITE_NAME } from "@/lib/site";
-import type { WpCategory } from "@/lib/types";
+import type { WpCategory, WpPost } from "@/lib/types";
 import {
   displayTitleForPost,
   formatPakistanDateTime,
@@ -23,63 +24,77 @@ import {
 
 export const revalidate = 60;
 
-const FEATURED_CATEGORY_SLUGS = [
-  "pakistan",
-  "world",
-  "diplomacy",
-  "defence",
-  "defense",
-  "politics",
-  "sports",
-  "blogger-archive",
-  "blogger",
-] as const;
+function postsForCategory(
+  posts: WpPost[],
+  categoryId: number,
+  excludeIds: Set<number>,
+  limit = 3,
+): WpPost[] {
+  return posts
+    .filter(
+      (post) =>
+        Array.isArray(post.categories) &&
+        post.categories.includes(categoryId) &&
+        !excludeIds.has(post.id),
+    )
+    .slice(0, limit);
+}
 
-function resolveFeaturedCategories(categories: WpCategory[]): WpCategory[] {
-  const seen = new Set<number>();
-  const featured: WpCategory[] = [];
+async function buildCategorySections(
+  categories: WpCategory[],
+  homepagePosts: WpPost[],
+  leadId?: number,
+) {
+  const featured = getHomepageSectionCategories(categories);
+  const excludeIds = new Set<number>();
+  if (leadId) excludeIds.add(leadId);
 
-  for (const slug of FEATURED_CATEGORY_SLUGS) {
-    const match = categories.find(
-      (category) =>
-        category.slug.toLowerCase() === slug ||
-        category.name.trim().toLowerCase() === slug.replace("-", " "),
-    );
-    if (match && !seen.has(match.id)) {
-      seen.add(match.id);
-      featured.push(match);
+  const sections: { category: WpCategory; posts: WpPost[] }[] = [];
+
+  for (const category of featured) {
+    let posts = postsForCategory(homepagePosts, category.id, excludeIds, 3);
+
+    if (posts.length < 3 && category.count > posts.length) {
+      const fetched = await getPosts({
+        categories: category.id,
+        perPage: 4,
+      });
+      posts = fetched.posts
+        .filter((post) => !excludeIds.has(post.id))
+        .slice(0, 3);
     }
+
+    if (posts.length === 0) continue;
+
+    for (const post of posts) {
+      excludeIds.add(post.id);
+    }
+
+    sections.push({ category, posts });
   }
 
-  return featured;
+  return sections;
 }
 
 export default async function HomePage() {
   const [{ posts, fromSnapshot, snapshotMessage }, categories, tags] =
     await Promise.all([
-      getPosts({ page: 1, perPage: 14 }),
+      getPosts({ page: 1, perPage: 20 }),
       getNavCategories(),
       getTags(12),
     ]);
-
-  const featuredCategories = resolveFeaturedCategories(categories);
-  const categorySections = await Promise.all(
-    featuredCategories.map(async (category) => ({
-      category,
-      posts: (
-        await getPosts({
-          categories: category.id,
-          perPage: 3,
-        })
-      ).posts,
-    })),
-  );
 
   const [lead, ...rest] = posts;
   const secondary = rest.slice(0, 4);
   const latestGrid = rest.slice(4, 10);
   const sidebarLatest = posts.slice(0, 5);
   const picks = posts.slice(1, 6);
+
+  const categorySections = await buildCategorySections(
+    categories,
+    posts,
+    lead?.id,
+  );
 
   const tickerHeadlines = posts.slice(0, 12).map((post) => {
     const title = displayTitleForPost(post);

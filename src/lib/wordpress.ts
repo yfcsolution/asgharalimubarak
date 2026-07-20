@@ -1,6 +1,11 @@
 import { cache } from "react";
 
 import { readSnapshot, saveFullSnapshot } from "@/lib/content-repository";
+import {
+  CATEGORY_CACHE_SECONDS,
+  isValidNavCategory,
+  sortCategoriesEditorially,
+} from "@/lib/category-config";
 import { getPostImage } from "@/lib/images";
 import { POSTS_PER_PAGE, REVALIDATE_SECONDS, getWordPressApiUrl } from "@/lib/site";
 import type {
@@ -41,6 +46,7 @@ const SNAPSHOT_MESSAGE = "Showing the latest saved edition.";
 async function wpFetchRaw<T>(
   path: string,
   query: Record<string, QueryValue> = {},
+  options: { revalidate?: number } = {},
 ): Promise<{ data: T; headers: Headers }> {
   const base = getWordPressApiUrl();
   const url = new URL(`${base}${path.startsWith("/") ? path : `/${path}`}`);
@@ -51,6 +57,7 @@ async function wpFetchRaw<T>(
   }
 
   let lastError: Error | null = null;
+  const revalidate = options.revalidate ?? REVALIDATE_SECONDS;
 
   for (let attempt = 0; attempt <= WP_MAX_RETRIES; attempt += 1) {
     const controller = new AbortController();
@@ -58,7 +65,7 @@ async function wpFetchRaw<T>(
 
     try {
       const response = await fetch(url.toString(), {
-        next: { revalidate: REVALIDATE_SECONDS },
+        next: { revalidate },
         headers: { Accept: "application/json" },
         signal: controller.signal,
       });
@@ -87,8 +94,9 @@ async function wpFetchRaw<T>(
 async function wpFetch<T>(
   path: string,
   query: Record<string, QueryValue> = {},
+  options: { revalidate?: number } = {},
 ): Promise<{ data: T; headers: Headers }> {
-  return wpFetchRaw<T>(path, query);
+  return wpFetchRaw<T>(path, query, options);
 }
 
 function stripHeavyContent(posts: WpPost[]): WpPost[] {
@@ -285,17 +293,42 @@ export const getCategories = cache(async function getCategories(): Promise<
   WpCategory[]
 > {
   try {
-    const { data } = await wpFetch<WpCategory[]>("/categories", {
-      per_page: 100,
-      hide_empty: true,
-      orderby: "count",
-      order: "desc",
-    });
+    const { data } = await wpFetch<WpCategory[]>(
+      "/categories",
+      {
+        per_page: 100,
+        hide_empty: true,
+        orderby: "count",
+        order: "desc",
+      },
+      { revalidate: CATEGORY_CACHE_SECONDS },
+    );
     await persistSnapshot({ categories: data });
-    return data;
+    return sortCategoriesEditorially(data);
   } catch {
     const snapshot = await readSnapshot("site");
-    return snapshot?.categories ?? [];
+    return sortCategoriesEditorially(snapshot?.categories ?? []);
+  }
+});
+
+export const getAllCategories = cache(async function getAllCategories(): Promise<
+  WpCategory[]
+> {
+  try {
+    const { data } = await wpFetch<WpCategory[]>(
+      "/categories",
+      {
+        per_page: 100,
+        hide_empty: false,
+        orderby: "count",
+        order: "desc",
+      },
+      { revalidate: CATEGORY_CACHE_SECONDS },
+    );
+    return sortCategoriesEditorially(data);
+  } catch {
+    const snapshot = await readSnapshot("site");
+    return sortCategoriesEditorially(snapshot?.categories ?? []);
   }
 });
 
@@ -323,9 +356,11 @@ export const getCategoryBySlug = cache(async function getCategoryBySlug(
   const normalized = normalizeSlug(slug);
 
   try {
-    const { data } = await wpFetch<WpCategory[]>("/categories", {
-      slug: normalized,
-    });
+    const { data } = await wpFetch<WpCategory[]>(
+      "/categories",
+      { slug: normalized },
+      { revalidate: CATEGORY_CACHE_SECONDS },
+    );
     return data[0] ?? null;
   } catch {
     const snapshot = await readSnapshot("site");
@@ -355,14 +390,7 @@ export async function getPostsForSitemap(
 
 export async function getNavCategories(): Promise<WpCategory[]> {
   const categories = await getCategories();
-  return categories.filter((category) => {
-    const name = category.name.trim().toLowerCase();
-    const slug = category.slug.trim().toLowerCase();
-    if (category.count <= 0) return false;
-    if (slug === "uncategorized" || name === "uncategorized") return false;
-    if (!name || name === "-" || name.includes("http")) return false;
-    return true;
-  });
+  return sortCategoriesEditorially(categories.filter(isValidNavCategory));
 }
 
 export const getSnapshotStatus = cache(async function getSnapshotStatus(): Promise<{

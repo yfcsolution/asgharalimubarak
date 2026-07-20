@@ -2,12 +2,12 @@ import type { MetadataRoute } from "next";
 
 import { getSiteUrl } from "@/lib/site";
 import { normalizeSlug, postPath } from "@/lib/utils";
-import { getCategories, getPosts } from "@/lib/wordpress";
+import { getNavCategories, getPosts } from "@/lib/wordpress";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = getSiteUrl();
   const [categories, page1, page2] = await Promise.all([
-    getCategories(),
+    getNavCategories(),
     getPosts({ page: 1, perPage: 100, mode: "sitemap" }),
     getPosts({ page: 2, perPage: 100, mode: "sitemap" }),
   ]);

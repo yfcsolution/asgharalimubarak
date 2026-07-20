@@ -9,7 +9,8 @@
     "lint": "eslint",
     "content:sync": "npx tsx scripts/sync-content-snapshot.ts",
     "content:validate": "npx tsx scripts/validate-content-snapshot.ts",
-    "ads:generate": "node scripts/generate-ad-creatives.mjs"
+    "ads:generate": "node scripts/generate-ad-creatives.mjs",
+    "categories:inspect": "npx tsx scripts/inspect-categories.ts"
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.20",

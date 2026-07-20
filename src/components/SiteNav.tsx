@@ -1,13 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { useId, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useId, useRef, useState } from "react";
 
 export type NavItem = {
   href: string;
   label: string;
   dir?: "auto" | "ltr" | "rtl";
 };
+
+function isActivePath(pathname: string, href: string): boolean {
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
 
 export function DesktopNav({
   primary,
@@ -18,48 +24,77 @@ export function DesktopNav({
 }) {
   const [open, setOpen] = useState(false);
   const menuId = useId();
+  const pathname = usePathname();
+  const moreRef = useRef<HTMLLIElement>(null);
+  const moreActive = more.some((item) => isActivePath(pathname, item.href));
+
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    const onPointerDown = (event: MouseEvent) => {
+      if (!moreRef.current?.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("mousedown", onPointerDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("mousedown", onPointerDown);
+    };
+  }, [open]);
 
   return (
     <nav aria-label="Primary" className="primary-nav">
       <ul className="primary-nav-list">
-        {primary.map((item) => (
-          <li key={item.href}>
-            <Link href={item.href} className="nav-link" dir={item.dir ?? "auto"}>
-              {item.label}
-            </Link>
-          </li>
-        ))}
+        {primary.map((item) => {
+          const active = isActivePath(pathname, item.href);
+          return (
+            <li key={item.href}>
+              <Link
+                href={item.href}
+                className={`nav-link${active ? " is-active" : ""}`}
+                dir={item.dir ?? "auto"}
+                aria-current={active ? "page" : undefined}
+              >
+                {item.label}
+              </Link>
+            </li>
+          );
+        })}
         {more.length > 0 ? (
-          <li className="nav-more">
+          <li className="nav-more" ref={moreRef}>
             <button
               type="button"
-              className="nav-link nav-more-button"
+              className={`nav-link nav-more-button${moreActive ? " is-active" : ""}`}
               aria-expanded={open}
               aria-controls={menuId}
+              aria-haspopup="menu"
               onClick={() => setOpen((value) => !value)}
-              onBlur={(event) => {
-                if (!event.currentTarget.parentElement?.contains(event.relatedTarget as Node)) {
-                  setOpen(false);
-                }
-              }}
             >
               More
             </button>
             {open ? (
               <ul id={menuId} className="nav-more-menu" role="menu">
-                {more.map((item) => (
-                  <li key={item.href} role="none">
-                    <Link
-                      href={item.href}
-                      className="nav-more-link"
-                      role="menuitem"
-                      dir={item.dir ?? "auto"}
-                      onClick={() => setOpen(false)}
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
+                {more.map((item) => {
+                  const active = isActivePath(pathname, item.href);
+                  return (
+                    <li key={item.href} role="none">
+                      <Link
+                        href={item.href}
+                        className={`nav-more-link${active ? " is-active" : ""}`}
+                        role="menuitem"
+                        dir={item.dir ?? "auto"}
+                        aria-current={active ? "page" : undefined}
+                        onClick={() => setOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             ) : null}
           </li>
@@ -72,6 +107,7 @@ export function DesktopNav({
 export function MobileNav({ items }: { items: NavItem[] }) {
   const [open, setOpen] = useState(false);
   const panelId = useId();
+  const pathname = usePathname();
 
   return (
     <div className="mobile-nav">
@@ -94,18 +130,22 @@ export function MobileNav({ items }: { items: NavItem[] }) {
           aria-label="Mobile navigation"
         >
           <ul>
-            {items.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="mobile-nav-link"
-                  dir={item.dir ?? "auto"}
-                  onClick={() => setOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
+            {items.map((item) => {
+              const active = isActivePath(pathname, item.href);
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className={`mobile-nav-link${active ? " is-active" : ""}`}
+                    dir={item.dir ?? "auto"}
+                    aria-current={active ? "page" : undefined}
+                    onClick={() => setOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
       ) : null}

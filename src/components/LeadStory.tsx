@@ -1,7 +1,10 @@
 import Link from "next/link";
 
+import { RecommendButton } from "@/components/RecommendButton";
 import { LinkedPostImage } from "@/components/PostImage";
+import { ShareButtons } from "@/components/ShareButtons";
 import { getPostAuthor } from "@/lib/author";
+import { getSiteUrl } from "@/lib/site";
 import type { WpPost } from "@/lib/types";
 import {
   categoryPath,
@@ -23,6 +26,7 @@ export function LeadStory({ post }: { post: WpPost }) {
     210,
   );
   const href = postPath(post.slug);
+  const shareUrl = `${getSiteUrl()}${href}`;
   const image = getPostImage(post);
   const categories = getPostCategories(post).filter(
     (category) => category.slug !== "uncategorized",
@@ -38,7 +42,7 @@ export function LeadStory({ post }: { post: WpPost }) {
           title={title.text}
           priority
           className="lead-story-image"
-          sizes="(max-width: 900px) 100vw, 60vw"
+          sizes="(max-width: 900px) 100vw, 48vw"
         />
       </div>
 
@@ -83,9 +87,13 @@ export function LeadStory({ post }: { post: WpPost }) {
           ) : null}
         </div>
 
-        <Link href={href} className="btn-primary">
-          Read full story
-        </Link>
+        <div className="lead-actions">
+          <Link href={href} className="btn-primary">
+            Read full story
+          </Link>
+          <ShareButtons url={shareUrl} title={title.text} variant="compact" />
+          <RecommendButton postId={post.id} />
+        </div>
       </div>
     </section>
   );

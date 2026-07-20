@@ -43,6 +43,7 @@ function AdLink({
         height={height}
         className="ad-image"
         sizes={`(max-width: 768px) 100vw, ${width}px`}
+        loading="lazy"
       />
     </Link>
   );

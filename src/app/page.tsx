@@ -2,11 +2,13 @@ import Link from "next/link";
 
 import { AdBanner } from "@/components/ads/AdBanner";
 import { ArticleCard } from "@/components/ArticleCard";
+import { CategoryNewsSection } from "@/components/CategoryNewsSection";
 import { LeadStory } from "@/components/LeadStory";
 import { LatestNewsTicker } from "@/components/latest-news-ticker";
 import { NewsSidebar } from "@/components/news-sidebar";
 import { SnapshotNotice } from "@/components/SnapshotNotice";
 import { SITE_NAME } from "@/lib/site";
+import type { WpCategory } from "@/lib/types";
 import {
   displayTitleForPost,
   formatPakistanDateTime,
@@ -21,6 +23,37 @@ import {
 
 export const revalidate = 60;
 
+const FEATURED_CATEGORY_SLUGS = [
+  "pakistan",
+  "world",
+  "diplomacy",
+  "defence",
+  "defense",
+  "politics",
+  "sports",
+  "blogger-archive",
+  "blogger",
+] as const;
+
+function resolveFeaturedCategories(categories: WpCategory[]): WpCategory[] {
+  const seen = new Set<number>();
+  const featured: WpCategory[] = [];
+
+  for (const slug of FEATURED_CATEGORY_SLUGS) {
+    const match = categories.find(
+      (category) =>
+        category.slug.toLowerCase() === slug ||
+        category.name.trim().toLowerCase() === slug.replace("-", " "),
+    );
+    if (match && !seen.has(match.id)) {
+      seen.add(match.id);
+      featured.push(match);
+    }
+  }
+
+  return featured;
+}
+
 export default async function HomePage() {
   const [{ posts, fromSnapshot, snapshotMessage }, categories, tags] =
     await Promise.all([
@@ -28,6 +61,19 @@ export default async function HomePage() {
       getNavCategories(),
       getTags(12),
     ]);
+
+  const featuredCategories = resolveFeaturedCategories(categories);
+  const categorySections = await Promise.all(
+    featuredCategories.map(async (category) => ({
+      category,
+      posts: (
+        await getPosts({
+          categories: category.id,
+          perPage: 3,
+        })
+      ).posts,
+    })),
+  );
 
   const [lead, ...rest] = posts;
   const secondary = rest.slice(0, 4);
@@ -72,7 +118,7 @@ export default async function HomePage() {
             <section className="section" aria-labelledby="secondary-heading">
               <div className="section-heading">
                 <div>
-                  <h2 id="secondary-heading">Top stories</h2>
+                  <h2 id="secondary-heading">Latest stories</h2>
                   <p>Selected reports from the newsroom.</p>
                 </div>
               </div>
@@ -103,38 +149,20 @@ export default async function HomePage() {
             </section>
           ) : null}
 
-          {categories.length > 0 ? (
-            <section className="section" aria-labelledby="categories-heading">
-              <div className="section-heading">
-                <div>
-                  <h2 id="categories-heading">Sections</h2>
-                  <p>Browse by WordPress category.</p>
-                </div>
-              </div>
-              <ul className="section-chip-row">
-                {categories.map((category) => (
-                  <li key={category.id}>
-                    <Link
-                      href={`/category/${encodeURIComponent(category.slug)}`}
-                      className="section-chip"
-                      dir="auto"
-                    >
-                      {category.name}
-                      <span>{category.count}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ) : (
+          {categorySections.map(({ category, posts: sectionPosts }) => (
+            <CategoryNewsSection
+              key={category.id}
+              category={category}
+              posts={sectionPosts}
+            />
+          ))}
+
+          {categories.length === 0 && tags.length > 0 ? (
             <section className="section" aria-labelledby="topics-heading">
               <div className="section-heading">
                 <div>
                   <h2 id="topics-heading">Topics</h2>
-                  <p>
-                    WordPress currently files posts under Uncategorized. Topic
-                    tags below are taken from the CMS.
-                  </p>
+                  <p>Explore recent reporting by topic tag.</p>
                 </div>
               </div>
               <ul className="section-chip-row">
@@ -152,7 +180,7 @@ export default async function HomePage() {
                 ))}
               </ul>
             </section>
-          )}
+          ) : null}
         </div>
 
         <NewsSidebar

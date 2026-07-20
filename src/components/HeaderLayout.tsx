@@ -1,6 +1,5 @@
-import { HeaderPromoBanner } from "@/components/HeaderPromoBanner";
-import { SiteMasthead } from "@/components/SiteMasthead";
 import { DesktopNav, MobileNav, type NavItem } from "@/components/SiteNav";
+import { SiteMasthead } from "@/components/SiteMasthead";
 import type { SocialLink } from "@/lib/site";
 
 type HeaderLayoutProps = {
@@ -23,8 +22,6 @@ export function HeaderLayout({ nav, socialLinks }: HeaderLayoutProps) {
           <MobileNav items={nav.all} />
         </div>
       </div>
-
-      <HeaderPromoBanner />
     </header>
   );
 }

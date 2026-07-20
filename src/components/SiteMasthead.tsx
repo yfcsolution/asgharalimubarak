@@ -4,11 +4,12 @@ import Link from "next/link";
 import { SocialLinksList } from "@/components/SocialIcons";
 import type { SocialLink } from "@/lib/site";
 import {
-  HEADER_PORTRAIT,
+  AUTHOR_LOCAL_PHOTO,
   HEADER_PORTRAIT_ALT,
   SITE_NAME,
   SITE_NAME_UR,
   SITE_SHOW_NAME_UR,
+  SITE_TAGLINE,
 } from "@/lib/site";
 
 type SiteMastheadProps = {
@@ -19,28 +20,31 @@ export function SiteMasthead({ socialLinks }: SiteMastheadProps) {
   return (
     <div className="site-masthead">
       <div className="site-masthead-inner">
-        <Link href="/" className="site-masthead-portrait-link">
-          <Image
-            src={HEADER_PORTRAIT}
-            alt={HEADER_PORTRAIT_ALT}
-            width={180}
-            height={220}
-            className="site-masthead-portrait"
-            priority
-          />
-        </Link>
+        <div className="site-masthead-left">
+          <Link href="/" className="site-masthead-portrait-link">
+            <Image
+              src={AUTHOR_LOCAL_PHOTO}
+              alt={HEADER_PORTRAIT_ALT}
+              width={900}
+              height={900}
+              className="site-masthead-portrait"
+              priority
+            />
+          </Link>
+          <p className="site-masthead-mark" lang="ur" dir="rtl">
+            {SITE_SHOW_NAME_UR}
+          </p>
+        </div>
 
         <div className="site-masthead-brand">
           <Link href="/" className="site-masthead-lockup">
-            <span className="site-masthead-show" lang="ur" dir="rtl">
-              {SITE_SHOW_NAME_UR}
-            </span>
             <span className="site-masthead-name-en" lang="en">
               {SITE_NAME}
             </span>
             <span className="site-masthead-name-ur" lang="ur" dir="rtl">
               {SITE_NAME_UR}
             </span>
+            <span className="site-masthead-tagline">{SITE_TAGLINE}</span>
           </Link>
         </div>
 
@@ -53,13 +57,11 @@ export function SiteMasthead({ socialLinks }: SiteMastheadProps) {
               id="site-search"
               name="q"
               type="search"
-              placeholder="Search"
+              placeholder="Search news"
               autoComplete="off"
               enterKeyHint="search"
             />
-            <button type="submit" aria-label="Search">
-              Search
-            </button>
+            <button type="submit">Search</button>
           </form>
           <SocialLinksList links={socialLinks} className="site-masthead-social" />
         </div>

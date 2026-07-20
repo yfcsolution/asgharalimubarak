@@ -1,8 +1,7 @@
 import { HeaderLayout } from "@/components/HeaderLayout";
 import { type NavItem } from "@/components/SiteNav";
-import { getSiteAuthor, resolveAuthorPhoto } from "@/lib/author";
 import { getActiveSocialLinks } from "@/lib/site";
-import { categoryPath, decodeHtml, formatPakistanDate } from "@/lib/utils";
+import { categoryPath, decodeHtml } from "@/lib/utils";
 import { getNavCategories } from "@/lib/wordpress";
 
 function buildNavItems(
@@ -35,21 +34,9 @@ function buildNavItems(
 }
 
 export async function Header() {
-  const [author, categories] = await Promise.all([
-    getSiteAuthor(),
-    getNavCategories(),
-  ]);
-  const photo = resolveAuthorPhoto(author);
+  const [categories] = await Promise.all([getNavCategories()]);
   const nav = buildNavItems(categories);
   const socialLinks = getActiveSocialLinks();
-  const today = formatPakistanDate(new Date().toISOString());
 
-  return (
-    <HeaderLayout
-      nav={nav}
-      socialLinks={socialLinks}
-      photo={photo}
-      today={today}
-    />
-  );
+  return <HeaderLayout nav={nav} socialLinks={socialLinks} />;
 }

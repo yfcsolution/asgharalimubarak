@@ -94,6 +94,183 @@ img {
   background: var(--paper);
 }
 
+.site-masthead {
+  border-bottom: 1px solid var(--line);
+  background: #fff;
+}
+
+.site-masthead-inner {
+  width: min(var(--max), calc(100% - 1rem));
+  margin-inline: auto;
+  padding: 0.55rem 0 0.65rem;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.65rem 0.85rem;
+}
+
+.site-masthead-portrait-link {
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.site-masthead-portrait {
+  display: block;
+  width: clamp(46px, 11vw, 64px);
+  height: clamp(58px, 14vw, 82px);
+  object-fit: cover;
+  object-position: top center;
+  filter: grayscale(100%);
+  border: 1px solid var(--line);
+  background: #e8edf1;
+}
+
+.site-masthead-brand {
+  min-width: 0;
+  text-align: center;
+}
+
+.site-masthead-lockup {
+  display: inline-grid;
+  gap: 0.05rem;
+  text-decoration: none;
+  color: inherit;
+  max-width: 100%;
+}
+
+.site-masthead-show {
+  font-family: var(--font-urdu);
+  font-size: clamp(0.95rem, 3.2vw, 1.25rem);
+  line-height: 1.2;
+  color: var(--ink-soft);
+}
+
+.site-masthead-name-en {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 3.8vw, 1.55rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.site-masthead-name-ur {
+  font-family: var(--font-urdu);
+  font-size: clamp(0.82rem, 2.6vw, 1.05rem);
+  color: var(--accent);
+  line-height: 1.25;
+}
+
+.site-masthead-tools {
+  display: grid;
+  gap: 0.35rem;
+  justify-items: end;
+  min-width: 0;
+  max-width: min(100%, 15rem);
+}
+
+.site-masthead-search {
+  display: flex;
+  gap: 0.25rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.site-masthead-search input {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: 0.38rem 0.5rem;
+  font: inherit;
+  font-size: 0.82rem;
+}
+
+.site-masthead-search button {
+  border: 0;
+  background: var(--accent);
+  color: white;
+  font-weight: 700;
+  padding: 0.38rem 0.55rem;
+  font-size: 0.78rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.site-masthead-search button:hover,
+.site-masthead-search button:focus-visible {
+  background: #0b4843;
+}
+
+.site-masthead-social {
+  justify-content: flex-end;
+  gap: 0.3rem;
+}
+
+.site-masthead-social .social-icon-link {
+  min-height: 1.85rem;
+  min-width: 1.85rem;
+  padding: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.header-promo-row {
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.header-promo-inner {
+  width: min(var(--max), calc(100% - 1rem));
+  margin-inline: auto;
+  padding: 0.45rem 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.header-promo-ad {
+  max-width: min(100%, 360px);
+}
+
+.header-promo-link {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #fff;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(20, 33, 43, 0.08);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.header-promo-link:hover,
+.header-promo-link:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(20, 33, 43, 0.12);
+}
+
+.header-promo-label {
+  position: absolute;
+  top: 0.35rem;
+  left: 0.45rem;
+  z-index: 1;
+  padding: 0.1rem 0.35rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--muted);
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+.header-promo-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 .site-header-banner-wrap {
   position: relative;
 }
@@ -2007,6 +2184,38 @@ img {
 }
 
 @media (max-width: 767px) {
+  .site-masthead-inner {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "portrait brand"
+      "tools tools";
+    gap: 0.45rem 0.65rem;
+    padding: 0.5rem 0 0.6rem;
+  }
+
+  .site-masthead-portrait-link {
+    grid-area: portrait;
+  }
+
+  .site-masthead-brand {
+    grid-area: brand;
+    text-align: left;
+  }
+
+  .site-masthead-tools {
+    grid-area: tools;
+    max-width: none;
+    justify-items: stretch;
+  }
+
+  .site-masthead-social {
+    justify-content: flex-start;
+  }
+
+  .header-promo-inner {
+    justify-content: center;
+  }
+
   .site-banner {
     display: flex;
     flex-direction: column;

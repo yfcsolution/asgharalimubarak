@@ -3,6 +3,7 @@ import Link from "next/link";
 import { AdBanner } from "@/components/ads/AdBanner";
 import { ArticleCard } from "@/components/ArticleCard";
 import { CategoryNewsSection } from "@/components/CategoryNewsSection";
+import { CategoryStrip } from "@/components/CategoryStrip";
 import { LeadStory } from "@/components/LeadStory";
 import { LatestNewsTicker } from "@/components/latest-news-ticker";
 import { NewsSidebar } from "@/components/news-sidebar";
@@ -131,11 +132,14 @@ export default async function HomePage() {
 
           {secondary.length > 0 ? (
             <section className="section" aria-labelledby="secondary-heading">
-              <div className="section-heading">
+              <div className="section-heading section-heading-accent">
                 <div>
                   <h2 id="secondary-heading">Latest stories</h2>
                   <p>Selected reports from the newsroom.</p>
                 </div>
+                <Link href="/latest" className="section-link">
+                  View all
+                </Link>
               </div>
               <div className="article-grid two-col">
                 {secondary.map((post) => (
@@ -144,6 +148,8 @@ export default async function HomePage() {
               </div>
             </section>
           ) : null}
+
+          <CategoryStrip categories={categories} />
 
           {latestGrid.length > 0 ? (
             <section className="section" aria-labelledby="latest-heading">

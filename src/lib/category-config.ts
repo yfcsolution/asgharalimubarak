@@ -70,9 +70,11 @@ export const PRIMARY_NAV_CATEGORY_SLUGS = [
   "education",
   "health",
   "sports",
+  "science-technology",
+  "opinion",
 ] as const;
 
-export const MAX_PRIMARY_NAV_CATEGORIES = 8;
+export const MAX_PRIMARY_NAV_CATEGORIES = 10;
 export const MAX_SIDEBAR_CATEGORIES = 14;
 export const CATEGORY_CACHE_SECONDS = 300;
 
@@ -211,6 +213,12 @@ export function splitNavCategories(categories: WpCategory[]): {
     primary,
     more: [...overflowPreferred, ...remainder],
   };
+}
+
+export function getCategoryNavLabel(category: Pick<WpCategory, "slug" | "name">): string {
+  const canonical = getCategoryCanonicalSlug(category);
+  if (canonical === "science-technology") return "Science & Tech";
+  return decodeHtml(category.name);
 }
 
 export const CATEGORY_DESCRIPTION_FALLBACK =

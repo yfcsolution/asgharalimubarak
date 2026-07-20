@@ -1,8 +1,8 @@
 import { HeaderLayout } from "@/components/HeaderLayout";
 import { type NavItem } from "@/components/SiteNav";
-import { splitNavCategories } from "@/lib/category-config";
+import { getCategoryNavLabel, splitNavCategories } from "@/lib/category-config";
 import { getActiveSocialLinks } from "@/lib/site";
-import { categoryPath, decodeHtml } from "@/lib/utils";
+import { categoryPath } from "@/lib/utils";
 import { getNavCategories } from "@/lib/wordpress";
 
 function toNavItem(href: string, label: string, dir: "auto" = "auto"): NavItem {
@@ -25,10 +25,10 @@ function buildNavItems(
     splitNavCategories(categories);
 
   const primaryCategoryItems = primaryCategories.map((category) =>
-    toNavItem(categoryPath(category.slug), decodeHtml(category.name)),
+    toNavItem(categoryPath(category.slug), getCategoryNavLabel(category)),
   );
   const moreCategoryItems = moreCategories.map((category) =>
-    toNavItem(categoryPath(category.slug), decodeHtml(category.name)),
+    toNavItem(categoryPath(category.slug), getCategoryNavLabel(category)),
   );
   const allCategoryItems = [...primaryCategoryItems, ...moreCategoryItems];
 

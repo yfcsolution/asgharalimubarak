@@ -10,11 +10,18 @@ import { getPosts } from "@/lib/wordpress";
 async function localAuthorPhotoExists(): Promise<boolean> {
   try {
     await access(
-      path.join(process.cwd(), "public", "images", "asghar-ali-mubarak.jpg"),
+      path.join(process.cwd(), "public", "images", "asghar-ali-mubarak-original.jpg"),
     );
     return true;
   } catch {
-    return false;
+    try {
+      await access(
+        path.join(process.cwd(), "public", "images", "asghar-ali-mubarak.jpg"),
+      );
+      return true;
+    } catch {
+      return false;
+    }
   }
 }
 

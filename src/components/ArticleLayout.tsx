@@ -12,7 +12,7 @@ import {
   getSiteAuthor,
   resolveAuthorPhoto,
 } from "@/lib/author";
-import { DEFAULT_OG_IMAGE, getSiteUrl, SITE_NAME } from "@/lib/site";
+import { AUTHOR_LOCAL_PHOTO, DEFAULT_OG_IMAGE, getSiteUrl, SITE_NAME } from "@/lib/site";
 import type { WpPost } from "@/lib/types";
 import {
   categoryPath,
@@ -75,7 +75,7 @@ export async function ArticleLayout({
       name: SITE_NAME,
       logo: {
         "@type": "ImageObject",
-        url: `${getSiteUrl()}/images/asghar-ali-mubarak.jpg`,
+        url: `${getSiteUrl()}${AUTHOR_LOCAL_PHOTO}`,
       },
     },
     image: image?.src

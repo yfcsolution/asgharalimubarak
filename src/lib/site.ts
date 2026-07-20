@@ -1,5 +1,6 @@
 export const SITE_NAME = "Asghar Ali Mubarak";
 export const SITE_NAME_UR = "اصغر علی مبارک";
+export const SITE_SLOGAN = "New Generation's News Leader";
 export const SITE_TAGLINE =
   "Bilingual English & Urdu news coverage from Pakistan and beyond.";
 export const SITE_TAGLINE_UR =
@@ -12,7 +13,10 @@ export const REVALIDATE_SECONDS = 60;
 export const UPDATE_THRESHOLD_MS = 10 * 60 * 1000;
 export const PAKISTAN_TIME_ZONE = "Asia/Karachi";
 
-export const AUTHOR_LOCAL_PHOTO = "/images/asghar-ali-mubarak.jpg";
+export const AUTHOR_LOCAL_PHOTO = "/images/asghar-ali-mubarak-original.jpg";
+export const AUTHOR_HEADER_PHOTO = "/images/asghar-ali-mubarak-header.webp";
+export const AUTHOR_AVATAR_PHOTO = "/images/asghar-ali-mubarak-avatar.webp";
+export const AUTHOR_ABOUT_PHOTO = "/images/asghar-ali-mubarak-about.webp";
 export const HEADER_PORTRAIT_ALT = "Asghar Ali Mubarak";
 export const SITE_SHOW_NAME_UR = "اندر کی بات";
 
@@ -38,26 +42,32 @@ export const DEVELOPER_CREDIT = {
   descriptor: "Digital products, websites and software solutions",
 } as const;
 
+/** Preferred masthead order: Facebook, X, YouTube, LinkedIn, Instagram (+ TikTok if valid). */
 export const SOCIAL_LINKS = [
-  {
-    id: "youtube",
-    label: "YouTube",
-    href: "https://www.youtube.com/@AsgharaliMubarak/",
-  },
-  {
-    id: "instagram",
-    label: "Instagram",
-    href: "https://www.instagram.com/Asgharali.Mubarak/",
-  },
   {
     id: "facebook",
     label: "Facebook",
     href: "https://www.facebook.com/Asgharali.Mubarak/",
   },
   {
+    id: "x",
+    label: "X",
+    href: "",
+  },
+  {
+    id: "youtube",
+    label: "YouTube",
+    href: "https://www.youtube.com/@AsgharaliMubarak/",
+  },
+  {
     id: "linkedin",
     label: "LinkedIn",
     href: "https://www.linkedin.com/in/asghar-ali-mubarak-a67abb29/",
+  },
+  {
+    id: "instagram",
+    label: "Instagram",
+    href: "https://www.instagram.com/Asgharali.Mubarak/",
   },
   {
     id: "tiktok",

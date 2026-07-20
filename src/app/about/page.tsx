@@ -3,7 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { getSiteAuthor, resolveAuthorPhoto } from "@/lib/author";
-import { SITE_NAME, SITE_NAME_UR, SOCIAL_LINKS } from "@/lib/site";
+import { ShareButtons } from "@/components/ShareButtons";
+import { getSiteUrl, SITE_NAME, SITE_NAME_UR, SOCIAL_LINKS } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "About",
@@ -64,6 +65,15 @@ export default async function AboutPage() {
             </li>
           ))}
         </ul>
+
+        <section className="share-block" aria-label="Share this page">
+          <h2>Share this page</h2>
+          <ShareButtons
+            url={`${getSiteUrl()}/about`}
+            title={`About ${SITE_NAME}`}
+            variant="page"
+          />
+        </section>
 
         <p>
           <Link href="/contact" className="section-link">

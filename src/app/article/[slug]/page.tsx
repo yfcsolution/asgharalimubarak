@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { ArticleCard } from "@/components/ArticleCard";
 import { ArticleLayout } from "@/components/ArticleLayout";
 import { NewsSidebar } from "@/components/news-sidebar";
-import { getSiteUrl } from "@/lib/site";
+import { DEFAULT_OG_IMAGE, getSiteUrl } from "@/lib/site";
 import {
   displayTitleForPost,
   excerptText,
@@ -45,6 +45,7 @@ export async function generateMetadata({
   const description = excerptText(post, 160);
   const image = getPostImage(post);
   const url = `${getSiteUrl()}/article/${encodeURIComponent(slug)}`;
+  const fallbackOg = `${getSiteUrl()}${DEFAULT_OG_IMAGE}`;
 
   return {
     title: title.text,
@@ -68,13 +69,20 @@ export async function generateMetadata({
               height: image.height,
             },
           ]
-        : undefined,
+        : [
+            {
+              url: fallbackOg,
+              alt: "Asghar Ali Mubarak in a professional news studio",
+              width: 1536,
+              height: 1024,
+            },
+          ],
     },
     twitter: {
       card: "summary_large_image",
       title: title.text,
       description,
-      images: image ? [image.src] : undefined,
+      images: image ? [image.src] : [fallbackOg],
     },
   };
 }

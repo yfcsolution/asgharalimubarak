@@ -1,10 +1,11 @@
 import Link from "next/link";
 
+import { AdBanner } from "@/components/ads/AdBanner";
 import { ArticleCard } from "@/components/ArticleCard";
-import { EditorialBanner } from "@/components/EditorialBanner";
 import { LeadStory } from "@/components/LeadStory";
 import { LatestNewsTicker } from "@/components/latest-news-ticker";
 import { NewsSidebar } from "@/components/news-sidebar";
+import { SnapshotNotice } from "@/components/SnapshotNotice";
 import { SITE_NAME } from "@/lib/site";
 import {
   displayTitleForPost,
@@ -21,11 +22,12 @@ import {
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const [{ posts }, categories, tags] = await Promise.all([
-    getPosts({ page: 1, perPage: 14 }),
-    getNavCategories(),
-    getTags(12),
-  ]);
+  const [{ posts, fromSnapshot, snapshotMessage }, categories, tags] =
+    await Promise.all([
+      getPosts({ page: 1, perPage: 14 }),
+      getNavCategories(),
+      getTags(12),
+    ]);
 
   const [lead, ...rest] = posts;
   const secondary = rest.slice(0, 4);
@@ -56,7 +58,11 @@ export default async function HomePage() {
         updatedLabel={updatedLabel}
       />
 
-      <EditorialBanner />
+      {fromSnapshot ? <SnapshotNotice message={snapshotMessage} /> : null}
+
+      <div className="page-shell ad-leaderboard-wrap">
+        <AdBanner />
+      </div>
 
       <div className="page-shell content-with-sidebar">
         <div className="main-column">

@@ -2,15 +2,17 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { ArticleBody } from "@/components/ArticleBody";
 import { PostImage } from "@/components/PostImage";
-import { WordPressContent } from "@/components/WordPressContent";
+import { RecommendButton } from "@/components/RecommendButton";
+import { ShareButtons } from "@/components/ShareButtons";
 import {
   authorFromEmbedded,
   getPostAuthor,
   getSiteAuthor,
   resolveAuthorPhoto,
 } from "@/lib/author";
-import { getSiteUrl, SITE_NAME, SOCIAL_LINKS } from "@/lib/site";
+import { DEFAULT_OG_IMAGE, getSiteUrl, SITE_NAME } from "@/lib/site";
 import type { WpPost } from "@/lib/types";
 import {
   categoryPath,
@@ -78,7 +80,7 @@ export async function ArticleLayout({
     },
     image: image?.src
       ? [image.src]
-      : [`${getSiteUrl()}/images/asghar-ali-mubarak.jpg`],
+      : [`${getSiteUrl()}${DEFAULT_OG_IMAGE}`],
     mainEntityOfPage: shareUrl,
     inLanguage: display.lang === "ur" ? "ur" : "en",
   };
@@ -184,7 +186,11 @@ export async function ArticleLayout({
           ) : null}
         </figure>
 
-        <WordPressContent html={post.content?.rendered ?? ""} />
+        <ArticleBody html={post.content?.rendered ?? ""} />
+
+        <div className="article-actions">
+          <RecommendButton postId={post.id} />
+        </div>
 
         {tags.length > 0 ? (
           <section className="article-tags" aria-label="Tags">
@@ -207,40 +213,7 @@ export async function ArticleLayout({
 
         <section className="share-block" aria-label="Share">
           <h2 className="sidebar-heading">Share</h2>
-          <ul className="share-links">
-            <li>
-              <a
-                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Facebook
-              </a>
-            </li>
-            <li>
-              <a
-                href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(display.text)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                X
-              </a>
-            </li>
-            <li>
-              <a
-                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LinkedIn
-              </a>
-            </li>
-            <li>
-              <a href={SOCIAL_LINKS[0].href} target="_blank" rel="noopener noreferrer">
-                YouTube
-              </a>
-            </li>
-          </ul>
+          <ShareButtons url={shareUrl} title={display.text} variant="full" />
         </section>
 
         {related}

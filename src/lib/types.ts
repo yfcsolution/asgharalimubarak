@@ -93,6 +93,8 @@ export interface PaginatedPosts {
   totalPages: number;
   page: number;
   perPage: number;
+  fromSnapshot?: boolean;
+  snapshotMessage?: string;
 }
 
 export interface FeaturedImageData {

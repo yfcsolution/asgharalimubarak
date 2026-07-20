@@ -5,6 +5,7 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import {
+  DEFAULT_OG_IMAGE,
   SITE_DESCRIPTION,
   SITE_NAME,
   SITE_NAME_UR,
@@ -62,10 +63,10 @@ export const metadata: Metadata = {
     url: siteUrl,
     images: [
       {
-        url: "/images/asghar-ali-mubarak.jpg",
-        width: 900,
-        height: 900,
-        alt: `${SITE_NAME} portrait`,
+        url: DEFAULT_OG_IMAGE,
+        width: 1536,
+        height: 1024,
+        alt: "Asghar Ali Mubarak in a professional news studio",
       },
     ],
   },
@@ -73,7 +74,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${SITE_NAME} | ${SITE_NAME_UR}`,
     description: SITE_DESCRIPTION,
-    images: ["/images/asghar-ali-mubarak.jpg"],
+    images: [DEFAULT_OG_IMAGE],
   },
   alternates: {
     canonical: siteUrl,

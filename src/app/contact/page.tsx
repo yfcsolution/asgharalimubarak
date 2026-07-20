@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { ContactQuickLinks } from "@/components/WhatsAppFloat";
+import { ShareButtons } from "@/components/ShareButtons";
 import { SocialLinksList } from "@/components/SocialIcons";
 import {
   CONTACT_EMAIL,
@@ -9,6 +10,7 @@ import {
   SITE_NAME,
   WHATSAPP_URL,
   getActiveSocialLinks,
+  getSiteUrl,
 } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -48,6 +50,15 @@ export default function ContactPage() {
 
         <h2>Follow</h2>
         <SocialLinksList links={socialLinks} className="footer-social" showLabels />
+
+        <section className="share-block" aria-label="Share this page">
+          <h2>Share this page</h2>
+          <ShareButtons
+            url={`${getSiteUrl()}/contact`}
+            title={`Contact ${SITE_NAME}`}
+            variant="page"
+          />
+        </section>
 
         <form className="contact-form" action={MAILTO_URL} method="get">
           <label htmlFor="name">

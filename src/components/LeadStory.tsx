@@ -96,7 +96,7 @@ export function LeadStory({
 
         <div className="lead-actions">
           <Link href={href} className="btn-primary">
-            Read full story
+            Read Full Story →
           </Link>
           <ShareButtons url={shareUrl} title={title.text} variant="compact" />
           <RecommendButton postId={post.id} />

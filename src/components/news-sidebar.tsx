@@ -4,10 +4,15 @@ import Link from "next/link";
 import { SidebarAd } from "@/components/ads/SidebarAd";
 import { SidebarSecondaryAd } from "@/components/ads/SidebarSecondaryAd";
 import { getSiteAuthor, resolveAuthorPhoto } from "@/lib/author";
+import {
+  MAX_SIDEBAR_CATEGORIES,
+  sortCategoriesEditorially,
+} from "@/lib/category-config";
 import { SITE_NAME } from "@/lib/site";
 import type { WpCategory, WpPost, WpTag } from "@/lib/types";
 import {
   categoryPath,
+  decodeHtml,
   displayTitleForPost,
   formatCompactDate,
   getPostCategories,
@@ -20,6 +25,7 @@ type NewsSidebarProps = {
   categories: WpCategory[];
   tags?: WpTag[];
   picks: WpPost[];
+  activeCategorySlug?: string;
 };
 
 export async function NewsSidebar({
@@ -27,9 +33,13 @@ export async function NewsSidebar({
   categories,
   tags = [],
   picks,
+  activeCategorySlug,
 }: NewsSidebarProps) {
   const author = await getSiteAuthor();
   const photo = resolveAuthorPhoto(author);
+  const orderedCategories = sortCategoriesEditorially(categories);
+  const visibleCategories = orderedCategories.slice(0, MAX_SIDEBAR_CATEGORIES);
+  const hasMoreCategories = orderedCategories.length > visibleCategories.length;
 
   return (
     <aside className="news-sidebar" aria-label="Sidebar">
@@ -45,7 +55,9 @@ export async function NewsSidebar({
             const postCategories = getPostCategories(post).filter(
               (category) => category.slug !== "uncategorized",
             );
-            const sourceLabel = postCategories[0]?.name;
+            const sourceLabel = postCategories[0]
+              ? decodeHtml(postCategories[0].name)
+              : null;
 
             return (
               <li key={post.id} className="sidebar-item">
@@ -93,19 +105,32 @@ export async function NewsSidebar({
         </ul>
       </section>
 
-      {categories.length > 0 ? (
+      {visibleCategories.length > 0 ? (
         <section className="sidebar-block">
           <h2 className="sidebar-heading">Categories</h2>
           <ul className="sidebar-categories">
-            {categories.map((category) => (
-              <li key={category.id}>
-                <Link href={categoryPath(category.slug)} dir="auto">
-                  <span>{category.name}</span>
-                  <span>{category.count}</span>
-                </Link>
-              </li>
-            ))}
+            {visibleCategories.map((category) => {
+              const active = activeCategorySlug === category.slug;
+              return (
+                <li key={category.id}>
+                  <Link
+                    href={categoryPath(category.slug)}
+                    dir="auto"
+                    className={active ? "is-active" : undefined}
+                    aria-current={active ? "page" : undefined}
+                  >
+                    <span>{decodeHtml(category.name)}</span>
+                    <span>{category.count}</span>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
+          {hasMoreCategories ? (
+            <Link href="/latest" className="section-link sidebar-view-all">
+              View all sections
+            </Link>
+          ) : null}
         </section>
       ) : tags.length > 0 ? (
         <section className="sidebar-block">

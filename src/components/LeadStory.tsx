@@ -18,7 +18,13 @@ import {
   stripHtml,
 } from "@/lib/utils";
 
-export function LeadStory({ post }: { post: WpPost }) {
+export function LeadStory({
+  post,
+  headingLevel = "h1",
+}: {
+  post: WpPost;
+  headingLevel?: "h1" | "h2";
+}) {
   const title = displayTitleForPost(post);
   const excerpt = getDisplayExcerpt(
     stripHtml(post.excerpt?.rendered || ""),
@@ -32,6 +38,7 @@ export function LeadStory({ post }: { post: WpPost }) {
     (category) => category.slug !== "uncategorized",
   );
   const author = getPostAuthor(post);
+  const HeadingTag = headingLevel;
 
   return (
     <section className="lead-story" aria-labelledby="lead-story-title">
@@ -57,7 +64,7 @@ export function LeadStory({ post }: { post: WpPost }) {
           )}
         </p>
 
-        <h1 id="lead-story-title" className="lead-title">
+        <HeadingTag id="lead-story-title" className="lead-title">
           <Link
             href={href}
             dir={title.dir}
@@ -66,7 +73,7 @@ export function LeadStory({ post }: { post: WpPost }) {
           >
             {title.text}
           </Link>
-        </h1>
+        </HeadingTag>
 
         <span className="sr-only">{title.fullText}</span>
 

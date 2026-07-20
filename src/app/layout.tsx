@@ -6,6 +6,9 @@ import { Header } from "@/components/Header";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import {
   DEFAULT_OG_IMAGE,
+  NEWS_BANNER_ALT,
+  NEWS_BANNER_HEIGHT,
+  NEWS_BANNER_WIDTH,
   SITE_DESCRIPTION,
   SITE_NAME,
   SITE_NAME_UR,
@@ -64,9 +67,9 @@ export const metadata: Metadata = {
     images: [
       {
         url: DEFAULT_OG_IMAGE,
-        width: 1536,
-        height: 1024,
-        alt: "Asghar Ali Mubarak in a professional news studio",
+        width: NEWS_BANNER_WIDTH,
+        height: NEWS_BANNER_HEIGHT,
+        alt: NEWS_BANNER_ALT,
       },
     ],
   },

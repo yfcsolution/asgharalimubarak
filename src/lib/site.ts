@@ -16,6 +16,8 @@ export const AUTHOR_LOCAL_PHOTO = "/images/asghar-ali-mubarak.jpg";
 export const NEWS_BANNER_IMAGE = "/images/asghar-ali-mubarak-news-banner.webp";
 export const NEWS_BANNER_SOURCE = "/images/asghar-ali-mubarak-news-banner-source.png";
 export const NEWS_BANNER_ALT = "Asghar Ali Mubarak in a professional news studio";
+export const NEWS_BANNER_WIDTH = 1920;
+export const NEWS_BANNER_HEIGHT = 800;
 /** Default Open Graph image when no article-specific image exists. */
 export const DEFAULT_OG_IMAGE = NEWS_BANNER_IMAGE;
 

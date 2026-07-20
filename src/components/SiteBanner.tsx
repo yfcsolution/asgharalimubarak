@@ -5,6 +5,7 @@ import {
   NEWS_BANNER_IMAGE,
   SITE_NAME,
   SITE_NAME_UR,
+  SITE_TAGLINE,
   SITE_TAGLINE_UR,
 } from "@/lib/site";
 

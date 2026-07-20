@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { SidebarAd } from "@/components/ads/SidebarAd";
+import { SidebarSecondaryAd } from "@/components/ads/SidebarSecondaryAd";
 import { getSiteAuthor, resolveAuthorPhoto } from "@/lib/author";
 import { SITE_NAME } from "@/lib/site";
 import type { WpCategory, WpPost, WpTag } from "@/lib/types";
@@ -9,6 +10,7 @@ import {
   categoryPath,
   displayTitleForPost,
   formatCompactDate,
+  getPostCategories,
   getPostImage,
   postPath,
 } from "@/lib/utils";
@@ -31,12 +33,20 @@ export async function NewsSidebar({
 
   return (
     <aside className="news-sidebar" aria-label="Sidebar">
+      <SidebarAd />
+      <SidebarSecondaryAd />
+
       <section className="sidebar-block">
         <h2 className="sidebar-heading">Latest News</h2>
         <ul className="sidebar-list">
           {latest.map((post) => {
             const title = displayTitleForPost(post);
             const image = getPostImage(post);
+            const postCategories = getPostCategories(post).filter(
+              (category) => category.slug !== "uncategorized",
+            );
+            const sourceLabel = postCategories[0]?.name;
+
             return (
               <li key={post.id} className="sidebar-item">
                 <Link href={postPath(post.slug)} className="sidebar-thumb-link">
@@ -48,6 +58,7 @@ export async function NewsSidebar({
                         width={72}
                         height={54}
                         className="object-cover"
+                        loading="lazy"
                       />
                     </span>
                   ) : (
@@ -66,15 +77,21 @@ export async function NewsSidebar({
                   >
                     {title.text}
                   </Link>
-                  <time dateTime={post.date}>{formatCompactDate(post.date)}</time>
+                  <p className="sidebar-item-meta">
+                    <time dateTime={post.date}>{formatCompactDate(post.date)}</time>
+                    {sourceLabel ? (
+                      <>
+                        {" · "}
+                        <span dir="auto">{sourceLabel}</span>
+                      </>
+                    ) : null}
+                  </p>
                 </div>
               </li>
             );
           })}
         </ul>
       </section>
-
-      <SidebarAd />
 
       {categories.length > 0 ? (
         <section className="sidebar-block">
@@ -137,6 +154,7 @@ export async function NewsSidebar({
               width={64}
               height={64}
               className="author-photo author-photo-sm"
+              loading="lazy"
             />
           ) : null}
           <div>

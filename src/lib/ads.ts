@@ -1,8 +1,14 @@
 import type { AdCampaign } from "@/data/ads";
-import { LOCAL_AD_CAMPAIGNS } from "@/data/ads";
+import {
+  LOCAL_AD_CAMPAIGNS,
+  SLICE_N_STORY_URL,
+  YFC_SOLUTION_URL,
+} from "@/data/ads";
 
 const SAFE_URL_PATTERN = /^https?:\/\//i;
 const BLOCKED_URL_PATTERN = /^(javascript|data):/i;
+
+const ALLOWED_DESTINATIONS = new Set([SLICE_N_STORY_URL, YFC_SOLUTION_URL]);
 
 export function isSafeAdUrl(url: string): boolean {
   const trimmed = url.trim();
@@ -11,9 +17,13 @@ export function isSafeAdUrl(url: string): boolean {
   return SAFE_URL_PATTERN.test(trimmed);
 }
 
+export function isAllowedAdDestination(url: string): boolean {
+  return isSafeAdUrl(url) && ALLOWED_DESTINATIONS.has(url.trim());
+}
+
 export function isCampaignActive(campaign: AdCampaign, now = Date.now()): boolean {
   if (!campaign.enabled) return false;
-  if (!isSafeAdUrl(campaign.destinationUrl)) return false;
+  if (!isAllowedAdDestination(campaign.destinationUrl)) return false;
 
   if (campaign.startAt) {
     const start = Date.parse(campaign.startAt);
@@ -64,7 +74,8 @@ export async function loadAdCampaigns(): Promise<AdCampaign[]> {
         typeof campaign.destinationUrl === "string" &&
         typeof campaign.alt === "string" &&
         typeof campaign.placement === "string" &&
-        typeof campaign.enabled === "boolean",
+        typeof campaign.enabled === "boolean" &&
+        isAllowedAdDestination(campaign.destinationUrl),
     );
 
     return validated.length > 0 ? validated : LOCAL_AD_CAMPAIGNS;

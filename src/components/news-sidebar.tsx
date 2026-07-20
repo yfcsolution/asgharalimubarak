@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { SidebarAd } from "@/components/ads/SidebarAd";
 import { getSiteAuthor, resolveAuthorPhoto } from "@/lib/author";
 import { SITE_NAME } from "@/lib/site";
 import type { WpCategory, WpPost, WpTag } from "@/lib/types";
@@ -72,6 +73,8 @@ export async function NewsSidebar({
           })}
         </ul>
       </section>
+
+      <SidebarAd />
 
       {categories.length > 0 ? (
         <section className="sidebar-block">

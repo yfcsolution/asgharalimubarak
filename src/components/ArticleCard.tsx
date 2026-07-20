@@ -1,6 +1,8 @@
 import Link from "next/link";
 
+import { ShareButtons } from "@/components/ShareButtons";
 import { LinkedPostImage } from "@/components/PostImage";
+import { getSiteUrl } from "@/lib/site";
 import type { WpPost } from "@/lib/types";
 import {
   categoryPath,
@@ -32,6 +34,7 @@ export function ArticleCard({
     featured ? 180 : 120,
   );
   const href = postPath(post.slug);
+  const shareUrl = `${getSiteUrl()}${href}`;
   const image = getPostImage(post);
   const categories = getPostCategories(post).filter(
     (category) => category.slug !== "uncategorized",
@@ -98,6 +101,13 @@ export function ArticleCard({
             </>
           ) : null}
         </p>
+
+        <ShareButtons
+          url={shareUrl}
+          title={title.text}
+          variant="compact"
+          className="article-card-share"
+        />
       </div>
     </article>
   );

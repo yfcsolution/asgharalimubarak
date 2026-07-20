@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import { BannerPartnerAd } from "@/components/BannerPartnerAd";
 import {
   NEWS_BANNER_ALT,
   NEWS_BANNER_IMAGE,
@@ -56,6 +57,7 @@ export function SiteBanner({
             </p>
           ) : null}
         </div>
+        <BannerPartnerAd compact={isCompact} />
       </div>
 
       {hidePortrait ? (

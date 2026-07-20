@@ -13,6 +13,32 @@ export const UPDATE_THRESHOLD_MS = 10 * 60 * 1000;
 export const PAKISTAN_TIME_ZONE = "Asia/Karachi";
 
 export const AUTHOR_LOCAL_PHOTO = "/images/asghar-ali-mubarak.jpg";
+export const HEADER_PORTRAIT = "/images/asghar-ali-mubarak-header-portrait.webp";
+export const HEADER_PORTRAIT_ALT = "Asghar Ali Mubarak";
+export const SITE_SHOW_NAME_UR = "اندر کی بات";
+
+export const PIZZA_PROMO = {
+  enabled: true,
+  image: "/images/ads/pizza-promo.webp",
+  href:
+    process.env.NEXT_PUBLIC_PIZZA_PROMO_URL?.trim() ||
+    "https://example.com/pizza",
+  alt: "Pizza restaurant — order online",
+  label: "Sponsored",
+  width: 360,
+  height: 120,
+} as const;
+
+export type SitePromo = {
+  enabled: boolean;
+  href: string;
+};
+
+export function isPromoConfigured(promo: SitePromo): boolean {
+  const href = promo.href.trim();
+  return href.length > 0 && /^https?:\/\//i.test(href);
+}
+
 export const NEWS_BANNER_IMAGE = "/images/asghar-ali-mubarak-news-banner.webp";
 export const NEWS_BANNER_SOURCE = "/images/asghar-ali-mubarak-news-banner-source.png";
 export const NEWS_BANNER_ALT = "Asghar Ali Mubarak in a professional news studio";

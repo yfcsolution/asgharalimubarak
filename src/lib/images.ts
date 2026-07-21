@@ -120,6 +120,16 @@ function candidatesFromMedia(media: WpFeaturedMedia): Candidate[] {
   return candidates;
 }
 
+function parseOrigSize(value: string | undefined): {
+  width?: number;
+  height?: number;
+} {
+  if (!value) return {};
+  const match = value.match(/^(\d+)\s*,\s*(\d+)$/);
+  if (!match) return {};
+  return { width: Number(match[1]), height: Number(match[2]) };
+}
+
 function extractFromHtml(html: string | undefined): Candidate | null {
   if (!html) return null;
 
@@ -134,12 +144,14 @@ function extractFromHtml(html: string | undefined): Candidate | null {
       attrs[match[1].toLowerCase()] = match[3];
     }
 
-    const width = Number(attrs.width) || undefined;
-    const height = Number(attrs.height) || undefined;
+    const orig = parseOrigSize(attrs["data-orig-size"]);
+    const width = Number(attrs.width) || orig.width || undefined;
+    const height = Number(attrs.height) || orig.height || undefined;
 
     const urlCandidates = [
       attrs["data-orig-file"],
       attrs["data-large-file"],
+      attrs["data-medium-file"],
       attrs.src,
     ];
 
@@ -157,7 +169,9 @@ function extractFromHtml(html: string | undefined): Candidate | null {
             ? 80
             : raw === attrs["data-large-file"]
               ? 40
-              : 0),
+              : raw === attrs["data-medium-file"]
+                ? 20
+                : 0),
       });
     }
 

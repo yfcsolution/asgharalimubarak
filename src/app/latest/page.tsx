@@ -4,6 +4,7 @@ import { ArticleCard } from "@/components/ArticleCard";
 import { NewsSidebar } from "@/components/news-sidebar";
 import { Pagination } from "@/components/Pagination";
 import { SnapshotNotice } from "@/components/SnapshotNotice";
+import type { PaginatedPosts, WpCategory, WpTag } from "@/lib/types";
 import { getPosts, getNavCategories, getTags } from "@/lib/wordpress";
 
 export const revalidate = 60;
@@ -18,16 +19,51 @@ type LatestPageProps = {
   searchParams: Promise<{ page?: string }>;
 };
 
+async function safePosts(
+  options: Parameters<typeof getPosts>[0],
+): Promise<PaginatedPosts> {
+  try {
+    return await getPosts(options);
+  } catch {
+    return {
+      posts: [],
+      total: 0,
+      totalPages: 0,
+      page: options?.page ?? 1,
+      perPage: options?.perPage ?? 12,
+      fromSnapshot: true,
+      snapshotMessage: "Newsroom feed temporarily unavailable.",
+    };
+  }
+}
+
+async function safeCategories(): Promise<WpCategory[]> {
+  try {
+    return await getNavCategories();
+  } catch {
+    return [];
+  }
+}
+
+async function safeTags(limit: number): Promise<WpTag[]> {
+  try {
+    return await getTags(limit);
+  } catch {
+    return [];
+  }
+}
+
 export default async function LatestPage({ searchParams }: LatestPageProps) {
   const { page: pageParam } = await searchParams;
   const page = Math.max(1, Number(pageParam) || 1);
 
-  const [{ posts, totalPages, fromSnapshot, snapshotMessage }, categories, tags, sidebarLatest] =
+  // No category filter: every published post from every category, newest first.
+  const [{ posts, totalPages, total, fromSnapshot, snapshotMessage }, categories, tags, sidebarLatest] =
     await Promise.all([
-      getPosts({ page, mode: "light" }),
-      getNavCategories(),
-      getTags(10),
-      getPosts({ page: 1, perPage: 5, mode: "light" }),
+      safePosts({ page, mode: "light" }),
+      safeCategories(),
+      safeTags(10),
+      safePosts({ page: 1, perPage: 5, mode: "light" }),
     ]);
 
   return (
@@ -38,7 +74,10 @@ export default async function LatestPage({ searchParams }: LatestPageProps) {
           <p lang="ur" dir="rtl">
             تازہ ترین انگریزی و اردو خبریں
           </p>
-          <p>Every published report from the newsroom, newest first.</p>
+          <p>
+            Every published report from all categories, newest first
+            {total > 0 ? ` · ${total.toLocaleString()} stories` : ""}.
+          </p>
         </header>
 
         {fromSnapshot ? <SnapshotNotice message={snapshotMessage} /> : null}
@@ -50,7 +89,9 @@ export default async function LatestPage({ searchParams }: LatestPageProps) {
             ))}
           </div>
         ) : (
-          <p className="empty-state">No published posts are available right now.</p>
+          <p className="empty-state">
+            No published posts are available right now. Please try again shortly.
+          </p>
         )}
 
         <Pagination currentPage={page} totalPages={totalPages} basePath="/latest" />

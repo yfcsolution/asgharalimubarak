@@ -12,6 +12,8 @@ import {
   SITE_SLOGAN,
 } from "@/lib/site";
 
+const HOMEPAGE_ARIA_LABEL = "Go to Asghar Ali Mubarak homepage";
+
 type SiteMastheadProps = {
   socialLinks: SocialLink[];
 };
@@ -38,7 +40,11 @@ export function SiteMasthead({ socialLinks }: SiteMastheadProps) {
 
       <div className="site-masthead-inner">
         <div className="site-masthead-left">
-          <Link href="/" className="site-masthead-portrait-link">
+          <Link
+            href="/"
+            className="site-masthead-brand-link"
+            aria-label={HOMEPAGE_ARIA_LABEL}
+          >
             <Image
               src={AUTHOR_HEADER_PHOTO}
               alt={HEADER_PORTRAIT_ALT}
@@ -47,16 +53,20 @@ export function SiteMasthead({ socialLinks }: SiteMastheadProps) {
               className="site-masthead-portrait"
               priority
             />
+            <div className="site-masthead-urdu" lang="ur" dir="rtl">
+              <p className="site-masthead-show">{SITE_SHOW_NAME_UR}</p>
+              <span className="site-masthead-urdu-divider" aria-hidden="true" />
+              <p className="site-masthead-name-ur-side">{SITE_NAME_UR}</p>
+            </div>
           </Link>
-          <div className="site-masthead-urdu" lang="ur" dir="rtl">
-            <p className="site-masthead-show">{SITE_SHOW_NAME_UR}</p>
-            <span className="site-masthead-urdu-divider" aria-hidden="true" />
-            <p className="site-masthead-name-ur-side">{SITE_NAME_UR}</p>
-          </div>
         </div>
 
         <div className="site-masthead-brand">
-          <Link href="/" className="site-masthead-lockup">
+          <Link
+            href="/"
+            className="site-masthead-lockup"
+            aria-label={HOMEPAGE_ARIA_LABEL}
+          >
             <span className="site-masthead-name-en" lang="en">
               {SITE_NAME}
             </span>

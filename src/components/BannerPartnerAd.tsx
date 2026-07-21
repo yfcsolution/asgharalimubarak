@@ -43,7 +43,7 @@ export function BannerPartnerAd({ compact = false }: { compact?: boolean }) {
   return (
     <aside
       className={`banner-partner-ad${compact ? " banner-partner-ad-compact" : ""}`}
-      aria-label="Sponsored partner advertisement"
+      aria-label="Advertisement"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}
@@ -58,12 +58,12 @@ export function BannerPartnerAd({ compact = false }: { compact?: boolean }) {
         target="_blank"
         rel="sponsored noopener noreferrer"
         className="banner-partner-ad-link"
-        aria-label={`Sponsored: ${DEVELOPER_CREDIT.company} — ${DEVELOPER_CREDIT.descriptor}`}
+        aria-label={`Advertisement: ${DEVELOPER_CREDIT.company} — ${DEVELOPER_CREDIT.descriptor}`}
         onClick={() =>
           trackEvent("ad_click", { ad_id: "yfc-banner-partner", placement: "header" })
         }
       >
-        <span className="banner-partner-ad-label">Sponsored</span>
+        <span className="banner-partner-ad-label ad-label">Advertisement</span>
         <span className="banner-partner-ad-brand">{DEVELOPER_CREDIT.company}</span>
         <span className="banner-partner-ad-tagline" aria-live="polite">
           {message}

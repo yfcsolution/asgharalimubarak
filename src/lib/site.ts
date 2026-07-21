@@ -88,17 +88,19 @@ export function getActiveSocialLinks(): SocialLink[] {
   });
 }
 
+import {
+  getConfiguredWordPressApiUrl,
+  WORDPRESS_DIRECT_API_URL,
+  WORDPRESS_PUBLIC_API_URL,
+} from "@/lib/wordpress-api";
+
 export function getSiteUrl(): string {
   const url = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
   return url && url.length > 0 ? url : "http://localhost:3000";
 }
 
 export function getWordPressApiUrl(): string {
-  const url = process.env.WORDPRESS_API_URL?.replace(/\/$/, "");
-  if (!url) {
-    throw new Error(
-      "WORDPRESS_API_URL is not set. Add it to your environment variables.",
-    );
-  }
-  return url;
+  return getConfiguredWordPressApiUrl();
 }
+
+export { WORDPRESS_PUBLIC_API_URL, WORDPRESS_DIRECT_API_URL };

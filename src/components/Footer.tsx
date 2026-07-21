@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { ContactQuickLinks } from "@/components/WhatsAppFloat";
 import { SocialLinksList } from "@/components/SocialIcons";
+import { getCategoryCanonicalSlug } from "@/lib/category-config";
 import {
   DEVELOPER_CREDIT,
   SITE_NAME,
@@ -15,7 +16,11 @@ import { getNavCategories } from "@/lib/wordpress";
 export async function Footer() {
   const year = new Date().getFullYear();
   const socialLinks = getActiveSocialLinks();
-  const categories = (await getNavCategories()).slice(0, 8);
+  const categories = await getNavCategories();
+  const footerCategories = categories.slice(0, 8);
+  const bloggerArchive = categories.find(
+    (category) => getCategoryCanonicalSlug(category) === "blogger-archive",
+  );
 
   return (
     <footer className="site-footer">
@@ -29,29 +34,33 @@ export async function Footer() {
           <p className="footer-copy">{SITE_SLOGAN}</p>
         </div>
 
-        <nav aria-label="Quick links">
-          <p className="footer-eyebrow">Quick Links</p>
+        <nav aria-label="Site pages">
+          <p className="footer-eyebrow">Pages</p>
           <ul className="footer-links">
-            <li>
-              <Link href="/">Home</Link>
-            </li>
-            <li>
-              <Link href="/latest">Latest</Link>
-            </li>
             <li>
               <Link href="/about">About</Link>
             </li>
             <li>
               <Link href="/contact">Contact</Link>
             </li>
+            <li>
+              <Link href="/latest">Latest</Link>
+            </li>
+            {bloggerArchive ? (
+              <li>
+                <Link href={categoryPath(bloggerArchive.slug)} dir="auto">
+                  {decodeHtml(bloggerArchive.name)}
+                </Link>
+              </li>
+            ) : null}
           </ul>
         </nav>
 
-        {categories.length > 0 ? (
+        {footerCategories.length > 0 ? (
           <nav aria-label="Footer categories">
             <p className="footer-eyebrow">Categories</p>
             <ul className="footer-links">
-              {categories.map((category) => (
+              {footerCategories.map((category) => (
                 <li key={category.id}>
                   <Link href={categoryPath(category.slug)} dir="auto">
                     {decodeHtml(category.name)}

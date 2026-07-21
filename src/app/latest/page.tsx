@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 
+import { AdBanner } from "@/components/ads/AdBanner";
 import { ArticleCard } from "@/components/ArticleCard";
+import { FeedUnavailablePanel } from "@/components/FeedUnavailablePanel";
 import { NewsSidebar } from "@/components/news-sidebar";
 import { Pagination } from "@/components/Pagination";
 import { SnapshotNotice } from "@/components/SnapshotNotice";
+import { hasEditorialPosts } from "@/lib/feed-status";
 import type { PaginatedPosts, WpCategory, WpTag } from "@/lib/types";
 import { getPosts, getNavCategories, getTags } from "@/lib/wordpress";
 
@@ -32,7 +35,7 @@ async function safePosts(
       page: options?.page ?? 1,
       perPage: options?.perPage ?? 12,
       fromSnapshot: true,
-      snapshotMessage: "Newsroom feed temporarily unavailable.",
+      feedUnavailable: true,
     };
   }
 }
@@ -57,17 +60,23 @@ export default async function LatestPage({ searchParams }: LatestPageProps) {
   const { page: pageParam } = await searchParams;
   const page = Math.max(1, Number(pageParam) || 1);
 
-  // No category filter: every published post from every category, newest first.
-  const [{ posts, totalPages, total, fromSnapshot, snapshotMessage }, categories, tags, sidebarLatest] =
-    await Promise.all([
-      safePosts({ page, mode: "light" }),
-      safeCategories(),
-      safeTags(10),
-      safePosts({ page: 1, perPage: 5, mode: "light" }),
-    ]);
+  const [feed, categories, tags, sidebarLatest] = await Promise.all([
+    safePosts({ page, mode: "light" }),
+    safeCategories(),
+    safeTags(10),
+    safePosts({ page: 1, perPage: 5, mode: "light" }),
+  ]);
+
+  const { posts, totalPages, total, fromSnapshot, snapshotMessage, feedUnavailable } =
+    feed;
+  const editorialAvailable = hasEditorialPosts(feed);
+  const showSnapshotNotice =
+    editorialAvailable && fromSnapshot && Boolean(snapshotMessage);
 
   return (
-    <div className="page-shell content-with-sidebar">
+    <div
+      className={`page-shell${editorialAvailable ? " content-with-sidebar" : " feed-unavailable-layout"}`}
+    >
       <div className="main-column">
         <header className="page-hero">
           <h1>Latest News</h1>
@@ -80,29 +89,37 @@ export default async function LatestPage({ searchParams }: LatestPageProps) {
           </p>
         </header>
 
-        {fromSnapshot ? <SnapshotNotice message={snapshotMessage} /> : null}
+        {feedUnavailable ? <FeedUnavailablePanel message={snapshotMessage} /> : null}
 
-        {posts.length > 0 ? (
+        {showSnapshotNotice ? <SnapshotNotice message={snapshotMessage} /> : null}
+
+        {editorialAvailable ? (
           <div className="article-grid three-col">
             {posts.map((post) => (
               <ArticleCard key={post.id} post={post} />
             ))}
           </div>
-        ) : (
-          <p className="empty-state">
-            No published posts are available right now. Please try again shortly.
-          </p>
-        )}
+        ) : null}
 
-        <Pagination currentPage={page} totalPages={totalPages} basePath="/latest" />
+        {editorialAvailable && totalPages > 1 ? (
+          <Pagination currentPage={page} totalPages={totalPages} basePath="/latest" />
+        ) : null}
+
+        {!editorialAvailable ? (
+          <div className="feed-unavailable-ads">
+            <AdBanner />
+          </div>
+        ) : null}
       </div>
 
-      <NewsSidebar
-        latest={sidebarLatest.posts}
-        categories={categories}
-        tags={tags}
-        picks={posts.slice(0, 5)}
-      />
+      {editorialAvailable ? (
+        <NewsSidebar
+          latest={sidebarLatest.posts}
+          categories={categories}
+          tags={tags}
+          picks={posts.slice(0, 5)}
+        />
+      ) : null}
     </div>
   );
 }

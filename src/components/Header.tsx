@@ -16,10 +16,6 @@ function buildNavItems(
     toNavItem("/", "Home"),
     toNavItem("/latest", "Latest"),
   ];
-  const fixedEnd = [
-    toNavItem("/about", "About"),
-    toNavItem("/contact", "Contact"),
-  ];
 
   const { primary: primaryCategories, more: moreCategories } =
     splitNavCategories(categories);
@@ -33,9 +29,9 @@ function buildNavItems(
   const allCategoryItems = [...primaryCategoryItems, ...moreCategoryItems];
 
   return {
-    primary: [...fixedStart, ...primaryCategoryItems, ...fixedEnd],
+    primary: [...fixedStart, ...primaryCategoryItems],
     more: moreCategoryItems,
-    all: [...fixedStart, ...allCategoryItems, ...fixedEnd],
+    all: [...fixedStart, ...allCategoryItems],
   };
 }
 

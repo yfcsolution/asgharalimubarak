@@ -2,19 +2,20 @@
 
 ## Slice 'n' Story
 
-1. Save the approved storefront photo as `slice-n-story-source.jpg` in this folder.
-2. Run `npm run ads:generate` from the project root.
-3. Generated files:
-   - `slice-n-story-sidebar.webp`
-   - `slice-n-story-leaderboard.webp`
-   - `slice-n-story-mobile.webp`
+Files:
+- `slice-n-story-source.jpg`
+- `slice-n-story-sidebar.webp`
+- `slice-n-story-leaderboard.webp`
+- `slice-n-story-mobile.webp`
 
-Slice campaigns stay disabled in `src/data/ads.ts` until the source file and generated WebP files exist.
+Destination (Google Maps location):
 
-Destination URL: `https://share.google/BFjmaS80FaZiyhrso`
+`https://share.google/qDvgIXVAYuhGaDCd5`
+
+Links open in a new tab with `rel="sponsored noopener noreferrer"`.
 
 ## YFC Solution
 
-YFC banners are generated locally with `npm run ads:generate` and do not require a source photo.
+YFC banners are generated with `npm run ads:generate`.
 
 Destination URL: `https://yfcsolution.com/`

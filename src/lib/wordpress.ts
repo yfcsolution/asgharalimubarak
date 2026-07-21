@@ -27,7 +27,6 @@ const LIST_FIELDS = [
   "link",
   "title",
   "excerpt",
-  "content",
   "author",
   "featured_media",
   "categories",
@@ -35,6 +34,22 @@ const LIST_FIELDS = [
   "jetpack_featured_media_url",
   "_links",
   "_embedded",
+].join(",");
+
+const LIST_FIELDS_LIGHT = [
+  "id",
+  "date",
+  "modified",
+  "slug",
+  "status",
+  "link",
+  "title",
+  "excerpt",
+  "author",
+  "featured_media",
+  "categories",
+  "tags",
+  "jetpack_featured_media_url",
 ].join(",");
 
 const SITEMAP_FIELDS = ["id", "date", "modified", "slug"].join(",");
@@ -194,17 +209,24 @@ export const getPosts = cache(async function getPosts(options: {
   perPage?: number;
   categories?: number | string;
   search?: string;
-  mode?: "list" | "sitemap";
+  mode?: "list" | "sitemap" | "light";
 } = {}): Promise<PaginatedPosts> {
   const page = Math.max(1, options.page ?? 1);
   const perPage = options.perPage ?? POSTS_PER_PAGE;
   const mode = options.mode ?? "list";
+  const fields =
+    mode === "sitemap"
+      ? SITEMAP_FIELDS
+      : mode === "light"
+        ? LIST_FIELDS_LIGHT
+        : LIST_FIELDS;
+  const useEmbed = mode === "list";
 
   try {
     const { data, headers } = await wpFetch<WpPost[]>("/posts", {
       status: "publish",
-      _embed: mode === "list" ? true : undefined,
-      _fields: mode === "sitemap" ? SITEMAP_FIELDS : LIST_FIELDS,
+      _embed: useEmbed ? true : undefined,
+      _fields: fields,
       page,
       per_page: perPage,
       categories: options.categories,
@@ -214,14 +236,14 @@ export const getPosts = cache(async function getPosts(options: {
     });
 
     const result: PaginatedPosts = {
-      posts: mode === "list" ? stripHeavyContent(data) : data,
+      posts: mode === "sitemap" ? data : stripHeavyContent(data),
       total: Number(headers.get("X-WP-Total") ?? data.length),
       totalPages: Number(headers.get("X-WP-TotalPages") ?? 1),
       page,
       perPage,
     };
 
-    if (page === 1 && !options.search && !options.categories) {
+    if (page === 1 && !options.search && !options.categories && mode === "list") {
       await persistSnapshot({ posts: data, pagination: result });
     }
 
@@ -240,7 +262,7 @@ export const getPosts = cache(async function getPosts(options: {
     });
 
     return {
-      posts: mode === "list" ? stripHeavyContent(filtered) : filtered,
+      posts: mode === "sitemap" ? filtered : stripHeavyContent(filtered),
       total: snapshot.pagination?.total ?? snapshot.posts.length,
       totalPages: snapshot.pagination?.totalPages ?? 1,
       page,

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Newsreader, Noto_Nastaliq_Urdu, Source_Sans_3 } from "next/font/google";
+import { Noto_Nastaliq_Urdu } from "next/font/google";
 
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
@@ -16,18 +16,6 @@ import {
 } from "@/lib/site";
 
 import "./globals.css";
-
-const newsreader = Newsreader({
-  variable: "--font-newsreader",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const sourceSans = Source_Sans_3({
-  variable: "--font-source-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 const notoNastaliq = Noto_Nastaliq_Urdu({
   variable: "--font-noto-nastaliq",
@@ -94,10 +82,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${newsreader.variable} ${sourceSans.variable} ${notoNastaliq.variable} h-full`}
-    >
+    <html lang="en" className={`${notoNastaliq.variable} h-full`}>
       <body className="site-shell antialiased">
         <Header />
         <main id="main-content" className="site-main">

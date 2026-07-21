@@ -8,6 +8,7 @@ import { FeedUnavailablePanel } from "@/components/FeedUnavailablePanel";
 import { LeadStory } from "@/components/LeadStory";
 import { LatestNewsTicker } from "@/components/latest-news-ticker";
 import { NewsSidebar } from "@/components/news-sidebar";
+import { SectionHeading } from "@/components/SectionHeading";
 import { SnapshotNotice } from "@/components/SnapshotNotice";
 import { getHomepageSectionCategories } from "@/lib/category-config";
 import { hasEditorialPosts } from "@/lib/feed-status";
@@ -149,15 +150,12 @@ export default async function HomePage() {
 
           {secondary.length > 0 ? (
             <section className="section" aria-labelledby="secondary-heading">
-              <div className="section-heading section-heading-accent">
-                <div>
-                  <h2 id="secondary-heading">Latest stories</h2>
-                  <p>Selected reports from the newsroom.</p>
-                </div>
-                <Link href="/latest" className="section-link">
-                  View all
-                </Link>
-              </div>
+              <SectionHeading
+                title="Latest Stories"
+                titleId="secondary-heading"
+                description="Selected reports from the newsroom."
+                href="/latest"
+              />
               <div className="article-grid two-col">
                 {secondary.map((post) => (
                   <ArticleCard key={post.id} post={post} />
@@ -170,15 +168,12 @@ export default async function HomePage() {
 
           {latestGrid.length > 0 ? (
             <section className="section" aria-labelledby="latest-heading">
-              <div className="section-heading">
-                <div>
-                  <h2 id="latest-heading">Latest news</h2>
-                  <p>Fresh coverage in English and Urdu.</p>
-                </div>
-                <Link href="/latest" className="section-link">
-                  View all
-                </Link>
-              </div>
+              <SectionHeading
+                title="Latest News"
+                titleId="latest-heading"
+                description="Fresh coverage in English and Urdu."
+                href="/latest"
+              />
               <div className="article-grid three-col">
                 {latestGrid.map((post) => (
                   <ArticleCard key={post.id} post={post} />
@@ -197,12 +192,11 @@ export default async function HomePage() {
 
           {categories.length === 0 && tags.length > 0 ? (
             <section className="section" aria-labelledby="topics-heading">
-              <div className="section-heading">
-                <div>
-                  <h2 id="topics-heading">Topics</h2>
-                  <p>Explore recent reporting by topic tag.</p>
-                </div>
-              </div>
+              <SectionHeading
+                title="Topics"
+                titleId="topics-heading"
+                description="Explore recent reporting by topic tag."
+              />
               <ul className="section-chip-row">
                 {tags.slice(0, 10).map((tag) => (
                   <li key={tag.id}>

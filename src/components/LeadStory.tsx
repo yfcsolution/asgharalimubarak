@@ -55,13 +55,12 @@ export function LeadStory({
 
       <div className="lead-story-content">
         <p className="lead-kicker">
+          <span className="lead-kicker-label">Top Story</span>
           {categories[0] ? (
             <Link href={categoryPath(categories[0].slug)} dir="auto">
               {categories[0].name}
             </Link>
-          ) : (
-            <span>Top Story</span>
-          )}
+          ) : null}
         </p>
 
         <HeadingTag id="lead-story-title" className="lead-title">

@@ -1,13 +1,15 @@
 import Link from "next/link";
 
-import { ContactQuickLinks } from "@/components/WhatsAppFloat";
 import { SocialLinksList } from "@/components/SocialIcons";
+import {
+  FOOTER_DESCRIPTION_EN,
+  FOOTER_DESCRIPTION_UR,
+} from "@/lib/about-content";
 import { getCategoryCanonicalSlug } from "@/lib/category-config";
 import {
   DEVELOPER_CREDIT,
   SITE_NAME,
   SITE_NAME_UR,
-  SITE_SLOGAN,
   getActiveSocialLinks,
 } from "@/lib/site";
 import { categoryPath, decodeHtml } from "@/lib/utils";
@@ -26,22 +28,22 @@ export async function Footer() {
     <footer className="site-footer">
       <div className="footer-inner footer-grid">
         <div className="footer-brand">
-          <p className="footer-eyebrow">About</p>
+          <p className="footer-eyebrow">AAM News</p>
           <p className="footer-title">{SITE_NAME}</p>
           <p className="footer-title-ur" lang="ur" dir="rtl">
             {SITE_NAME_UR}
           </p>
-          <p className="footer-copy">{SITE_SLOGAN}</p>
+          <p className="footer-copy">{FOOTER_DESCRIPTION_EN}</p>
+          <p className="footer-copy footer-copy-ur" lang="ur" dir="rtl">
+            {FOOTER_DESCRIPTION_UR}
+          </p>
         </div>
 
         <nav aria-label="Site pages">
           <p className="footer-eyebrow">Pages</p>
           <ul className="footer-links">
             <li>
-              <Link href="/about">About</Link>
-            </li>
-            <li>
-              <Link href="/contact">Contact</Link>
+              <Link href="/about">About &amp; Contact</Link>
             </li>
             <li>
               <Link href="/latest">Latest</Link>
@@ -72,9 +74,7 @@ export async function Footer() {
         ) : null}
 
         <div className="footer-contact">
-          <p className="footer-eyebrow">Contact</p>
-          <ContactQuickLinks className="footer-contact-links" />
-          <p className="footer-follow-label">Follow</p>
+          <p className="footer-eyebrow">Follow</p>
           <SocialLinksList links={socialLinks} className="footer-social" />
         </div>
 

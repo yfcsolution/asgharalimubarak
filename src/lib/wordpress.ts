@@ -187,11 +187,15 @@ async function persistSnapshot(partial: {
     tags: [],
   };
 
+  const mergedPosts = partial.posts
+    ? mergePostsById(existing.posts, partial.posts)
+    : existing.posts;
+
   await saveFullSnapshot(
     {
       ...existing,
       savedAt: new Date().toISOString(),
-      posts: partial.posts ?? existing.posts,
+      posts: mergedPosts,
       categories: partial.categories ?? existing.categories,
       tags: partial.tags ?? existing.tags,
       pagination: partial.pagination
@@ -204,6 +208,19 @@ async function persistSnapshot(partial: {
         : existing.pagination,
     },
     "site",
+  );
+}
+
+function mergePostsById(existing: WpPost[], incoming: WpPost[]): WpPost[] {
+  const byId = new Map<number, WpPost>();
+  for (const post of existing) {
+    byId.set(post.id, post);
+  }
+  for (const post of incoming) {
+    byId.set(post.id, post);
+  }
+  return Array.from(byId.values()).sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   );
 }
 
@@ -289,7 +306,8 @@ export const getPosts = cache(async function getPosts(options: {
       page === 1 &&
       !options.search &&
       !options.categories &&
-      (mode === "list" || mode === "light")
+      (mode === "list" || mode === "light") &&
+      perPage >= POSTS_PER_PAGE
     ) {
       await persistSnapshot({ posts, pagination: result });
     }
@@ -316,12 +334,13 @@ export const getPosts = cache(async function getPosts(options: {
       search: options.search,
     });
 
+    const total = snapshot.pagination?.total ?? snapshot.posts.length;
+    const totalPages = Math.max(1, Math.ceil(total / perPage));
+
     return {
       posts: mode === "sitemap" ? filtered : stripHeavyContent(filtered),
-      total: snapshot.pagination?.total ?? snapshot.posts.length,
-      totalPages:
-        snapshot.pagination?.totalPages ??
-        Math.max(1, Math.ceil((snapshot.pagination?.total ?? snapshot.posts.length) / perPage)),
+      total,
+      totalPages,
       page,
       perPage,
       fromSnapshot: true,

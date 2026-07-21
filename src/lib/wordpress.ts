@@ -6,7 +6,6 @@ import {
   isValidNavCategory,
   sortCategoriesEditorially,
 } from "@/lib/category-config";
-import { getPostImage } from "@/lib/images";
 import { POSTS_PER_PAGE, REVALIDATE_SECONDS, getWordPressApiUrl } from "@/lib/site";
 import type {
   PaginatedPosts,
@@ -32,31 +31,19 @@ const LIST_FIELDS = [
   "categories",
   "tags",
   "jetpack_featured_media_url",
-  "_links",
-  "_embedded",
 ].join(",");
 
-const LIST_FIELDS_LIGHT = [
-  "id",
-  "date",
-  "modified",
-  "slug",
-  "status",
-  "link",
-  "title",
-  "excerpt",
-  "author",
-  "featured_media",
-  "categories",
-  "tags",
-  "jetpack_featured_media_url",
-].join(",");
+const LIST_FIELDS_LIGHT = LIST_FIELDS;
+
+const CONTENT_IMAGE_FIELDS = ["id", "content"].join(",");
 
 const SITEMAP_FIELDS = ["id", "date", "modified", "slug"].join(",");
 
-const WP_TIMEOUT_MS = 8000;
+const WP_TIMEOUT_MS = 10000;
 const WP_MAX_RETRIES = 2;
 const SNAPSHOT_MESSAGE = "Showing the latest saved edition.";
+const FEED_UNAVAILABLE_MESSAGE =
+  "Newsroom feed temporarily unavailable. Please try again shortly.";
 
 async function wpFetchRaw<T>(
   path: string,
@@ -115,25 +102,76 @@ async function wpFetch<T>(
 }
 
 function stripHeavyContent(posts: WpPost[]): WpPost[] {
-  return posts.map((post) => {
-    const imageProbe = getPostImage(post);
-    void imageProbe;
-    return {
-      ...post,
-      content: post.content
-        ? {
-            rendered: summarizeContentForImages(post.content.rendered),
-            protected: post.content.protected,
-          }
-        : undefined,
-    };
-  });
+  return posts.map((post) => ({
+    ...post,
+    content: post.content
+      ? {
+          rendered: summarizeContentForImages(post.content.rendered),
+          protected: post.content.protected,
+        }
+      : undefined,
+  }));
 }
 
 function summarizeContentForImages(html: string): string {
   const images = html.match(/<img\b[^>]*>/gi) ?? [];
   if (images.length === 0) return "";
   return images.slice(0, 8).join("\n");
+}
+
+function postNeedsContentImage(post: WpPost): boolean {
+  if (post.jetpack_featured_media_url) return false;
+  if (post._embedded?.["wp:featuredmedia"]?.[0]?.source_url) return false;
+  if (extractHasInlineImage(post.content?.rendered)) return false;
+  if (extractHasInlineImage(post.excerpt?.rendered)) return false;
+  return true;
+}
+
+function extractHasInlineImage(html: string | undefined): boolean {
+  if (!html) return false;
+  return /<img\b/i.test(html);
+}
+
+/**
+ * Most posts on this WordPress.com site ship with featured_media: 0.
+ * Real images live inside post content HTML. Fetch only those posts'
+ * content (id + content fields) and keep just the <img> tags.
+ */
+async function enrichPostsWithContentImages(
+  posts: WpPost[],
+): Promise<WpPost[]> {
+  const missing = posts.filter(postNeedsContentImage);
+  if (missing.length === 0) return posts;
+
+  try {
+    const { data } = await wpFetch<WpPost[]>("/posts", {
+      include: missing.map((post) => post.id).join(","),
+      per_page: missing.length,
+      status: "publish",
+      _fields: CONTENT_IMAGE_FIELDS,
+    });
+
+    const contentById = new Map(
+      data.map((post) => [
+        post.id,
+        summarizeContentForImages(post.content?.rendered ?? ""),
+      ]),
+    );
+
+    return posts.map((post) => {
+      const rendered = contentById.get(post.id);
+      if (!rendered) return post;
+      return {
+        ...post,
+        content: {
+          rendered,
+          protected: false,
+        },
+      };
+    });
+  } catch {
+    return posts;
+  }
 }
 
 async function persistSnapshot(partial: {
@@ -220,12 +258,11 @@ export const getPosts = cache(async function getPosts(options: {
       : mode === "light"
         ? LIST_FIELDS_LIGHT
         : LIST_FIELDS;
-  const useEmbed = mode === "list";
 
   try {
+    // No category filter = every published post across all categories (newest first).
     const { data, headers } = await wpFetch<WpPost[]>("/posts", {
       status: "publish",
-      _embed: useEmbed ? true : undefined,
       _fields: fields,
       page,
       per_page: perPage,
@@ -235,23 +272,41 @@ export const getPosts = cache(async function getPosts(options: {
       order: "desc",
     });
 
+    const postsWithImages =
+      mode === "sitemap" ? data : await enrichPostsWithContentImages(data);
+    const posts =
+      mode === "sitemap" ? postsWithImages : stripHeavyContent(postsWithImages);
+
     const result: PaginatedPosts = {
-      posts: mode === "sitemap" ? data : stripHeavyContent(data),
+      posts,
       total: Number(headers.get("X-WP-Total") ?? data.length),
       totalPages: Number(headers.get("X-WP-TotalPages") ?? 1),
       page,
       perPage,
     };
 
-    if (page === 1 && !options.search && !options.categories && mode === "list") {
-      await persistSnapshot({ posts: data, pagination: result });
+    if (
+      page === 1 &&
+      !options.search &&
+      !options.categories &&
+      (mode === "list" || mode === "light")
+    ) {
+      await persistSnapshot({ posts, pagination: result });
     }
 
     return result;
   } catch {
     const snapshot = await readSnapshot("site");
     if (!snapshot || snapshot.posts.length === 0) {
-      throw new Error("WordPress unavailable and no saved snapshot exists");
+      return {
+        posts: [],
+        total: 0,
+        totalPages: 0,
+        page,
+        perPage,
+        fromSnapshot: true,
+        snapshotMessage: FEED_UNAVAILABLE_MESSAGE,
+      };
     }
 
     const filtered = filterSnapshotPosts(snapshot.posts, {
@@ -264,7 +319,9 @@ export const getPosts = cache(async function getPosts(options: {
     return {
       posts: mode === "sitemap" ? filtered : stripHeavyContent(filtered),
       total: snapshot.pagination?.total ?? snapshot.posts.length,
-      totalPages: snapshot.pagination?.totalPages ?? 1,
+      totalPages:
+        snapshot.pagination?.totalPages ??
+        Math.max(1, Math.ceil((snapshot.pagination?.total ?? snapshot.posts.length) / perPage)),
       page,
       perPage,
       fromSnapshot: true,

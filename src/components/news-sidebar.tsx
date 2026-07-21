@@ -186,7 +186,7 @@ export async function NewsSidebar({
             <p className="about-author-name">{author.name || SITE_NAME}</p>
             <p className="about-author-bio">{author.shortBio}</p>
             <Link href="/about" className="section-link">
-              Read full profile
+              About &amp; Contact
             </Link>
           </div>
         </div>

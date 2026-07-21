@@ -1,3 +1,4 @@
+import { BrandBar } from "@/components/BrandBar";
 import { DesktopNav, MobileNav, type NavItem } from "@/components/SiteNav";
 import { SiteMasthead } from "@/components/SiteMasthead";
 import type { SocialLink } from "@/lib/site";
@@ -15,6 +16,7 @@ export function HeaderLayout({ nav, socialLinks }: HeaderLayoutProps) {
   return (
     <header className="site-header">
       <SiteMasthead socialLinks={socialLinks} />
+      <BrandBar />
 
       <div className="nav-bar nav-bar-sticky">
         <div className="nav-bar-inner">

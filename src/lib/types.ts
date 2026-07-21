@@ -94,6 +94,7 @@ export interface PaginatedPosts {
   page: number;
   perPage: number;
   fromSnapshot?: boolean;
+  feedUnavailable?: boolean;
   snapshotMessage?: string;
 }
 

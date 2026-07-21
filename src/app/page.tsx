@@ -4,11 +4,13 @@ import { AdBanner } from "@/components/ads/AdBanner";
 import { ArticleCard } from "@/components/ArticleCard";
 import { CategoryNewsSection } from "@/components/CategoryNewsSection";
 import { CategoryStrip } from "@/components/CategoryStrip";
+import { FeedUnavailablePanel } from "@/components/FeedUnavailablePanel";
 import { LeadStory } from "@/components/LeadStory";
 import { LatestNewsTicker } from "@/components/latest-news-ticker";
 import { NewsSidebar } from "@/components/news-sidebar";
 import { SnapshotNotice } from "@/components/SnapshotNotice";
 import { getHomepageSectionCategories } from "@/lib/category-config";
+import { hasEditorialPosts } from "@/lib/feed-status";
 import { SITE_NAME } from "@/lib/site";
 import type { WpCategory, WpPost } from "@/lib/types";
 import {
@@ -78,12 +80,27 @@ async function buildCategorySections(
 }
 
 export default async function HomePage() {
-  const [{ posts, fromSnapshot, snapshotMessage }, categories, tags] =
-    await Promise.all([
-      getPosts({ page: 1, perPage: 20 }),
-      getNavCategories(),
-      getTags(12),
-    ]);
+  const [feed, categories, tags] = await Promise.all([
+    getPosts({ page: 1, perPage: 20 }),
+    getNavCategories(),
+    getTags(12),
+  ]);
+
+  const { posts, fromSnapshot, snapshotMessage } = feed;
+  const editorialAvailable = hasEditorialPosts(feed);
+  const showSnapshotNotice =
+    editorialAvailable && fromSnapshot && Boolean(snapshotMessage);
+
+  if (!editorialAvailable) {
+    return (
+      <div className="page-shell feed-unavailable-layout">
+        <FeedUnavailablePanel message={snapshotMessage} />
+        <div className="feed-unavailable-ads">
+          <AdBanner />
+        </div>
+      </div>
+    );
+  }
 
   const [lead, ...rest] = posts;
   const secondary = rest.slice(0, 4);
@@ -120,7 +137,7 @@ export default async function HomePage() {
         updatedLabel={updatedLabel}
       />
 
-      {fromSnapshot ? <SnapshotNotice message={snapshotMessage} /> : null}
+      {showSnapshotNotice ? <SnapshotNotice message={snapshotMessage} /> : null}
 
       <div className="page-shell ad-leaderboard-wrap">
         <AdBanner />

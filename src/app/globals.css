@@ -289,15 +289,33 @@ img {
 }
 
 .site-masthead-left {
-  display: grid;
-  grid-template-columns: auto auto;
-  gap: 0.65rem 0.75rem;
+  display: flex;
   align-items: center;
 }
 
+.site-masthead-brand-link,
 .site-masthead-portrait-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem 0.75rem;
   flex-shrink: 0;
   line-height: 0;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 0.35rem;
+}
+
+.site-masthead-brand-link:hover,
+.site-masthead-brand-link:focus-visible,
+.site-masthead-lockup:hover,
+.site-masthead-lockup:focus-visible {
+  color: inherit;
+}
+
+.site-masthead-brand-link:focus-visible,
+.site-masthead-lockup:focus-visible {
+  outline: 2px solid var(--brand-green);
+  outline-offset: 3px;
 }
 
 .site-masthead-urdu {
@@ -341,6 +359,7 @@ img {
   text-decoration: none;
   color: inherit;
   max-width: 100%;
+  border-radius: 0.35rem;
 }
 
 .site-masthead-lockup:hover,
@@ -641,11 +660,7 @@ img {
 }
 
 .banner-partner-ad-label {
-  font-size: 0.62rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.72);
-  font-weight: 700;
+  align-self: start;
 }
 
 .banner-partner-ad-brand {
@@ -775,6 +790,50 @@ img {
   text-align: center;
 }
 
+.feed-unavailable-layout {
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+}
+
+.feed-unavailable-panel {
+  max-width: 42rem;
+  margin: 0 auto 1.25rem;
+  padding: 1.35rem 1.25rem;
+  text-align: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 28px rgba(1, 65, 28, 0.06);
+}
+
+.feed-unavailable-title {
+  margin: 0 0 0.55rem;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  color: var(--brand-green);
+}
+
+.feed-unavailable-message {
+  margin: 0 0 1rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.feed-unavailable-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.feed-unavailable-ads {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding-top: 0.5rem;
+}
+
+.feed-unavailable-ads .ad-slot {
+  opacity: 0.92;
+}
+
 .ad-leaderboard-wrap {
   padding-top: 0.85rem;
   padding-bottom: 0.25rem;
@@ -792,13 +851,18 @@ img {
 }
 
 .ad-label {
-  display: block;
-  margin-bottom: 0.25rem;
-  color: var(--muted);
-  font-size: 0.68rem;
-  letter-spacing: 0.08em;
+  display: inline-block;
+  margin-bottom: 0.35rem;
+  padding: 0.18rem 0.45rem;
+  color: #2f3a35;
+  background: #f4f6f5;
+  border: 1px solid #d7dfdb;
+  border-radius: 0.2rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  font-weight: 800;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .ad-link {

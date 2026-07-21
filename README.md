@@ -45,17 +45,33 @@ npm install
 npm run dev
 npm run lint
 npm run build
+npm run wordpress:check
 npm start
 ```
+
+## WordPress API resilience
+
+The server tries these bases in order and uses the first valid JSON response:
+
+1. `WORDPRESS_API_URL` (when set)
+2. `https://public-api.wordpress.com/wp/v2/sites/asgharalimubarakblog.wordpress.com`
+3. `https://asgharalimubarakblog.wordpress.com/wp-json/wp/v2`
+
+If `WORDPRESS_API_URL` is missing, the public WordPress.com proxy is used automatically.
+
+Health check: `/api/health/wordpress` (returns safe JSON, `Cache-Control: no-store`).
+
+Snapshot persistence is best-effort only on Vercel and never blocks live WordPress responses.
 
 ## Routes
 
 - `/` — homepage with lead story and latest reports
-- `/latest` — paginated archive
+- `/latest` — paginated archive (all categories)
 - `/article/[slug]` — article detail
 - `/category/[slug]` — category archive
-- `/about` — about the publication
-- `/contact` — contact page
+- `/about` — about the publication (footer link)
+- `/contact` — contact page (footer link)
+- `/api/health/wordpress` — WordPress connectivity health check
 - `/robots.txt` and `/sitemap.xml` — SEO
 
 ## Notes

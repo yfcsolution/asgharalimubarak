@@ -33,9 +33,11 @@ function AdLink({
       className={`ad-link ${className}`.trim()}
       tabIndex={isActive ? 0 : -1}
       onClick={() => trackEvent("ad_click", { ad_id: campaign.id, placement })}
-      aria-label={`${campaign.label ?? "Advertisement"}: ${campaign.alt}`}
+      aria-label={`Advertisement: ${campaign.alt}`}
     >
-      <span className="ad-label">{campaign.label ?? "Advertisement"}</span>
+      <span className="ad-label" aria-label="Advertisement">
+        {campaign.label ?? "Advertisement"}
+      </span>
       <Image
         src={campaign.mobileImage && width <= 400 ? campaign.mobileImage : campaign.image}
         alt={campaign.alt}

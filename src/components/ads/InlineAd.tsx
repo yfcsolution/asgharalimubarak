@@ -10,7 +10,7 @@ export async function InlineAd() {
   if (campaigns.length === 0) return null;
 
   return (
-    <aside className="ad-slot ad-slot-inline" aria-label="Sponsored content">
+    <aside className="ad-slot ad-slot-inline" aria-label="Advertisement">
       <RotatingAds
         campaigns={campaigns}
         placement="inline"

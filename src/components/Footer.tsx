@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { SocialLinksList } from "@/components/SocialIcons";
+import { ContactQuickLinks } from "@/components/WhatsAppFloat";
 import {
   FOOTER_DESCRIPTION_EN,
   FOOTER_DESCRIPTION_UR,
@@ -12,14 +13,12 @@ import {
   SITE_NAME_UR,
   getActiveSocialLinks,
 } from "@/lib/site";
-import { categoryPath, decodeHtml } from "@/lib/utils";
 import { getNavCategories } from "@/lib/wordpress";
 
 export async function Footer() {
   const year = new Date().getFullYear();
   const socialLinks = getActiveSocialLinks();
   const categories = await getNavCategories();
-  const footerCategories = categories.slice(0, 8);
   const bloggerArchive = categories.find(
     (category) => getCategoryCanonicalSlug(category) === "blogger-archive",
   );
@@ -28,7 +27,7 @@ export async function Footer() {
     <footer className="site-footer">
       <div className="footer-inner footer-grid">
         <div className="footer-brand">
-          <p className="footer-eyebrow">AAM News</p>
+          <p className="footer-eyebrow">About AAM News</p>
           <p className="footer-title">{SITE_NAME}</p>
           <p className="footer-title-ur" lang="ur" dir="rtl">
             {SITE_NAME_UR}
@@ -39,39 +38,39 @@ export async function Footer() {
           </p>
         </div>
 
-        <nav aria-label="Site pages">
-          <p className="footer-eyebrow">Pages</p>
-          <ul className="footer-links">
+        <nav aria-label="Explore AAM News">
+          <p className="footer-eyebrow">Explore AAM News</p>
+          <ul className="footer-links footer-links-stack">
             <li>
               <Link href="/about">About &amp; Contact</Link>
             </li>
             <li>
-              <Link href="/latest">Latest</Link>
+              <Link href="/latest">Latest News</Link>
+            </li>
+            <li>
+              <Link href="/categories">All Categories</Link>
+            </li>
+            <li>
+              <Link href="/videos">YouTube Videos</Link>
+            </li>
+            <li>
+              <Link href="/facebook">Facebook</Link>
+            </li>
+            <li>
+              <Link href="/instagram">Instagram</Link>
             </li>
             {bloggerArchive ? (
               <li>
-                <Link href={categoryPath(bloggerArchive.slug)} dir="auto">
-                  {decodeHtml(bloggerArchive.name)}
-                </Link>
+                <Link href="/blogger">Blogger Archive</Link>
               </li>
             ) : null}
           </ul>
         </nav>
 
-        {footerCategories.length > 0 ? (
-          <nav aria-label="Footer categories">
-            <p className="footer-eyebrow">Categories</p>
-            <ul className="footer-links">
-              {footerCategories.map((category) => (
-                <li key={category.id}>
-                  <Link href={categoryPath(category.slug)} dir="auto">
-                    {decodeHtml(category.name)}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        ) : null}
+        <div className="footer-contact">
+          <p className="footer-eyebrow">Contact</p>
+          <ContactQuickLinks className="footer-contact-links" />
+        </div>
 
         <div className="footer-contact">
           <p className="footer-eyebrow">Follow</p>

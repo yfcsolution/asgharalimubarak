@@ -63,19 +63,42 @@ Health check: `/api/health/wordpress` (returns safe JSON, `Cache-Control: no-sto
 
 Snapshot persistence is best-effort only on Vercel and never blocks live WordPress responses.
 
+### Optional social APIs (server-only)
+
+```bash
+YOUTUBE_API_KEY=
+YOUTUBE_CHANNEL_ID=
+YOUTUBE_UPLOADS_PLAYLIST_ID=
+META_FACEBOOK_PAGE_ID=
+META_FACEBOOK_PAGE_ACCESS_TOKEN=
+META_INSTAGRAM_USER_ID=
+META_INSTAGRAM_ACCESS_TOKEN=
+```
+
+These are never exposed to the browser. The site builds and runs without them;
+social pages then show a professional link to the official profile/channel.
+
 ## Routes
 
-- `/` — homepage with lead story and latest reports
+- `/` — homepage with lead story, latest reports, and optional Latest Videos
 - `/latest` — paginated archive (all categories)
 - `/article/[slug]` — article detail
 - `/category/[slug]` — category archive
-- `/about` — about the publication (footer link)
-- `/contact` — contact page (footer link)
+- `/categories` — all news sections
+- `/about` — About AAM News & Contact (footer only)
+- `/contact` — permanent redirect to `/about#contact`
+- `/videos` — YouTube videos (API or channel fallback)
+- `/videos/[videoId]` — privacy-enhanced YouTube embed
+- `/facebook` — Facebook page (Graph API or official link)
+- `/instagram` — Instagram (Graph API or official link)
+- `/blogger` — Blogger Archive (when WP category exists)
 - `/api/health/wordpress` — WordPress connectivity health check
 - `/robots.txt` and `/sitemap.xml` — SEO
 
 ## Notes
 
+- Header navigation is editorial only (Home, Latest, WordPress categories, More).
+- Institutional and social pages live in the footer Explore section.
 - Only published WordPress posts are fetched on the server.
 - Featured images use `next/image` with a branded fallback when missing.
 - Titles support English, Urdu, and mixed text via `dir="auto"`.

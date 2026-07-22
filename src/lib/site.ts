@@ -43,6 +43,8 @@ export const DEVELOPER_CREDIT = {
 } as const;
 
 /** Preferred masthead order: Facebook, X, YouTube, LinkedIn, Instagram (+ TikTok if valid). */
+export const YOUTUBE_CHANNEL_URL = "https://www.youtube.com/asgharalimubarak";
+
 export const SOCIAL_LINKS = [
   {
     id: "facebook",
@@ -57,7 +59,7 @@ export const SOCIAL_LINKS = [
   {
     id: "youtube",
     label: "YouTube",
-    href: "https://www.youtube.com/@AsgharaliMubarak/",
+    href: YOUTUBE_CHANNEL_URL,
   },
   {
     id: "linkedin",

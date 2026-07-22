@@ -10,6 +10,7 @@ import { LatestNewsTicker } from "@/components/latest-news-ticker";
 import { NewsSidebar } from "@/components/news-sidebar";
 import { SectionHeading } from "@/components/SectionHeading";
 import { SnapshotNotice } from "@/components/SnapshotNotice";
+import { VideoCard } from "@/components/VideoCard";
 import { getHomepageSectionCategories } from "@/lib/category-config";
 import { hasEditorialPosts } from "@/lib/feed-status";
 import { SITE_NAME } from "@/lib/site";
@@ -25,6 +26,7 @@ import {
   getPosts,
   getTags,
 } from "@/lib/wordpress";
+import { getLatestYouTubeVideos } from "@/lib/youtube";
 
 export const revalidate = 60;
 
@@ -81,10 +83,11 @@ async function buildCategorySections(
 }
 
 export default async function HomePage() {
-  const [feed, categories, tags] = await Promise.all([
+  const [feed, categories, tags, latestVideos] = await Promise.all([
     getPosts({ page: 1, perPage: 20 }),
     getNavCategories(),
     getTags(12),
+    getLatestYouTubeVideos(4),
   ]);
 
   const { posts, fromSnapshot, snapshotMessage } = feed;
@@ -177,6 +180,23 @@ export default async function HomePage() {
               <div className="article-grid three-col">
                 {latestGrid.map((post) => (
                   <ArticleCard key={post.id} post={post} />
+                ))}
+              </div>
+            </section>
+          ) : null}
+
+          {latestVideos.length > 0 ? (
+            <section className="section" aria-labelledby="videos-heading">
+              <SectionHeading
+                title="Latest Videos"
+                titleId="videos-heading"
+                description="From the official AAM News YouTube channel."
+                href="/videos"
+                linkLabel="View all videos"
+              />
+              <div className="media-grid media-grid-home">
+                {latestVideos.map((video) => (
+                  <VideoCard key={video.id} video={video} />
                 ))}
               </div>
             </section>

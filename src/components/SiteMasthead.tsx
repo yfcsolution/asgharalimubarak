@@ -12,7 +12,7 @@ import {
   SITE_SLOGAN,
 } from "@/lib/site";
 
-const HOMEPAGE_ARIA_LABEL = "Go to Asghar Ali Mubarak homepage";
+const HOMEPAGE_ARIA_LABEL = "Go to AAM News homepage";
 
 type SiteMastheadProps = {
   socialLinks: SocialLink[];

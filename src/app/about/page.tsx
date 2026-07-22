@@ -15,8 +15,12 @@ import {
   CONTACT_INTRO,
   CORRECTIONS_EN,
   CORRECTIONS_UR,
+  EXTENDED_PROFILE_GROUPS,
   MISSION_EN,
   MISSION_UR,
+  PROFESSIONAL_PROFILE_SUMMARY,
+  PUBLICATIONS_SUMMARY,
+  SHOW_EXTENDED_PROFILE,
 } from "@/lib/about-content";
 import { getSiteAuthor, resolveAuthorPhoto } from "@/lib/author";
 import {
@@ -35,16 +39,16 @@ import { categoryPath, decodeHtml, displayTitleForPost, postPath } from "@/lib/u
 import { getNavCategories, getPosts } from "@/lib/wordpress";
 
 export const metadata: Metadata = {
-  title: "About & Contact",
+  title: "About AAM News & Contact",
   description:
-    "Learn about AAM News, its bilingual editorial mission, coverage areas and how to contact Asghar Ali Mubarak for news tips, corrections and professional inquiries.",
+    "Learn about AAM News, the professional profile of Asghar Ali Mubarak, coverage areas and how to contact the newsroom.",
   alternates: {
     canonical: `${getSiteUrl()}/about`,
   },
   openGraph: {
-    title: "About & Contact | Asghar Ali Mubarak",
+    title: "About AAM News & Contact | Asghar Ali Mubarak",
     description:
-      "Learn about AAM News, its bilingual editorial mission, coverage areas and how to contact Asghar Ali Mubarak for news tips, corrections and professional inquiries.",
+      "Learn about AAM News, the professional profile of Asghar Ali Mubarak, coverage areas and how to contact the newsroom.",
     url: `${getSiteUrl()}/about`,
     type: "website",
   },
@@ -99,23 +103,6 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {categories.length > 0 ? (
-        <section className="about-card" aria-labelledby="coverage-heading">
-          <h2 id="coverage-heading">Coverage Areas</h2>
-          <ul className="about-coverage-grid">
-            {categories.map((category) => (
-              <li key={category.id}>
-                <Link href={categoryPath(category.slug)} className="about-coverage-card" dir="auto">
-                  <span className="about-coverage-accent" aria-hidden="true" />
-                  <span className="about-coverage-name">{decodeHtml(category.name)}</span>
-                  <span className="about-coverage-count">{category.count} stories</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
-
       <section className="about-card about-author-section" aria-labelledby="author-heading">
         <h2 id="author-heading">About Asghar Ali Mubarak</h2>
         <div className="about-author-profile">
@@ -164,6 +151,64 @@ export default async function AboutPage() {
           </div>
         </div>
       </section>
+
+      <section className="about-card" aria-labelledby="profile-heading">
+        <h2 id="profile-heading">Professional Profile</h2>
+        <p>{PROFESSIONAL_PROFILE_SUMMARY}</p>
+      </section>
+
+      {SHOW_EXTENDED_PROFILE ? (
+        <section className="about-card" aria-labelledby="education-heading">
+          <h2 id="education-heading">Education and Public Service</h2>
+          <div className="about-profile-groups">
+            {EXTENDED_PROFILE_GROUPS.map((group) => (
+              <div key={group.title}>
+                <h3>{group.title}</h3>
+                <ul>
+                  {group.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : (
+        <section className="about-card" aria-labelledby="education-heading">
+          <h2 id="education-heading">Education and Public Service</h2>
+          <p>
+            A structured education and public-service timeline is prepared and can
+            be enabled after client verification of the supplied biography details.
+          </p>
+        </section>
+      )}
+
+      <section className="about-card" aria-labelledby="publications-heading">
+        <h2 id="publications-heading">Publications</h2>
+        <p>{PUBLICATIONS_SUMMARY}</p>
+      </section>
+
+      {categories.length > 0 ? (
+        <section className="about-card" aria-labelledby="coverage-heading">
+          <h2 id="coverage-heading">Coverage Areas</h2>
+          <ul className="about-coverage-grid">
+            {categories.map((category) => (
+              <li key={category.id}>
+                <Link href={categoryPath(category.slug)} className="about-coverage-card" dir="auto">
+                  <span className="about-coverage-accent" aria-hidden="true" />
+                  <span className="about-coverage-name">{decodeHtml(category.name)}</span>
+                  <span className="about-coverage-count">{category.count} stories</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <p>
+            <Link href="/categories" className="section-link">
+              View all news sections
+            </Link>
+          </p>
+        </section>
+      ) : null}
 
       <section className="about-card" id="contact" aria-labelledby="contact-heading">
         <h2 id="contact-heading">Contact Information</h2>
@@ -214,6 +259,23 @@ export default async function AboutPage() {
                 </a>
               </li>
             ))}
+          </ul>
+          <ul className="about-social-grid" style={{ marginTop: "0.75rem" }}>
+            <li>
+              <Link href="/videos" className="about-social-button">
+                YouTube Videos
+              </Link>
+            </li>
+            <li>
+              <Link href="/facebook" className="about-social-button">
+                Facebook
+              </Link>
+            </li>
+            <li>
+              <Link href="/instagram" className="about-social-button">
+                Instagram
+              </Link>
+            </li>
           </ul>
         </section>
       ) : null}

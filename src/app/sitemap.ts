@@ -1,8 +1,10 @@
 import type { MetadataRoute } from "next";
 
+import { getCategoryCanonicalSlug } from "@/lib/category-config";
 import { getSiteUrl } from "@/lib/site";
 import { normalizeSlug, postPath } from "@/lib/utils";
 import { getNavCategories, getPosts } from "@/lib/wordpress";
+import { getAllYouTubeVideos, isYouTubeConfigured } from "@/lib/youtube";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = getSiteUrl();
@@ -13,8 +15,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]);
 
   const posts = [...page1.posts, ...page2.posts];
+  const bloggerArchive = categories.find(
+    (category) => getCategoryCanonicalSlug(category) === "blogger-archive",
+  );
 
-  return [
+  const entries: MetadataRoute.Sitemap = [
     {
       url: siteUrl,
       lastModified: new Date(),
@@ -33,6 +38,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.6,
     },
+    {
+      url: `${siteUrl}/videos`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.7,
+    },
+    {
+      url: `${siteUrl}/facebook`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.5,
+    },
+    {
+      url: `${siteUrl}/instagram`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.5,
+    },
+    {
+      url: `${siteUrl}/categories`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.7,
+    },
     ...categories.map((category) => ({
       url: `${siteUrl}/category/${encodeURIComponent(normalizeSlug(category.slug))}`,
       lastModified: new Date(),
@@ -46,4 +75,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     })),
   ];
+
+  if (bloggerArchive) {
+    entries.push({
+      url: `${siteUrl}/blogger`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.5,
+    });
+  }
+
+  if (isYouTubeConfigured()) {
+    const videos = await getAllYouTubeVideos({ maxResults: 25 });
+    for (const video of videos.videos) {
+      entries.push({
+        url: `${siteUrl}/videos/${video.id}`,
+        lastModified: new Date(video.publishedAt),
+        changeFrequency: "weekly",
+        priority: 0.55,
+      });
+    }
+  }
+
+  return entries;
 }

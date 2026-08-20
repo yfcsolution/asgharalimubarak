@@ -65,15 +65,13 @@ export const PRIMARY_NAV_CATEGORY_SLUGS = [
   "pakistan",
   "world",
   "politics",
-  "diplomacy",
   "defence",
-  "health",
   "sports",
-  "science-technology",
+  "health",
   "opinion",
 ] as const;
 
-export const MAX_PRIMARY_NAV_CATEGORIES = 7;
+export const MAX_PRIMARY_NAV_CATEGORIES = 5;
 export const MAX_SIDEBAR_CATEGORIES = 14;
 export const CATEGORY_CACHE_SECONDS = 300;
 
@@ -216,8 +214,30 @@ export function splitNavCategories(categories: WpCategory[]): {
 
 export function getCategoryNavLabel(category: Pick<WpCategory, "slug" | "name">): string {
   const canonical = getCategoryCanonicalSlug(category);
-  if (canonical === "science-technology") return "Science & Tech";
-  return decodeHtml(category.name);
+  const shortLabels: Record<string, string> = {
+    "breaking-news": "Breaking",
+    pakistan: "Pakistan",
+    world: "World",
+    politics: "Politics",
+    diplomacy: "Diplomacy",
+    defence: "Defence",
+    economy: "Economy",
+    business: "Business",
+    education: "Education",
+    health: "Health",
+    sports: "Sports",
+    "science-technology": "Sci-Tech",
+    environment: "Environment",
+    opinion: "Opinion",
+    interviews: "Interviews",
+    "photo-stories": "Photos",
+    culture: "Culture",
+    entertainment: "Entertainment",
+    "law-justice": "Law",
+    columns: "Columns",
+    "blogger-archive": "Blogger",
+  };
+  return shortLabels[canonical] ?? decodeHtml(category.name);
 }
 
 export const CATEGORY_DESCRIPTION_FALLBACK =

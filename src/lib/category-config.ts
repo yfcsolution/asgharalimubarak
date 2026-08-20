@@ -73,7 +73,7 @@ export const PRIMARY_NAV_CATEGORY_SLUGS = [
   "opinion",
 ] as const;
 
-export const MAX_PRIMARY_NAV_CATEGORIES = 10;
+export const MAX_PRIMARY_NAV_CATEGORIES = 7;
 export const MAX_SIDEBAR_CATEGORIES = 14;
 export const CATEGORY_CACHE_SECONDS = 300;
 

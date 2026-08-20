@@ -42,7 +42,7 @@ const LIST_FIELDS_LIGHT = LIST_FIELDS;
 
 const CONTENT_IMAGE_FIELDS = ["id", "content"].join(",");
 
-const SITEMAP_FIELDS = ["id", "date", "modified", "slug"].join(",");
+const SITEMAP_FIELDS = ["id", "date", "modified", "slug", "title"].join(",");
 
 async function wpFetch<T>(
   path: string,

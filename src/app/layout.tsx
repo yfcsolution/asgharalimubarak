@@ -4,7 +4,6 @@ import { Noto_Nastaliq_Urdu } from "next/font/google";
 import { AnalyticsScript } from "@/components/AnalyticsScript";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
-import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import {
   DEFAULT_OG_IMAGE,
   NEWS_BANNER_ALT,
@@ -33,7 +32,9 @@ const notoNastaliq = Noto_Nastaliq_Urdu({
 const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl.includes("localhost") ? "https://asgharalimubarak.com" : siteUrl),
+  metadataBase: new URL(
+    siteUrl.includes("localhost") ? "https://asgharalimubarak.com" : siteUrl,
+  ),
   title: {
     default: HOMEPAGE_TITLE,
     template: `%s | AAM News`,
@@ -116,7 +117,6 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
-        <WhatsAppFloat />
       </body>
     </html>
   );

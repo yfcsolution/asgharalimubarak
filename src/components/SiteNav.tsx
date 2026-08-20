@@ -108,9 +108,32 @@ export function MobileNav({ items }: { items: NavItem[] }) {
   const [open, setOpen] = useState(false);
   const panelId = useId();
   const pathname = usePathname();
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    const onPointerDown = (event: MouseEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("mousedown", onPointerDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("mousedown", onPointerDown);
+    };
+  }, [open]);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   return (
-    <div className="mobile-nav">
+    <div className="mobile-nav" ref={rootRef}>
       <button
         type="button"
         className="menu-toggle"
@@ -127,6 +150,7 @@ export function MobileNav({ items }: { items: NavItem[] }) {
           id={panelId}
           className="mobile-nav-panel"
           role="dialog"
+          aria-modal="true"
           aria-label="Mobile navigation"
         >
           <ul>

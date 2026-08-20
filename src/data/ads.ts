@@ -17,7 +17,7 @@ export interface AdCampaign {
 }
 
 /** Exact Google Maps share link for Slice 'n' Story (do not shorten). */
-export const SLICE_N_STORY_URL = "https://share.google/qDvgIXVAYuhGaDCd5";
+export const SLICE_N_STORY_URL = "https://share.google/BFjmaS80FaZiyhrso";
 export const YFC_SOLUTION_URL = "https://yfcsolution.com/";
 
 const SLICE_SOURCE = join(process.cwd(), "public/ads/slice-n-story-source.jpg");

@@ -72,7 +72,7 @@ export function LatestNewsTicker({
       <div className="latest-ticker-inner">
         <div className="latest-ticker-meta">
           <span id={labelId} className="latest-ticker-badge">
-            Latest News
+            LATEST NEWS
           </span>
           <time className="latest-ticker-updated" dateTime={updatedIso}>
             Updated {updatedLabel}

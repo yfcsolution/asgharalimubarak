@@ -10,7 +10,7 @@ Files:
 
 Destination (Google Maps location):
 
-`https://share.google/qDvgIXVAYuhGaDCd5`
+`https://share.google/BFjmaS80FaZiyhrso`
 
 Links open in a new tab with `rel="sponsored noopener noreferrer"`.
 

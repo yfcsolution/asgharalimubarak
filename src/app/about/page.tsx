@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { AboutStructuredData } from "@/components/AboutStructuredData";
+import { ContactForm } from "@/components/ContactForm";
 import { SocialIcon } from "@/components/SocialIcons";
 import {
   ABOUT_COMMITMENT_EN,
@@ -211,7 +212,7 @@ export default async function AboutPage() {
       ) : null}
 
       <section className="about-card" id="contact" aria-labelledby="contact-heading">
-        <h2 id="contact-heading">Contact Information</h2>
+        <h2 id="contact-heading">Contact AAM News</h2>
         <p>{CONTACT_INTRO}</p>
         <ul className="about-contact-list">
           <li>
@@ -229,6 +230,7 @@ export default async function AboutPage() {
             </a>
           </li>
         </ul>
+        <ContactForm />
       </section>
 
       <section className="about-card" aria-labelledby="corrections-heading">

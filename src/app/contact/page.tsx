@@ -1,5 +1,5 @@
 import { permanentRedirect } from "next/navigation";
 
 export default function ContactPage() {
-  permanentRedirect("/about#contact");
+  permanentRedirect("/about-contact#contact");
 }

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="280" viewBox="0 0 1280 280" role="img" aria-label="Pakistan Independence Day">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#004D26"/>
+      <stop offset="55%" stop-color="#006600"/>
+      <stop offset="100%" stop-color="#004D26"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="280" fill="url(#bg)"/>
+  <rect x="0" y="0" width="88" height="280" fill="#FFFFFF"/>
+  <g fill="#FFFFFF" transform="translate(180,70)">
+    <path d="M70 12a48 48 0 1 0 38 82 40 40 0 1 1-38-82zm20 20 7 14 15 2-11 10 3 15-14-7-14 7 3-15-11-10 15-2z"/>
+  </g>
+  <text x="360" y="118" fill="#FFFFFF" font-family="Georgia, Times New Roman, serif" font-size="48" font-weight="700">Pakistan Independence Day</text>
+  <text x="360" y="168" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="28" letter-spacing="4">14 AUGUST</text>
+  <text x="360" y="214" fill="#E8F5E9" font-family="Arial, Helvetica, sans-serif" font-size="20">AAM News — New Generation's News Leader</text>
+  <text x="1180" y="250" text-anchor="end" fill="#FFFFFF" font-family="Noto Nastaliq Urdu, serif" font-size="22" opacity="0.95">پاکستان زندہ باد</text>
+</svg>

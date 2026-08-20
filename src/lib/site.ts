@@ -54,7 +54,7 @@ export const SOCIAL_LINKS = [
   {
     id: "x",
     label: "X",
-    href: "",
+    href: "https://x.com/ASGHARMUBARAK",
   },
   {
     id: "youtube",

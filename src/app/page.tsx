@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { AdBanner } from "@/components/ads/AdBanner";
 import { ArticleCard } from "@/components/ArticleCard";
+import { CampaignBanner } from "@/components/CampaignBanner";
 import { CategoryNewsSection } from "@/components/CategoryNewsSection";
 import { CategoryStrip } from "@/components/CategoryStrip";
 import { FeedUnavailablePanel } from "@/components/FeedUnavailablePanel";
@@ -140,6 +141,8 @@ export default async function HomePage() {
         updatedIso={updatedIso}
         updatedLabel={updatedLabel}
       />
+
+      <CampaignBanner />
 
       {showSnapshotNotice ? <SnapshotNotice message={snapshotMessage} /> : null}
 

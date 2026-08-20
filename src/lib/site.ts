@@ -35,9 +35,6 @@ export const NEWS_BANNER_HEIGHT = 800;
 export const DEFAULT_OG_IMAGE = NEWS_BANNER_IMAGE;
 
 export const CONTACT_EMAIL = "asgharalimubarak@yahoo.com";
-/** Used only to build the WhatsApp floating button deep link — never shown in public contact UI. */
-const WHATSAPP_E164 = "923334911786";
-export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_E164}`;
 export const MAILTO_URL = `mailto:${CONTACT_EMAIL}`;
 export const LINKEDIN_PROFILE_URL =
   "https://www.linkedin.com/in/asghar-ali-mubarak-a67abb29/";

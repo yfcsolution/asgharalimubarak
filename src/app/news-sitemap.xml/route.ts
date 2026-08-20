@@ -1,27 +1,50 @@
-import { absoluteUrl, PUBLISHER_NAME } from "@/lib/seo";
+import { PRODUCTION_SITE_URL, PUBLISHER_NAME, absoluteUrl } from "@/lib/seo";
 import { displayTitleForPost, postPath } from "@/lib/utils";
 import { getPosts } from "@/lib/wordpress";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 300;
 
-/** Google News sitemap — recent articles only (last 48 hours). */
-export async function GET() {
-  const feed = await getPosts({ page: 1, perPage: 50, mode: "sitemap" });
-  const cutoff = Date.now() - 48 * 60 * 60 * 1000;
+function origin(): string {
+  if (
+    process.env.VERCEL_ENV === "production" ||
+    process.env.NODE_ENV === "production"
+  ) {
+    return PRODUCTION_SITE_URL;
+  }
+  return absoluteUrl();
+}
 
-  const recent = feed.posts.filter((post) => {
-    const published = new Date(post.date).getTime();
+/** Google News sitemap — recent articles with real WordPress dates. */
+export async function GET() {
+  let posts: Awaited<ReturnType<typeof getPosts>>["posts"] = [];
+  try {
+    const feed = await getPosts({ page: 1, perPage: 50, mode: "sitemap" });
+    posts = Array.isArray(feed.posts) ? feed.posts : [];
+  } catch {
+    posts = [];
+  }
+
+  const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  let recent = posts.filter((post) => {
+    const published = Date.parse(post.date);
     return Number.isFinite(published) && published >= cutoff;
   });
 
+  if (recent.length === 0) {
+    recent = posts.slice(0, 20);
+  }
+
+  const base = origin();
   const urls = recent
     .map((post) => {
-      const rawTitle = post.title?.rendered || "";
-      if (!rawTitle) return null;
+      const slug = post.slug?.trim();
+      if (!slug) return "";
       const title = displayTitleForPost(post);
-      const loc = absoluteUrl(postPath(post.slug));
+      const headline = (title.text || post.title?.rendered || "").trim();
+      if (!headline) return "";
+      const loc = `${base}${postPath(slug)}`;
       const publicationDate = new Date(post.date).toISOString();
-      const safeTitle = escapeXml(title.text);
 
       return `  <url>
     <loc>${escapeXml(loc)}</loc>
@@ -31,7 +54,7 @@ export async function GET() {
         <news:language>${title.lang === "ur" ? "ur" : "en"}</news:language>
       </news:publication>
       <news:publication_date>${publicationDate}</news:publication_date>
-      <news:title>${safeTitle}</news:title>
+      <news:title>${escapeXml(headline)}</news:title>
     </news:news>
   </url>`;
     })
@@ -42,9 +65,11 @@ export async function GET() {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
 ${urls}
-</urlset>`;
+</urlset>
+`;
 
   return new Response(xml, {
+    status: 200,
     headers: {
       "Content-Type": "application/xml; charset=utf-8",
       "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",

@@ -20,25 +20,27 @@ export function HeaderLayout({ nav, socialLinks }: HeaderLayoutProps) {
     <header className="site-header site-header--newsroom">
       <div className="nav-bar nav-bar-sticky newsroom-header">
         <div className="newsroom-header-inner">
-          <Link
-            href="/"
-            className="newsroom-logo-link"
-            aria-label="Go to AAM News homepage"
-          >
-            <Image
-              src={AAM_NEWS_LOGO}
-              alt={AAM_NEWS_LOGO_ALT}
-              width={480}
-              height={320}
-              className="newsroom-logo"
-              priority
-              sizes="(max-width: 768px) 140px, 200px"
-            />
-          </Link>
-
-          <div className="newsroom-nav">
-            <DesktopNav primary={nav.primary} more={nav.more} />
+          <div className="newsroom-left">
             <MobileNav items={nav.all} />
+            <Link
+              href="/"
+              className="newsroom-logo-link"
+              aria-label="Go to AAM News homepage"
+            >
+              <Image
+                src={AAM_NEWS_LOGO}
+                alt={AAM_NEWS_LOGO_ALT}
+                width={480}
+                height={320}
+                className="newsroom-logo"
+                priority
+                sizes="(max-width: 640px) 120px, (max-width: 1024px) 160px, 200px"
+              />
+            </Link>
+          </div>
+
+          <div className="newsroom-nav" aria-label="Desktop navigation">
+            <DesktopNav primary={nav.primary} more={nav.more} />
           </div>
 
           <div className="newsroom-tools">

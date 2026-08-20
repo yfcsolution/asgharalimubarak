@@ -55,7 +55,7 @@ export function LeadStory({
 
       <div className="lead-story-content">
         <p className="lead-kicker">
-          <span className="lead-kicker-label">Top Story</span>
+          <span className="lead-kicker-label">TOP STORY</span>
           {categories[0] ? (
             <Link href={categoryPath(categories[0].slug)} dir="auto">
               {categories[0].name}

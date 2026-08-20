@@ -4,10 +4,12 @@ import { notFound } from "next/navigation";
 import { ArticleCard } from "@/components/ArticleCard";
 import { ArticleLayout } from "@/components/ArticleLayout";
 import { NewsSidebar } from "@/components/news-sidebar";
-import { DEFAULT_OG_IMAGE, getSiteUrl } from "@/lib/site";
+import { DEFAULT_OG_IMAGE, X_PROFILE_URL } from "@/lib/site";
+import { absoluteUrl, truncateMetaDescription } from "@/lib/seo";
 import {
   displayTitleForPost,
   excerptText,
+  getPostCategories,
   getPostImage,
 } from "@/lib/utils";
 import {
@@ -38,14 +40,17 @@ export async function generateMetadata({
   if (!post) {
     return {
       title: "Article not found",
+      robots: { index: false, follow: false },
     };
   }
 
   const title = displayTitleForPost(post);
-  const description = excerptText(post, 160);
+  const description = truncateMetaDescription(excerptText(post, 160));
   const image = getPostImage(post);
-  const url = `${getSiteUrl()}/article/${encodeURIComponent(slug)}`;
-  const fallbackOg = `${getSiteUrl()}${DEFAULT_OG_IMAGE}`;
+  const url = absoluteUrl(`/article/${encodeURIComponent(slug)}`);
+  const fallbackOg = absoluteUrl(DEFAULT_OG_IMAGE);
+  const categories = getPostCategories(post);
+  const section = categories.find((c) => c.slug !== "uncategorized")?.name;
 
   return {
     title: title.text,
@@ -58,13 +63,15 @@ export async function generateMetadata({
       title: title.text,
       description,
       url,
+      locale: title.lang === "ur" ? "ur_PK" : "en_PK",
       publishedTime: post.date,
       modifiedTime: post.modified,
+      section,
       images: image
         ? [
             {
               url: image.src,
-              alt: image.alt,
+              alt: image.alt || title.text,
               width: image.width,
               height: image.height,
             },
@@ -73,8 +80,8 @@ export async function generateMetadata({
             {
               url: fallbackOg,
               alt: "Asghar Ali Mubarak in a professional news studio",
-              width: 1536,
-              height: 1024,
+              width: 1920,
+              height: 800,
             },
           ],
     },
@@ -83,6 +90,11 @@ export async function generateMetadata({
       title: title.text,
       description,
       images: image ? [image.src] : [fallbackOg],
+      site: "@ASGHARMUBARAK",
+      creator: "@ASGHARMUBARAK",
+    },
+    other: {
+      "x:url": X_PROFILE_URL,
     },
   };
 }
@@ -95,15 +107,20 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     notFound();
   }
 
-  const [{ posts: relatedPool }, categories, tags, latestPack] =
-    await Promise.all([
-      getPosts({ page: 1, perPage: 8 }),
-      getNavCategories(),
-      getTags(10),
-      getPosts({ page: 1, perPage: 5 }),
-    ]);
+  const primaryCategoryId = Array.isArray(post.categories)
+    ? post.categories[0]
+    : undefined;
 
-  const related = relatedPool
+  const [relatedFeed, categories, tags, latestPack] = await Promise.all([
+    primaryCategoryId
+      ? getPosts({ page: 1, perPage: 8, categories: primaryCategoryId })
+      : getPosts({ page: 1, perPage: 8 }),
+    getNavCategories(),
+    getTags(10),
+    getPosts({ page: 1, perPage: 5 }),
+  ]);
+
+  const related = relatedFeed.posts
     .filter((item) => item.id !== post.id)
     .slice(0, 3);
 
@@ -115,7 +132,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           latest={latestPack.posts}
           categories={categories}
           tags={tags}
-          picks={relatedPool.slice(0, 5)}
+          picks={relatedFeed.posts.slice(0, 5)}
         />
       }
       related={
@@ -123,8 +140,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           <section className="section related-section" aria-labelledby="related-heading">
             <div className="section-heading">
               <div>
-                <h2 id="related-heading">Related coverage</h2>
-                <p>More reports you may want to read next.</p>
+                <h2 id="related-heading">Related News</h2>
+                <p>More reports from the same coverage area.</p>
               </div>
             </div>
             <div className="article-grid two-col">

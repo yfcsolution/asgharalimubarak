@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { AdBanner } from "@/components/ads/AdBanner";
 import { ArticleCard } from "@/components/ArticleCard";
+import { CampaignBanner } from "@/components/CampaignBanner";
 import { CategoryNewsSection } from "@/components/CategoryNewsSection";
 import { CategoryStrip } from "@/components/CategoryStrip";
 import { FeedUnavailablePanel } from "@/components/FeedUnavailablePanel";
@@ -9,11 +10,18 @@ import { LeadStory } from "@/components/LeadStory";
 import { LatestNewsTicker } from "@/components/latest-news-ticker";
 import { NewsSidebar } from "@/components/news-sidebar";
 import { SectionHeading } from "@/components/SectionHeading";
+import { SiteEntitiesJsonLd } from "@/components/SiteEntitiesJsonLd";
 import { SnapshotNotice } from "@/components/SnapshotNotice";
 import { VideoCard } from "@/components/VideoCard";
 import { getHomepageSectionCategories } from "@/lib/category-config";
 import { hasEditorialPosts } from "@/lib/feed-status";
+import {
+  HOMEPAGE_DESCRIPTION,
+  HOMEPAGE_TITLE,
+  absoluteUrl,
+} from "@/lib/seo";
 import { SITE_NAME } from "@/lib/site";
+import type { Metadata } from "next";
 import type { WpCategory, WpPost } from "@/lib/types";
 import {
   displayTitleForPost,
@@ -29,6 +37,22 @@ import {
 import { getLatestYouTubeVideos } from "@/lib/youtube";
 
 export const revalidate = 60;
+
+export const metadata: Metadata = {
+  title: {
+    absolute: HOMEPAGE_TITLE,
+  },
+  description: HOMEPAGE_DESCRIPTION,
+  alternates: {
+    canonical: absoluteUrl(),
+  },
+  openGraph: {
+    title: HOMEPAGE_TITLE,
+    description: HOMEPAGE_DESCRIPTION,
+    url: absoluteUrl(),
+    type: "website",
+  },
+};
 
 function postsForCategory(
   posts: WpPost[],
@@ -135,11 +159,14 @@ export default async function HomePage() {
 
   return (
     <>
+      <SiteEntitiesJsonLd />
       <LatestNewsTicker
         headlines={tickerHeadlines}
         updatedIso={updatedIso}
         updatedLabel={updatedLabel}
       />
+
+      <CampaignBanner />
 
       {showSnapshotNotice ? <SnapshotNotice message={snapshotMessage} /> : null}
 

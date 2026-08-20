@@ -2,37 +2,42 @@
 @plugin "@tailwindcss/typography";
 
 :root {
-  /* Broadcast-red international editorial theme */
-  --news-red-900: #8b0000;
-  --news-red-800: #a00000;
-  --news-red-700: #bb0000;
-  --news-red-600: #d00000;
-  --news-red-500: #e00000;
+  /* Professional Pakistani newsroom palette — deep green brand + restrained red accents */
+  --pakistan-green: #006600;
+  --pakistan-green-dark: #004d26;
+  --pakistan-green-soft: #0a7a0a;
+  --pakistan-green-pale: #e8f5e8;
+
+  --news-red-900: #8f0000;
+  --news-red-800: #a30000;
+  --news-red-700: #c40000;
+  --news-red-600: #d11a1a;
+  --news-red-500: #e03333;
 
   --ink-950: #111111;
-  --ink-900: #1a1a1a;
+  --ink-900: #161616;
   --ink-800: #242424;
   --ink-700: #333333;
 
   --white: #ffffff;
-  --page-bg: #f2f2f2;
+  --page-bg: #f8f8f6;
   --surface: #ffffff;
-  --surface-soft: #e6e8ea;
-  --surface-muted: #d8dadd;
-  --border: #c9cdd1;
-  --border-dark: #8a8e92;
+  --surface-soft: #eeeeee;
+  --surface-muted: #f2f2ef;
+  --border: #d9d9d9;
+  --border-dark: #b8b8b8;
 
-  --text: #171717;
+  --text: #161616;
   --text-muted: #5a5a5a;
   --text-light: #777777;
   --text-inverse: #ffffff;
 
-  --link: #a00000;
-  --link-hover: #6e0000;
-  --focus: #ffcc00;
+  --link: #004d26;
+  --link-hover: #006600;
+  --focus: #c40000;
   --success: #147a4b;
   --warning: #b56a00;
-  --error: #c00000;
+  --error: #c40000;
 
   /* Semantic aliases */
   --color-paper: var(--white);
@@ -49,7 +54,7 @@
   --color-error: var(--error);
   --color-ink: var(--ink-950);
 
-  /* Brand / legacy aliases mapped to broadcast red */
+  /* Brand aliases: green = identity/nav, red = breaking/latest labels */
   --brand-red: var(--news-red-700);
   --brand-red-dark: var(--news-red-900);
   --brand-red-soft: var(--news-red-600);
@@ -58,17 +63,17 @@
   --brand-maroon-soft: var(--news-red-700);
   --brand-maroon-pale: var(--surface-soft);
   --brand-gold: var(--focus);
-  --brand-green: var(--news-red-700);
-  --brand-green-dark: var(--news-red-900);
-  --brand-green-soft: var(--news-red-600);
-  --brand-green-pale: var(--surface-soft);
+  --brand-green: var(--pakistan-green);
+  --brand-green-dark: var(--pakistan-green-dark);
+  --brand-green-soft: var(--pakistan-green-soft);
+  --brand-green-pale: var(--pakistan-green-pale);
 
   --paper: var(--white);
   --muted: var(--text-muted);
   --color-navy: var(--ink-900);
   --color-navy-soft: var(--ink-700);
-  --color-teal: var(--news-red-700);
-  --color-teal-dark: var(--news-red-900);
+  --color-teal: var(--pakistan-green);
+  --color-teal-dark: var(--pakistan-green-dark);
   --color-red: var(--news-red-700);
   --color-red-dark: var(--news-red-900);
   --color-gold: var(--focus);
@@ -82,19 +87,21 @@
   --ink: var(--ink-950);
   --ink-soft: var(--ink-700);
   --accent: var(--news-red-700);
-  --accent-soft: var(--surface-soft);
+  --accent-soft: #fdecec;
   --signal: var(--news-red-600);
   --line: var(--border);
 
-  --max: 1360px;
+  --max: 1240px;
   --sidebar: 320px;
   --radius: 2px;
   --article-measure: 46rem;
   --control-height: 2.5rem;
-  --font-display: Georgia, "Times New Roman", Times, serif;
-  --font-sans: Arial, "Helvetica Neue", Helvetica, "Segoe UI", sans-serif;
-  --font-urdu: var(--font-noto-nastaliq), "Noto Nastaliq Urdu", "Noto Naskh Arabic", "Segoe UI", serif;
-  --font-meta: Arial, "Helvetica Neue", Helvetica, "Segoe UI", sans-serif;
+  --font-display: Georgia, "Merriweather", "Libre Baskerville", "Times New Roman", Times, serif;
+  --font-body: Arial, "Helvetica Neue", Helvetica, "Segoe UI", system-ui, sans-serif;
+  --font-ui: Arial, "Helvetica Neue", Helvetica, "Segoe UI", system-ui, sans-serif;
+  --font-sans: var(--font-ui);
+  --font-urdu: "Jameel Noori Nastaleeq", var(--font-noto-nastaliq), "Noto Nastaliq Urdu", "Noto Naskh Arabic", serif;
+  --font-meta: var(--font-ui);
 
   --type-masthead: clamp(2rem, 4vw, 4.5rem);
   --type-h1: clamp(2rem, 3.5vw, 4rem);
@@ -407,7 +414,7 @@ img {
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--news-red-700);
+  color: var(--pakistan-green);
 }
 
 .site-masthead-slogan {
@@ -430,13 +437,13 @@ img {
   display: block;
   width: min(12rem, 55%);
   height: 3px;
-  background: var(--news-red-700);
+  background: var(--pakistan-green);
 }
 
 .brand-bar {
-  background: var(--news-red-700);
+  background: var(--pakistan-green);
   color: var(--white);
-  border-bottom: 1px solid var(--news-red-900);
+  border-bottom: 1px solid var(--pakistan-green-dark);
 }
 
 .brand-bar-inner {
@@ -846,9 +853,9 @@ img {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
+  background: var(--pakistan-green);
+  border-bottom: 1px solid var(--pakistan-green-dark);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
 }
 
 .nav-bar {
@@ -1542,28 +1549,30 @@ img {
   font-weight: 700;
   border: 0;
   background: transparent;
-  color: var(--ink-900);
+  color: rgba(255, 255, 255, 0.94);
   cursor: pointer;
   font-family: var(--font-sans);
   border-bottom: 3px solid transparent;
-  border-inline-end: 1px solid var(--border);
+  border-inline-end: 1px solid rgba(255, 255, 255, 0.18);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 .nav-link:hover,
 .nav-link:focus-visible,
 .nav-more-button:hover,
 .nav-more-button:focus-visible {
-  color: var(--news-red-800);
-  background: var(--surface-soft);
-  border-bottom-color: var(--news-red-700);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom-color: #fff;
   text-decoration: none;
 }
 
 .nav-link.is-active,
 .nav-more-button.is-active {
-  color: var(--ink-950);
-  border-bottom-color: var(--news-red-700);
-  background: transparent;
+  color: #fff;
+  border-bottom-color: #fff;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .nav-more {
@@ -2969,13 +2978,13 @@ img {
 
 .nav-link.is-active,
 .nav-more-button.is-active {
-  border-bottom-color: var(--brand-gold) !important;
+  border-bottom-color: #fff !important;
 }
 
 .article-card .meta-pill,
 .article-card-kicker,
 .card-category {
-  background: var(--brand-green);
+  background: var(--news-red-700);
   color: var(--white);
 }
 
@@ -3246,13 +3255,13 @@ img {
 }
 
 /* =========================================================
-   Broadcast-red editorial overrides
+   Pakistani newsroom editorial overrides
    ========================================================= */
 
 .menu-toggle {
-  border: 1px solid var(--border);
-  background: var(--white);
-  color: var(--ink-900);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--white);
 }
 
 .mobile-nav-panel {
@@ -3269,8 +3278,8 @@ img {
 .mobile-nav-link.is-active,
 .mobile-nav-link:hover,
 .mobile-nav-link:focus-visible {
-  color: var(--news-red-800);
-  background: var(--surface-soft);
+  color: var(--pakistan-green-dark);
+  background: var(--pakistan-green-pale);
 }
 
 .primary-nav-list > li:last-child .nav-link,
@@ -3450,13 +3459,13 @@ img {
 }
 
 .site-footer {
-  background: #2b2b2b;
+  background: #0f1a12;
   color: var(--white);
-  border-top: 3px solid var(--news-red-700);
+  border-top: 4px solid var(--pakistan-green);
 }
 
 .footer-eyebrow {
-  color: var(--news-red-500);
+  color: #9dcf9d;
 }
 
 .footer-title-ur,
@@ -3464,7 +3473,7 @@ img {
 .footer-contact-links a,
 .footer-links a:hover,
 .footer-links a:focus-visible {
-  color: #ffb3b3;
+  color: #c8e6c8;
 }
 
 .footer-copy,
@@ -3472,6 +3481,30 @@ img {
 .footer-credit,
 .footer-credit-desc {
   color: #c8c8c8;
+}
+
+.footer-logo-link {
+  display: inline-flex;
+  margin-bottom: 0.65rem;
+  text-decoration: none;
+}
+
+.footer-logo {
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 50%;
+  border: 2px solid var(--pakistan-green);
+  object-fit: cover;
+  object-position: center top;
+  background: #fff;
+}
+
+.footer-social {
+  margin-top: 1rem;
+}
+
+.footer-grid-newsroom {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
 .footer-links a {
@@ -3527,21 +3560,21 @@ img {
 }
 
 .btn-primary {
-  background: var(--news-red-700);
+  background: var(--pakistan-green);
   color: var(--white);
   border-radius: 0;
 }
 
 .btn-primary:hover,
 .btn-primary:focus-visible {
-  background: var(--news-red-900);
+  background: var(--pakistan-green-dark);
   color: var(--white);
 }
 
 .btn-secondary {
   background: var(--white);
-  color: var(--news-red-800);
-  border-color: var(--news-red-800);
+  color: var(--pakistan-green-dark);
+  border-color: var(--pakistan-green);
   border-radius: 0;
 }
 
@@ -3552,7 +3585,7 @@ img {
 
 .nav-link.is-active,
 .nav-more-button.is-active {
-  border-bottom-color: var(--news-red-700) !important;
+  border-bottom-color: #fff !important;
 }
 
 @media (max-width: 900px) {
@@ -3821,5 +3854,55 @@ img {
   .media-card-actions {
     flex-direction: column;
     align-items: stretch;
+  }
+}
+
+/* Independence Day / seasonal campaign banner */
+.campaign-banner {
+  border-bottom: 1px solid var(--border);
+  background: var(--white);
+}
+
+.campaign-banner-inner {
+  width: min(var(--max), calc(100% - 1.25rem));
+  margin-inline: auto;
+  padding: 0.75rem 0 0.35rem;
+}
+
+.campaign-banner-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 12rem;
+  object-fit: cover;
+  object-position: center center;
+  border: 1px solid var(--border);
+  background: var(--surface-muted);
+}
+
+@media (min-width: 768px) {
+  .campaign-banner-image {
+    max-height: 14rem;
+  }
+}
+
+@media (min-width: 1100px) {
+  .campaign-banner-image {
+    max-height: 15.5rem;
+  }
+}
+
+.site-masthead-social {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.35rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 720px) {
+  .site-masthead-social {
+    overflow: visible;
   }
 }

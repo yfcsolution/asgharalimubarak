@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { CATEGORY_DESCRIPTION_FALLBACK } from "@/lib/category-config";
-import { getSiteUrl } from "@/lib/site";
+import { absoluteUrl } from "@/lib/seo";
 import { categoryPath, decodeHtml } from "@/lib/utils";
 import { getNavCategories } from "@/lib/wordpress";
 
@@ -12,12 +12,12 @@ export const metadata: Metadata = {
   title: "News Sections",
   description:
     "Browse all AAM News sections and categories covering politics, sports and public affairs.",
-  alternates: { canonical: `${getSiteUrl()}/categories` },
+  alternates: { canonical: absoluteUrl("/categories") },
   openGraph: {
     title: "News Sections | Asghar Ali Mubarak",
     description:
       "Browse all AAM News sections and categories covering politics, sports and public affairs.",
-    url: `${getSiteUrl()}/categories`,
+    url: absoluteUrl("/categories"),
   },
 };
 

@@ -1,11 +1,5 @@
-import {
-  CONTACT_EMAIL,
-  CONTACT_PHONE_DISPLAY,
-  MAILTO_URL,
-  PHONE_URL,
-  WHATSAPP_URL,
-} from "@/lib/site";
 import { WhatsAppIcon } from "@/components/SocialIcons";
+import { LINKEDIN_PROFILE_URL, MAILTO_URL, CONTACT_EMAIL, WHATSAPP_URL } from "@/lib/site";
 
 export function WhatsAppFloat() {
   return (
@@ -18,10 +12,7 @@ export function WhatsAppFloat() {
       title="Chat on WhatsApp"
     >
       <WhatsAppIcon className="whatsapp-float-icon" />
-      <span className="sr-only">
-        WhatsApp {CONTACT_PHONE_DISPLAY}. Email {CONTACT_EMAIL}. Call{" "}
-        {CONTACT_PHONE_DISPLAY}.
-      </span>
+      <span className="sr-only">Open WhatsApp chat with AAM News</span>
       <span className="whatsapp-float-label" aria-hidden="true">
         WhatsApp
       </span>
@@ -29,6 +20,7 @@ export function WhatsAppFloat() {
   );
 }
 
+/** Public contact links — LinkedIn + email only (no phone numbers). */
 export function ContactQuickLinks({ className = "contact-quick-links" }: { className?: string }) {
   return (
     <ul className={className}>
@@ -36,11 +28,12 @@ export function ContactQuickLinks({ className = "contact-quick-links" }: { class
         <a href={MAILTO_URL}>{CONTACT_EMAIL}</a>
       </li>
       <li>
-        <a href={PHONE_URL}>{CONTACT_PHONE_DISPLAY}</a>
-      </li>
-      <li>
-        <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
-          WhatsApp {CONTACT_PHONE_DISPLAY}
+        <a
+          href={LINKEDIN_PROFILE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Connect on LinkedIn
         </a>
       </li>
     </ul>

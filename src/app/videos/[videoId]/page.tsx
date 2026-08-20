@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { getSiteUrl, SITE_NAME } from "@/lib/site";
+import { absoluteUrl } from "@/lib/seo";
+import { SITE_NAME } from "@/lib/site";
 import { formatPakistanDate } from "@/lib/utils";
 import {
   YOUTUBE_CHANNEL_URL,
@@ -27,11 +28,11 @@ export async function generateMetadata({
   return {
     title: video.title,
     description: video.description.slice(0, 160) || `Watch ${video.title} on AAM News.`,
-    alternates: { canonical: `${getSiteUrl()}/videos/${video.id}` },
+    alternates: { canonical: absoluteUrl(`/videos/${video.id}`) },
     openGraph: {
       title: video.title,
       description: video.description.slice(0, 160),
-      url: `${getSiteUrl()}/videos/${video.id}`,
+      url: absoluteUrl(`/videos/${video.id}`),
       type: "video.other",
       videos: [{ url: video.url }],
     },
@@ -67,18 +68,18 @@ export default async function VideoDetailPage({ params }: VideoPageProps) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: getSiteUrl() },
+      { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl() },
       {
         "@type": "ListItem",
         position: 2,
         name: "Videos",
-        item: `${getSiteUrl()}/videos`,
+        item: absoluteUrl("/videos"),
       },
       {
         "@type": "ListItem",
         position: 3,
         name: video.title,
-        item: `${getSiteUrl()}/videos/${video.id}`,
+        item: absoluteUrl(`/videos/${video.id}`),
       },
     ],
   };

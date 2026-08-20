@@ -5,16 +5,16 @@ export const ABOUT_TITLE = "About AAM News & Contact";
 export const ABOUT_TITLE_UR = "اے اے ایم نیوز کا تعارف اور رابطہ";
 
 export const ABOUT_INTRO_EN =
-  "Asghar Ali Mubarak (AAM News) is an independent bilingual news platform from Pakistan, delivering factual, timely and responsible journalism in English and Urdu. It reports on politics, sports, the economy, diplomacy, defence, education, health and other matters of public interest.";
+  "Asghar Ali Mubarak (AAM News) is an independent bilingual Pakistani digital news platform committed to providing factual, timely and responsible news in English and Urdu.";
 
 export const ABOUT_INTRO_UR =
-  "اصغر علی مبارک (اے اے ایم نیوز) پاکستان کا ایک آزاد دو لسانی نیوز پلیٹ فارم ہے، جو انگریزی اور اردو میں درست، بروقت اور ذمہ دار صحافت پیش کرتا ہے۔ اس پلیٹ فارم پر سیاست، کھیل، معیشت، سفارت کاری، دفاع، تعلیم، صحت اور دیگر عوامی دلچسپی کے موضوعات کا احاطہ کیا جاتا ہے۔";
+  "اصغر علی مبارک (عام نیوز - AAM News) ایک آزاد دو لسانی پاکستانی ڈیجیٹل نیوز پلیٹ فارم ہے جو انگریزی اور اردو میں بروقت، مستند اور ذمہ دارانہ خبریں فراہم کرتا ہے۔";
 
 export const ABOUT_COMMITMENT_EN =
-  "AAM News is committed to accuracy, balance, independence and public service. Its purpose is to provide readers in Pakistan and abroad with clear reporting, informed analysis and a dependable perspective on national and international developments.";
+  "The platform covers Pakistan and international affairs, politics, diplomacy, defence, economy, business, sports, health, education, science and technology, culture, society and other matters of public interest. AAM News aims to serve readers with clear, responsible and accessible journalism for a new generation of audiences.";
 
 export const ABOUT_COMMITMENT_UR =
-  "اے اے ایم نیوز درستگی، توازن، آزادی اور عوامی خدمت کے اصولوں پر کاربند ہے۔ اس کا مقصد پاکستان اور بیرونِ ملک قارئین کو قومی و بین الاقوامی معاملات پر واضح خبریں، باخبر تجزیہ اور قابلِ اعتماد نقطۂ نظر فراہم کرنا ہے۔";
+  "یہ پلیٹ فارم پاکستان اور عالمی امور، سیاست، سفارت کاری، دفاع، معیشت، کاروبار، کھیل، صحت، تعلیم، سائنس و ٹیکنالوجی، ثقافت، معاشرت اور دیگر عوامی امور کا احاطہ کرتا ہے۔ AAM News کا مقصد نئی نسل کے قارئین کے لیے واضح، ذمہ دارانہ اور قابل اعتماد صحافت پیش کرنا ہے۔";
 
 export const MISSION_EN =
   "Our mission is to inform readers through factual reporting, responsible commentary and accessible bilingual journalism. AAM News aims to explain important developments clearly while maintaining independence, fairness and respect for the public interest.";
@@ -40,15 +40,15 @@ export const CORRECTIONS_UR =
   "قارئین کسی حقیقتی غلطی کی نشاندہی، تصحیح، خبر کی اطلاع یا وضاحت کی درخواست کے لیے اے اے ایم نیوز سے رابطہ کر سکتے ہیں۔ موصول ہونے والی معلومات کا جائزہ ادارتی اہمیت اور دستیاب شواہد کی بنیاد پر لیا جائے گا۔";
 
 export const CONTACT_INTRO =
-  "For news tips, interviews, corrections, professional inquiries and general correspondence, use the contact details below.";
+  "For professional enquiries, editorial communication and collaboration: connect with Asghar Ali Mubarak on LinkedIn.";
 
 export const AUTHOR_ROLE = "Journalist and Editor";
 
 export const FOOTER_DESCRIPTION_EN =
-  "AAM News is an independent bilingual news platform from Pakistan, delivering factual reporting and analysis in English and Urdu.";
+  "Asghar Ali Mubarak (AAM News) is an independent Pakistani bilingual digital news platform providing factual and timely news in English and Urdu across Pakistan, politics, sports, economy, diplomacy, defence, health, education, science and technology, and other public affairs.";
 
 export const FOOTER_DESCRIPTION_UR =
-  "اے اے ایم نیوز پاکستان کا ایک آزاد دو لسانی نیوز پلیٹ فارم ہے جو انگریزی اور اردو میں درست خبریں اور تجزیے پیش کرتا ہے۔";
+  "اصغر علی مبارک (AAM News) ایک آزاد دو لسانی پاکستانی ڈیجیٹل نیوز پلیٹ فارم ہے جو انگریزی اور اردو میں بروقت اور مستند خبریں فراہم کرتا ہے۔";
 
 /** Extended timeline groups — shown only when SHOW_EXTENDED_PROFILE is true. */
 export const EXTENDED_PROFILE_GROUPS = [

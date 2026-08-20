@@ -3,7 +3,7 @@ import Image from "next/image";
 
 import { SocialUnavailable } from "@/components/SocialUnavailable";
 import { getInstagramMedia, getOfficialInstagramUrl } from "@/lib/instagram";
-import { getSiteUrl } from "@/lib/site";
+import { absoluteUrl } from "@/lib/seo";
 import { formatPakistanDate } from "@/lib/utils";
 
 export const revalidate = 1800;
@@ -12,12 +12,12 @@ export const metadata: Metadata = {
   title: "AAM News on Instagram",
   description:
     "Follow AAM News on Instagram for photos and public updates from Asghar Ali Mubarak.",
-  alternates: { canonical: `${getSiteUrl()}/instagram` },
+  alternates: { canonical: absoluteUrl("/instagram") },
   openGraph: {
     title: "AAM News on Instagram | Asghar Ali Mubarak",
     description:
       "Follow AAM News on Instagram for photos and public updates from Asghar Ali Mubarak.",
-    url: `${getSiteUrl()}/instagram`,
+    url: absoluteUrl("/instagram"),
   },
 };
 

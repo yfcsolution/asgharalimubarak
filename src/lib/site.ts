@@ -6,7 +6,7 @@ export const SITE_TAGLINE =
 export const SITE_TAGLINE_UR =
   "پاکستان اور دنیا بھر سے انگریزی و اردو خبریں اور تجزیے۔";
 export const SITE_DESCRIPTION =
-  "Independent bilingual news by Asghar Ali Mubarak — politics, sports, economy, and current affairs in English and Urdu.";
+  "Asghar Ali Mubarak (AAM News) is an independent Pakistani bilingual news platform providing timely English and Urdu news on Pakistan, politics, sports, economy, diplomacy, defence, health and public affairs.";
 
 export const POSTS_PER_PAGE = 12;
 export const REVALIDATE_SECONDS = 60;
@@ -29,11 +29,13 @@ export const NEWS_BANNER_HEIGHT = 800;
 export const DEFAULT_OG_IMAGE = NEWS_BANNER_IMAGE;
 
 export const CONTACT_EMAIL = "asgharalimubarak@yahoo.com";
-export const CONTACT_PHONE_DISPLAY = "+92 333 4911786";
-export const CONTACT_PHONE_E164 = "923334911786";
-export const WHATSAPP_URL = `https://wa.me/${CONTACT_PHONE_E164}`;
-export const PHONE_URL = `tel:+${CONTACT_PHONE_E164}`;
+/** Used only to build the WhatsApp floating button deep link — never shown in public contact UI. */
+const WHATSAPP_E164 = "923334911786";
+export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_E164}`;
 export const MAILTO_URL = `mailto:${CONTACT_EMAIL}`;
+export const LINKEDIN_PROFILE_URL =
+  "https://www.linkedin.com/in/asghar-ali-mubarak-a67abb29/";
+export const X_PROFILE_URL = "https://x.com/ASGHARMUBARAK";
 
 export const DEVELOPER_CREDIT = {
   name: "Zulqarnain Basher",
@@ -54,7 +56,7 @@ export const SOCIAL_LINKS = [
   {
     id: "x",
     label: "X",
-    href: "",
+    href: X_PROFILE_URL,
   },
   {
     id: "youtube",
@@ -64,7 +66,7 @@ export const SOCIAL_LINKS = [
   {
     id: "linkedin",
     label: "LinkedIn",
-    href: "https://www.linkedin.com/in/asghar-ali-mubarak-a67abb29/",
+    href: LINKEDIN_PROFILE_URL,
   },
   {
     id: "instagram",
@@ -96,9 +98,29 @@ import {
   WORDPRESS_PUBLIC_API_URL,
 } from "@/lib/wordpress-api";
 
+export const PRODUCTION_SITE_URL = "https://asgharalimubarak.com";
+
 export function getSiteUrl(): string {
+  if (process.env.VERCEL_ENV === "production") {
+    return PRODUCTION_SITE_URL;
+  }
+
   const url = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
-  return url && url.length > 0 ? url : "http://localhost:3000";
+  if (
+    url &&
+    url.length > 0 &&
+    !url.includes("localhost") &&
+    !url.includes("127.0.0.1") &&
+    !url.includes(".vercel.app")
+  ) {
+    return url;
+  }
+
+  if (url && url.length > 0) {
+    return url;
+  }
+
+  return "http://localhost:3000";
 }
 
 export function getWordPressApiUrl(): string {

@@ -84,7 +84,7 @@ export function excerptText(post: WpPost, maxLength = 180): string {
 }
 
 export function displayTitleForPost(post: WpPost) {
-  return getDisplayTitle(decodeHtml(post.title.rendered), "auto");
+  return getDisplayTitle(decodeHtml(post.title?.rendered || ""), "auto");
 }
 
 export function cn(

@@ -128,10 +128,6 @@ export function MobileNav({ items }: { items: NavItem[] }) {
     };
   }, [open]);
 
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
-
   return (
     <div className="mobile-nav" ref={rootRef}>
       <button

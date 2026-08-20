@@ -230,7 +230,7 @@ export default async function AboutPage() {
             </a>
           </li>
         </ul>
-        <ContactForm />
+        <ContactForm email={CONTACT_EMAIL} />
       </section>
 
       <section className="about-card" aria-labelledby="corrections-heading">

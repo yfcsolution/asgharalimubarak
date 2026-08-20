@@ -1,12 +1,14 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { useState, type FormEvent } from "react";
 
-import { CONTACT_EMAIL } from "@/lib/site";
+type ContactFormProps = {
+  email: string;
+};
 
 type Status = "idle" | "ready" | "error";
 
-export function ContactForm() {
+export function ContactForm({ email }: ContactFormProps) {
   const [status, setStatus] = useState<Status>("idle");
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -14,23 +16,23 @@ export function ContactForm() {
     const form = event.currentTarget;
     const data = new FormData(form);
     const name = String(data.get("name") || "").trim();
-    const email = String(data.get("email") || "").trim();
+    const fromEmail = String(data.get("email") || "").trim();
     const subject = String(data.get("subject") || "").trim();
     const message = String(data.get("message") || "").trim();
 
-    if (!name || !email || !subject || !message) {
+    if (!name || !fromEmail || !subject || !message) {
       setStatus("error");
       return;
     }
 
     const body = [
       `Name: ${name}`,
-      `Email: ${email}`,
+      `Email: ${fromEmail}`,
       "",
       message,
     ].join("\n");
 
-    const mailto = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
+    const mailto = `mailto:${email}?subject=${encodeURIComponent(
       subject,
     )}&body=${encodeURIComponent(body)}`;
 
@@ -67,7 +69,7 @@ export function ContactForm() {
       ) : null}
       {status === "ready" ? (
         <p className="meta" role="status">
-          Your email app should open with the message addressed to {CONTACT_EMAIL}.
+          Your email app should open with the message addressed to {email}.
         </p>
       ) : null}
     </form>

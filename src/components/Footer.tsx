@@ -7,9 +7,9 @@ import {
 } from "@/lib/about-content";
 import { getCategoryCanonicalSlug } from "@/lib/category-config";
 import {
-  AUTHOR_AVATAR_PHOTO,
+  AAM_NEWS_LOGO,
+  AAM_NEWS_LOGO_ALT,
   DEVELOPER_CREDIT,
-  HEADER_PORTRAIT_ALT,
   SITE_NAME,
   getActiveSocialLinks,
 } from "@/lib/site";
@@ -68,15 +68,13 @@ export async function Footer() {
         <div className="footer-brand">
           <Link href="/" className="footer-logo-link" aria-label="Go to AAM News homepage">
             <Image
-              src={AUTHOR_AVATAR_PHOTO}
-              alt={HEADER_PORTRAIT_ALT}
-              width={72}
-              height={72}
+              src={AAM_NEWS_LOGO}
+              alt={AAM_NEWS_LOGO_ALT}
+              width={220}
+              height={146}
               className="footer-logo"
             />
           </Link>
-          <p className="footer-eyebrow">AAM NEWS</p>
-          <p className="footer-title">{SITE_NAME}</p>
           <p className="footer-copy">{FOOTER_DESCRIPTION_EN}</p>
           <SocialLinksList links={socialLinks} className="footer-social" />
         </div>

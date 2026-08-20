@@ -25,8 +25,8 @@ export const HOMEPAGE_TITLE =
 export const HOMEPAGE_DESCRIPTION =
   "Asghar Ali Mubarak (AAM News) is an independent Pakistani bilingual news platform providing timely English and Urdu news on Pakistan, politics, sports, economy, diplomacy, defence, health and public affairs.";
 
-/** Square brand mark for Organization/publisher logo. */
-export const PUBLISHER_LOGO_PATH = "/icons/icon-512.png";
+/** Square/brand mark for Organization/publisher logo. */
+export const PUBLISHER_LOGO_PATH = "/images/brand/aam-news-logo.png";
 
 /** Absolute URL for SEO/canonical/schema. Prefer production domain on Vercel production. */
 export function getCanonicalSiteUrl(): string {

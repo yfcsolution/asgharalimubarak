@@ -2,42 +2,50 @@
 @plugin "@tailwindcss/typography";
 
 :root {
-  /* Professional Pakistani newsroom palette — deep green brand + restrained red accents */
-  --pakistan-green: #006600;
-  --pakistan-green-dark: #004d26;
-  --pakistan-green-soft: #0a7a0a;
-  --pakistan-green-pale: #e8f5e8;
+  /* AAM News logo palette — red, black, white */
+  --aam-red: #d4161b;
+  --aam-red-dark: #a80f14;
+  --aam-red-deep: #8b0c10;
+  --aam-red-soft: #f8d6d7;
+  --aam-black: #000000;
+  --aam-ink: #111111;
+  --aam-white: #ffffff;
 
-  --news-red-900: #8f0000;
-  --news-red-800: #a30000;
-  --news-red-700: #c40000;
-  --news-red-600: #d11a1a;
-  --news-red-500: #e03333;
+  --pakistan-green: var(--aam-red);
+  --pakistan-green-dark: var(--aam-red-dark);
+  --pakistan-green-soft: var(--aam-red);
+  --pakistan-green-pale: var(--aam-red-soft);
 
-  --ink-950: #111111;
-  --ink-900: #161616;
-  --ink-800: #242424;
+  --news-red-900: #8b0c10;
+  --news-red-800: #a80f14;
+  --news-red-700: #d4161b;
+  --news-red-600: #e02026;
+  --news-red-500: #eb3a3f;
+
+  --ink-950: #000000;
+  --ink-900: #111111;
+  --ink-800: #1a1a1a;
   --ink-700: #333333;
 
   --white: #ffffff;
-  --page-bg: #f8f8f6;
+  --page-bg: #ffffff;
   --surface: #ffffff;
-  --surface-soft: #eeeeee;
-  --surface-muted: #f2f2ef;
+  --surface-soft: #f3f3f3;
+  --surface-muted: #ececec;
   --border: #d9d9d9;
-  --border-dark: #b8b8b8;
+  --border-dark: #b0b0b0;
 
-  --text: #161616;
-  --text-muted: #5a5a5a;
+  --text: #111111;
+  --text-muted: #555555;
   --text-light: #777777;
   --text-inverse: #ffffff;
 
-  --link: #004d26;
-  --link-hover: #006600;
-  --focus: #c40000;
+  --link: #a80f14;
+  --link-hover: #d4161b;
+  --focus: #d4161b;
   --success: #147a4b;
   --warning: #b56a00;
-  --error: #c40000;
+  --error: #d4161b;
 
   /* Semantic aliases */
   --color-paper: var(--white);
@@ -54,40 +62,40 @@
   --color-error: var(--error);
   --color-ink: var(--ink-950);
 
-  /* Brand aliases: green = identity/nav, red = breaking/latest labels */
-  --brand-red: var(--news-red-700);
-  --brand-red-dark: var(--news-red-900);
+  /* Brand aliases mapped to logo red/black */
+  --brand-red: var(--aam-red);
+  --brand-red-dark: var(--aam-red-dark);
   --brand-red-soft: var(--news-red-600);
-  --brand-maroon: var(--news-red-800);
-  --brand-maroon-dark: var(--news-red-900);
-  --brand-maroon-soft: var(--news-red-700);
-  --brand-maroon-pale: var(--surface-soft);
-  --brand-gold: var(--focus);
-  --brand-green: var(--pakistan-green);
-  --brand-green-dark: var(--pakistan-green-dark);
-  --brand-green-soft: var(--pakistan-green-soft);
-  --brand-green-pale: var(--pakistan-green-pale);
+  --brand-maroon: var(--aam-red-dark);
+  --brand-maroon-dark: var(--aam-red-deep);
+  --brand-maroon-soft: var(--aam-red);
+  --brand-maroon-pale: var(--aam-red-soft);
+  --brand-gold: var(--aam-red);
+  --brand-green: var(--aam-red);
+  --brand-green-dark: var(--aam-red-dark);
+  --brand-green-soft: var(--aam-red);
+  --brand-green-pale: var(--aam-red-soft);
 
   --paper: var(--white);
   --muted: var(--text-muted);
   --color-navy: var(--ink-900);
   --color-navy-soft: var(--ink-700);
-  --color-teal: var(--pakistan-green);
-  --color-teal-dark: var(--pakistan-green-dark);
-  --color-red: var(--news-red-700);
-  --color-red-dark: var(--news-red-900);
-  --color-gold: var(--focus);
-  --color-maroon-700: var(--news-red-700);
-  --color-maroon-800: var(--news-red-800);
-  --color-maroon-900: var(--news-red-900);
+  --color-teal: var(--aam-red);
+  --color-teal-dark: var(--aam-red-dark);
+  --color-red: var(--aam-red);
+  --color-red-dark: var(--aam-red-dark);
+  --color-gold: var(--aam-red);
+  --color-maroon-700: var(--aam-red);
+  --color-maroon-800: var(--aam-red-dark);
+  --color-maroon-900: var(--aam-red-deep);
   --color-gold-300: #dddddd;
   --color-gold-400: #cccccc;
-  --color-gold-500: var(--focus);
+  --color-gold-500: var(--aam-red);
 
   --ink: var(--ink-950);
   --ink-soft: var(--ink-700);
-  --accent: var(--news-red-700);
-  --accent-soft: #fdecec;
+  --accent: var(--aam-red);
+  --accent-soft: var(--aam-red-soft);
   --signal: var(--news-red-600);
   --line: var(--border);
 
@@ -853,9 +861,9 @@ img {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: var(--pakistan-green);
-  border-bottom: 1px solid var(--pakistan-green-dark);
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+  background: var(--aam-black);
+  border-bottom: 1px solid #1a1a1a;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
 }
 
 .nav-bar {
@@ -3904,5 +3912,319 @@ img {
 @media (min-width: 720px) {
   .site-masthead-social {
     overflow: visible;
+  }
+}
+
+/* =========================================================
+   AAM News logo header — black bar, logo | nav | search/social
+   ========================================================= */
+
+.site-header--newsroom {
+  background: var(--aam-black);
+  border-bottom: 0;
+  box-shadow: none;
+}
+
+.site-header--newsroom .site-masthead,
+.site-header--newsroom .brand-bar {
+  display: none !important;
+}
+
+.newsroom-header {
+  background: var(--aam-black);
+}
+
+.newsroom-header-inner {
+  width: min(var(--max), calc(100% - 1rem));
+  margin-inline: auto;
+  min-height: 4.25rem;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  padding: 0.45rem 0;
+}
+
+.newsroom-logo-link {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  text-decoration: none;
+  line-height: 0;
+}
+
+.newsroom-logo-link:hover,
+.newsroom-logo-link:focus-visible {
+  opacity: 0.92;
+  text-decoration: none;
+}
+
+.newsroom-logo {
+  width: auto;
+  height: clamp(2.75rem, 7vw, 3.85rem);
+  max-width: min(42vw, 13.5rem);
+  object-fit: contain;
+  object-position: left center;
+  background: transparent;
+}
+
+.newsroom-nav {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.newsroom-nav .primary-nav {
+  width: 100%;
+}
+
+.newsroom-nav .primary-nav-list {
+  justify-content: center;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  padding: 0;
+}
+
+.newsroom-nav .nav-link,
+.newsroom-nav .nav-more-button {
+  color: rgba(255, 255, 255, 0.92);
+  border-inline-end: 0;
+  border-bottom: 2px solid transparent;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.78rem;
+  padding: 0.55rem 0.55rem;
+  white-space: nowrap;
+}
+
+.newsroom-nav .nav-link:hover,
+.newsroom-nav .nav-link:focus-visible,
+.newsroom-nav .nav-more-button:hover,
+.newsroom-nav .nav-more-button:focus-visible,
+.newsroom-nav .nav-link.is-active,
+.newsroom-nav .nav-more-button.is-active {
+  color: #fff;
+  background: transparent;
+  border-bottom-color: var(--aam-red);
+}
+
+.newsroom-nav .nav-more-menu {
+  background: #111;
+  border: 1px solid #333;
+}
+
+.newsroom-nav .nav-more-link {
+  color: #fff;
+}
+
+.newsroom-nav .nav-more-link:hover,
+.newsroom-nav .nav-more-link:focus-visible,
+.newsroom-nav .nav-more-link.is-active {
+  background: #1f1f1f;
+  color: var(--aam-red);
+}
+
+.newsroom-tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.55rem;
+  min-width: 0;
+}
+
+.newsroom-search {
+  display: flex;
+  align-items: stretch;
+  max-width: 11.5rem;
+  border: 1px solid #3a3a3a;
+  background: #111;
+  overflow: hidden;
+}
+
+.newsroom-search input {
+  min-width: 0;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  padding: 0.4rem 0.55rem;
+  font-size: 0.82rem;
+}
+
+.newsroom-search input::placeholder {
+  color: #9a9a9a;
+}
+
+.newsroom-search input:focus {
+  outline: none;
+}
+
+.newsroom-search button {
+  border: 0;
+  border-left: 1px solid #3a3a3a;
+  background: var(--aam-red);
+  color: #fff;
+  padding: 0 0.65rem;
+  cursor: pointer;
+}
+
+.newsroom-search button:hover,
+.newsroom-search button:focus-visible {
+  background: var(--aam-red-dark);
+}
+
+.newsroom-social {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.newsroom-social .social-icon-link {
+  width: 1.85rem;
+  height: 1.85rem;
+  border: 1px solid #3a3a3a;
+  border-radius: 0;
+  background: #111;
+  color: #fff;
+}
+
+.newsroom-social .social-icon-link:hover,
+.newsroom-social .social-icon-link:focus-visible {
+  background: var(--aam-red);
+  border-color: var(--aam-red);
+  color: #fff;
+}
+
+.site-header--newsroom .menu-toggle {
+  border: 1px solid #444;
+  background: #151515;
+  color: #fff;
+}
+
+.site-header--newsroom .mobile-nav-panel {
+  background: #111;
+  border: 1px solid #333;
+  color: #fff;
+}
+
+.site-header--newsroom .mobile-nav-link {
+  color: #fff;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.site-header--newsroom .mobile-nav-link.is-active,
+.site-header--newsroom .mobile-nav-link:hover,
+.site-header--newsroom .mobile-nav-link:focus-visible {
+  color: #fff;
+  background: #1c1c1c;
+  border-left: 3px solid var(--aam-red);
+}
+
+.latest-ticker {
+  background: #0a0a0a;
+  border-bottom: 1px solid #1f1f1f;
+}
+
+.latest-ticker-badge {
+  background: var(--aam-red);
+  color: #fff;
+}
+
+.latest-ticker-updated {
+  color: #bdbdbd;
+}
+
+.latest-ticker-marquee a,
+.latest-ticker-focus-link {
+  color: #fff;
+}
+
+.btn-primary {
+  background: var(--aam-red);
+  color: #fff;
+  border-radius: 0;
+}
+
+.btn-primary:hover,
+.btn-primary:focus-visible {
+  background: var(--aam-red-dark);
+  color: #fff;
+}
+
+.btn-secondary {
+  background: #fff;
+  color: var(--aam-red-dark);
+  border-color: var(--aam-red);
+  border-radius: 0;
+}
+
+.lead-kicker-label,
+.article-card .meta-pill,
+.article-card-kicker,
+.card-category,
+.top-story-label {
+  background: var(--aam-red);
+  color: #fff;
+}
+
+.site-footer {
+  background: #0a0a0a;
+  color: rgba(255, 255, 255, 0.88);
+  border-top: 4px solid var(--aam-red);
+}
+
+.footer-logo {
+  width: auto;
+  height: auto;
+  max-width: 14rem;
+  border-radius: 0;
+  border: 0;
+  object-fit: contain;
+  background: transparent;
+}
+
+.footer-eyebrow {
+  color: var(--aam-red);
+}
+
+.footer-links a:hover,
+.footer-links a:focus-visible,
+.footer-credit a {
+  color: #ffb3b3;
+}
+
+@media (max-width: 979px) {
+  .newsroom-header-inner {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .newsroom-nav {
+    justify-content: flex-end;
+    order: 0;
+  }
+
+  .newsroom-tools {
+    grid-column: 1 / -1;
+    justify-content: space-between;
+  }
+
+  .newsroom-search {
+    max-width: none;
+    flex: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .newsroom-logo {
+    max-width: min(52vw, 10.5rem);
+    height: 2.6rem;
+  }
+
+  .newsroom-social {
+    display: none !important;
   }
 }

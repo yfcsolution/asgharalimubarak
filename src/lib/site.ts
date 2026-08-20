@@ -20,6 +20,12 @@ export const AUTHOR_ABOUT_PHOTO = "/images/asghar-ali-mubarak-about.webp";
 export const HEADER_PORTRAIT_ALT = "Asghar Ali Mubarak";
 export const SITE_SHOW_NAME_UR = "اندر کی بات";
 
+/** Approved AAM News brand logo (header, footer, OG/publisher). */
+export const AAM_NEWS_LOGO = "/images/brand/aam-news-logo.png";
+export const AAM_NEWS_LOGO_ALT = "AAM News — Asghar Ali Mubarak";
+export const AAM_NEWS_LOGO_WIDTH = 1536;
+export const AAM_NEWS_LOGO_HEIGHT = 1024;
+
 export const NEWS_BANNER_IMAGE = "/images/asghar-ali-mubarak-news-banner.webp";
 export const NEWS_BANNER_SOURCE = "/images/asghar-ali-mubarak-news-banner-source.png";
 export const NEWS_BANNER_ALT = "Asghar Ali Mubarak in a professional news studio";

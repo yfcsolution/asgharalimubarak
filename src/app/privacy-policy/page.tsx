@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { SITE_NAME, getSiteUrl } from "@/lib/site";
+import { SITE_NAME } from "@/lib/site";
+import { absoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: `Privacy practices for ${SITE_NAME} (AAM News).`,
   alternates: {
-    canonical: `${getSiteUrl()}/privacy-policy`,
+    canonical: absoluteUrl("/privacy-policy"),
   },
 };
 

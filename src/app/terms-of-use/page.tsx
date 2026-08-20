@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { SITE_NAME, getSiteUrl } from "@/lib/site";
+import { SITE_NAME } from "@/lib/site";
+import { absoluteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Terms of Use",
   description: `Terms of use for ${SITE_NAME} (AAM News).`,
   alternates: {
-    canonical: `${getSiteUrl()}/terms-of-use`,
+    canonical: absoluteUrl("/terms-of-use"),
   },
 };
 

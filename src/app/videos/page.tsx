@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { SocialUnavailable } from "@/components/SocialUnavailable";
 import { VideoCard } from "@/components/VideoCard";
-import { getSiteUrl } from "@/lib/site";
+import { absoluteUrl } from "@/lib/seo";
 import {
   YOUTUBE_CHANNEL_URL,
   getAllYouTubeVideos,
@@ -15,12 +15,12 @@ export const metadata: Metadata = {
   title: "AAM News Videos",
   description:
     "Watch the latest AAM News videos from the official Asghar Ali Mubarak YouTube channel.",
-  alternates: { canonical: `${getSiteUrl()}/videos` },
+  alternates: { canonical: absoluteUrl("/videos") },
   openGraph: {
     title: "AAM News Videos | Asghar Ali Mubarak",
     description:
       "Watch the latest AAM News videos from the official Asghar Ali Mubarak YouTube channel.",
-    url: `${getSiteUrl()}/videos`,
+    url: absoluteUrl("/videos"),
   },
 };
 

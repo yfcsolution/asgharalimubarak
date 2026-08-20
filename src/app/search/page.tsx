@@ -18,6 +18,10 @@ export async function generateMetadata({
   return {
     title: query ? `Search: ${query}` : "Search",
     description: "Search published English and Urdu news reports.",
+    robots: {
+      index: false,
+      follow: true,
+    },
   };
 }
 

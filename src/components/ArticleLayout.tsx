@@ -12,18 +12,30 @@ import {
   getSiteAuthor,
   resolveAuthorPhoto,
 } from "@/lib/author";
-import { AUTHOR_LOCAL_PHOTO, DEFAULT_OG_IMAGE, getSiteUrl, SITE_NAME } from "@/lib/site";
+import {
+  absoluteUrl,
+  breadcrumbJsonLd,
+  organizationJsonLd,
+  personJsonLd,
+  PUBLISHER_LOGO_PATH,
+  PUBLISHER_NAME,
+  toJsonLdGraph,
+  truncateMetaDescription,
+} from "@/lib/seo";
+import { DEFAULT_OG_IMAGE, SITE_NAME } from "@/lib/site";
 import type { WpPost } from "@/lib/types";
 import {
   categoryPath,
   displayTitleForPost,
   formatPakistanDate,
+  getDisplayExcerpt,
   getPostCategories,
   getPostImage,
   getPostTags,
   isMeaningfullyUpdated,
   postPath,
   readingTimeMinutes,
+  stripHtml,
 } from "@/lib/utils";
 
 type ArticleLayoutProps = {
@@ -56,38 +68,77 @@ export async function ArticleLayout({
   });
   const minutes = readingTimeMinutes(post.content?.rendered || "");
   const showUpdated = isMeaningfullyUpdated(post.date, post.modified);
-  const shareUrl = `${getSiteUrl()}${postPath(post.slug)}`;
+  const shareUrl = absoluteUrl(postPath(post.slug));
+  const primaryCategory = categories.find(
+    (category) => category.slug !== "uncategorized",
+  );
+  const description = truncateMetaDescription(
+    getDisplayExcerpt(
+      stripHtml(post.excerpt?.rendered || post.content?.rendered || ""),
+      "auto",
+      160,
+    ).text,
+  );
+  const authorName = author?.name || SITE_NAME;
+  const siteUrl = absoluteUrl();
 
-  const jsonLd = {
-    "@context": "https://schema.org",
+  const breadcrumbItems = [
+    { name: "Home", path: "/" },
+    ...(primaryCategory
+      ? [
+          {
+            name: primaryCategory.name,
+            path: categoryPath(primaryCategory.slug),
+          },
+        ]
+      : [{ name: "Latest", path: "/latest" }]),
+    { name: display.text, path: postPath(post.slug) },
+  ];
+
+  const newsArticle = {
     "@type": "NewsArticle",
+    "@id": `${shareUrl}#article`,
     headline: display.text,
-    alternativeHeadline:
-      display.fullText !== display.text ? display.fullText : undefined,
+    description,
+    image: image?.src
+      ? [image.src]
+      : [absoluteUrl(DEFAULT_OG_IMAGE)],
     datePublished: post.date,
     dateModified: post.modified || post.date,
     author: {
-      "@type": "Person",
-      name: author?.name || SITE_NAME,
+      ...personJsonLd(),
+      name: authorName,
+      url: absoluteUrl("/about-contact"),
     },
     publisher: {
-      "@type": "Organization",
-      name: SITE_NAME,
+      "@type": "NewsMediaOrganization",
+      "@id": `${siteUrl}/#organization`,
+      name: PUBLISHER_NAME,
       logo: {
         "@type": "ImageObject",
-        url: `${getSiteUrl()}${AUTHOR_LOCAL_PHOTO}`,
+        url: absoluteUrl(PUBLISHER_LOGO_PATH),
+        width: 512,
+        height: 512,
       },
     },
-    image: image?.src
-      ? [image.src]
-      : [`${getSiteUrl()}${DEFAULT_OG_IMAGE}`],
-    mainEntityOfPage: shareUrl,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": shareUrl,
+    },
+    articleSection: primaryCategory?.name,
     inLanguage: display.lang === "ur" ? "ur" : "en",
+    isAccessibleForFree: true,
   };
+
+  const jsonLd = toJsonLdGraph([
+    organizationJsonLd(),
+    breadcrumbJsonLd(breadcrumbItems),
+    newsArticle,
+  ]);
 
   return (
     <div className="content-with-sidebar article-page-shell">
-      <article className="article-layout">
+      <article className="article-layout" itemScope itemType="https://schema.org/NewsArticle">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -98,16 +149,17 @@ export async function ArticleLayout({
             <li>
               <Link href="/">Home</Link>
             </li>
-            <li>
-              <Link href="/latest">News</Link>
-            </li>
-            {categories[0] ? (
+            {primaryCategory ? (
               <li>
-                <Link href={categoryPath(categories[0].slug)} dir="auto">
-                  {categories[0].name}
+                <Link href={categoryPath(primaryCategory.slug)} dir="auto">
+                  {primaryCategory.name}
                 </Link>
               </li>
-            ) : null}
+            ) : (
+              <li>
+                <Link href="/latest">Latest</Link>
+              </li>
+            )}
             <li aria-current="page">
               <span dir={display.dir} lang={display.lang}>
                 {display.text}
@@ -129,7 +181,12 @@ export async function ArticleLayout({
             </ul>
           ) : null}
 
-          <h1 className="article-title" dir={display.dir} lang={display.lang}>
+          <h1
+            className="article-title"
+            dir={display.dir}
+            lang={display.lang}
+            itemProp="headline"
+          >
             {display.text}
           </h1>
 
@@ -150,16 +207,22 @@ export async function ArticleLayout({
               />
             ) : null}
             <div>
-              {author?.name ? <p className="byline-author">By {author.name}</p> : null}
+              {authorName ? (
+                <p className="byline-author" itemProp="author">
+                  By {authorName}
+                </p>
+              ) : null}
               <p className="byline-dates">
                 <span>
                   Published{" "}
-                  <time dateTime={post.date}>{formatPakistanDate(post.date)}</time>
+                  <time dateTime={post.date} itemProp="datePublished">
+                    {formatPakistanDate(post.date)}
+                  </time>
                 </span>
                 {showUpdated ? (
                   <span>
                     {" · Updated "}
-                    <time dateTime={post.modified}>
+                    <time dateTime={post.modified} itemProp="dateModified">
                       {formatPakistanDate(post.modified)}
                     </time>
                   </span>

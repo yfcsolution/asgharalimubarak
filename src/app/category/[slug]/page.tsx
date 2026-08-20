@@ -9,7 +9,7 @@ import {
   CATEGORY_DESCRIPTION_FALLBACK,
   getCategoryAccent,
 } from "@/lib/category-config";
-import { getSiteUrl } from "@/lib/site";
+import { absoluteUrl, breadcrumbJsonLd, categorySeoTitle, toJsonLdGraph } from "@/lib/seo";
 import { categoryPath, decodeHtml, stripHtml } from "@/lib/utils";
 import {
   getCategoryBySlug,
@@ -59,22 +59,27 @@ export async function generateMetadata({
 
   const name = decodeHtml(category.name);
   const description = categoryDescription(category.description, name);
-  const canonicalPath =
+  const canonicalPath = categoryPath(category.slug);
+  const title =
     page > 1
-      ? `${categoryPath(category.slug)}?page=${page}`
-      : categoryPath(category.slug);
-  const title = page > 1 ? `${name} news — page ${page}` : `${name} news`;
+      ? categorySeoTitle(name, page)
+      : categorySeoTitle(name);
 
   return {
-    title,
+    title: {
+      absolute: title,
+    },
     description: description.text,
     alternates: {
-      canonical: `${getSiteUrl()}${canonicalPath}`,
+      canonical:
+        page > 1
+          ? `${absoluteUrl(canonicalPath)}?page=${page}`
+          : absoluteUrl(canonicalPath),
     },
     openGraph: {
-      title: `${name} | Asghar Ali Mubarak`,
+      title,
       description: description.text,
-      url: `${getSiteUrl()}${categoryPath(category.slug)}`,
+      url: absoluteUrl(categoryPath(category.slug)),
       type: "website",
     },
     robots: page > 1 ? { index: false, follow: true } : undefined,
@@ -110,26 +115,13 @@ export default async function CategoryPage({
   const description = categoryDescription(category.description, name);
   const accent = getCategoryAccent(category);
   const [lead, ...gridPosts] = page === 1 ? posts : [undefined, ...posts];
-  const siteUrl = getSiteUrl();
 
-  const breadcrumbLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Home",
-        item: siteUrl,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name,
-        item: `${siteUrl}${categoryPath(category.slug)}`,
-      },
-    ],
-  };
+  const breadcrumbLd = toJsonLdGraph([
+    breadcrumbJsonLd([
+      { name: "Home", path: "/" },
+      { name, path: categoryPath(category.slug) },
+    ]),
+  ]);
 
   return (
     <div className={`page-shell content-with-sidebar category-page category-accent-${accent}`}>

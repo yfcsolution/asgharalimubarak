@@ -27,15 +27,13 @@ import { getSiteAuthor, resolveAuthorPhoto } from "@/lib/author";
 import {
   AUTHOR_ABOUT_PHOTO,
   CONTACT_EMAIL,
-  CONTACT_PHONE_DISPLAY,
+  LINKEDIN_PROFILE_URL,
   MAILTO_URL,
-  PHONE_URL,
   SITE_NAME,
   SITE_NAME_UR,
-  WHATSAPP_URL,
   getActiveSocialLinks,
-  getSiteUrl,
 } from "@/lib/site";
+import { absoluteUrl } from "@/lib/seo";
 import { categoryPath, decodeHtml, displayTitleForPost, postPath } from "@/lib/utils";
 import { getNavCategories, getPosts } from "@/lib/wordpress";
 
@@ -44,13 +42,13 @@ export const metadata: Metadata = {
   description:
     "Learn about AAM News, the professional profile of Asghar Ali Mubarak, coverage areas and how to contact the newsroom.",
   alternates: {
-    canonical: `${getSiteUrl()}/about`,
+    canonical: absoluteUrl("/about-contact"),
   },
   openGraph: {
     title: "About AAM News & Contact | Asghar Ali Mubarak",
     description:
       "Learn about AAM News, the professional profile of Asghar Ali Mubarak, coverage areas and how to contact the newsroom.",
-    url: `${getSiteUrl()}/about`,
+    url: absoluteUrl("/about-contact"),
     type: "website",
   },
 };
@@ -214,19 +212,33 @@ export default async function AboutPage() {
       <section className="about-card" id="contact" aria-labelledby="contact-heading">
         <h2 id="contact-heading">Contact AAM News</h2>
         <p>{CONTACT_INTRO}</p>
+        <p>
+          Connect with Asghar Ali Mubarak on LinkedIn for professional
+          enquiries, editorial communication and collaboration.
+        </p>
+        <p>
+          <a
+            href={LINKEDIN_PROFILE_URL}
+            className="btn-primary"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Connect on LinkedIn
+          </a>
+        </p>
         <ul className="about-contact-list">
           <li>
             <span className="about-contact-label">Email</span>
             <a href={MAILTO_URL}>{CONTACT_EMAIL}</a>
           </li>
           <li>
-            <span className="about-contact-label">Phone</span>
-            <a href={PHONE_URL}>{CONTACT_PHONE_DISPLAY}</a>
-          </li>
-          <li>
-            <span className="about-contact-label">WhatsApp</span>
-            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
-              {CONTACT_PHONE_DISPLAY}
+            <span className="about-contact-label">LinkedIn</span>
+            <a
+              href={LINKEDIN_PROFILE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Connect on LinkedIn
             </a>
           </li>
         </ul>

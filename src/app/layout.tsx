@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Nastaliq_Urdu } from "next/font/google";
 
+import { AnalyticsScript } from "@/components/AnalyticsScript";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
@@ -9,11 +10,16 @@ import {
   NEWS_BANNER_ALT,
   NEWS_BANNER_HEIGHT,
   NEWS_BANNER_WIDTH,
-  SITE_DESCRIPTION,
   SITE_NAME,
-  SITE_NAME_UR,
+  X_PROFILE_URL,
   getSiteUrl,
 } from "@/lib/site";
+import {
+  HOMEPAGE_DESCRIPTION,
+  HOMEPAGE_TITLE,
+  WEBSITE_NAME,
+  absoluteUrl,
+} from "@/lib/seo";
 
 import "./globals.css";
 
@@ -27,14 +33,16 @@ const notoNastaliq = Noto_Nastaliq_Urdu({
 const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(siteUrl.includes("localhost") ? "https://asgharalimubarak.com" : siteUrl),
   title: {
-    default: `${SITE_NAME} | ${SITE_NAME_UR}`,
-    template: `%s | ${SITE_NAME}`,
+    default: HOMEPAGE_TITLE,
+    template: `%s | AAM News`,
   },
-  description: SITE_DESCRIPTION,
-  applicationName: SITE_NAME,
-  authors: [{ name: SITE_NAME }],
+  description: HOMEPAGE_DESCRIPTION,
+  applicationName: WEBSITE_NAME,
+  authors: [{ name: SITE_NAME, url: absoluteUrl("/about-contact") }],
+  creator: SITE_NAME,
+  publisher: "AAM News",
   manifest: "/site.webmanifest",
   icons: {
     icon: [
@@ -48,10 +56,10 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_PK",
     alternateLocale: ["ur_PK"],
-    siteName: SITE_NAME,
-    title: `${SITE_NAME} | ${SITE_NAME_UR}`,
-    description: SITE_DESCRIPTION,
-    url: siteUrl,
+    siteName: WEBSITE_NAME,
+    title: HOMEPAGE_TITLE,
+    description: HOMEPAGE_DESCRIPTION,
+    url: absoluteUrl(),
     images: [
       {
         url: DEFAULT_OG_IMAGE,
@@ -63,16 +71,34 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE_NAME} | ${SITE_NAME_UR}`,
-    description: SITE_DESCRIPTION,
+    title: HOMEPAGE_TITLE,
+    description: HOMEPAGE_DESCRIPTION,
     images: [DEFAULT_OG_IMAGE],
+    site: "@ASGHARMUBARAK",
+    creator: "@ASGHARMUBARAK",
   },
   alternates: {
-    canonical: siteUrl,
+    canonical: absoluteUrl(),
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION || undefined,
+    other: process.env.BING_SITE_VERIFICATION
+      ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION }
+      : undefined,
+  },
+  other: {
+    "x:url": X_PROFILE_URL,
   },
 };
 
@@ -84,6 +110,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${notoNastaliq.variable} h-full`}>
       <body className="site-shell antialiased">
+        <AnalyticsScript />
         <Header />
         <main id="main-content" className="site-main">
           {children}

@@ -40,7 +40,7 @@ export const CORRECTIONS_UR =
   "قارئین کسی حقیقتی غلطی کی نشاندہی، تصحیح، خبر کی اطلاع یا وضاحت کی درخواست کے لیے اے اے ایم نیوز سے رابطہ کر سکتے ہیں۔ موصول ہونے والی معلومات کا جائزہ ادارتی اہمیت اور دستیاب شواہد کی بنیاد پر لیا جائے گا۔";
 
 export const CONTACT_INTRO =
-  "For news tips, interviews, corrections, professional inquiries and general correspondence, use the contact details below.";
+  "For professional enquiries, editorial communication and collaboration: connect with Asghar Ali Mubarak on LinkedIn.";
 
 export const AUTHOR_ROLE = "Journalist and Editor";
 

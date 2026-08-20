@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { SocialUnavailable } from "@/components/SocialUnavailable";
 import { getFacebookPosts, getOfficialFacebookUrl } from "@/lib/facebook";
-import { getSiteUrl } from "@/lib/site";
+import { absoluteUrl } from "@/lib/seo";
 import { formatPakistanDate } from "@/lib/utils";
 
 export const revalidate = 1800;
@@ -11,12 +11,12 @@ export const metadata: Metadata = {
   title: "AAM News on Facebook",
   description:
     "Follow AAM News on Facebook for public updates from Asghar Ali Mubarak.",
-  alternates: { canonical: `${getSiteUrl()}/facebook` },
+  alternates: { canonical: absoluteUrl("/facebook") },
   openGraph: {
     title: "AAM News on Facebook | Asghar Ali Mubarak",
     description:
       "Follow AAM News on Facebook for public updates from Asghar Ali Mubarak.",
-    url: `${getSiteUrl()}/facebook`,
+    url: absoluteUrl("/facebook"),
   },
 };
 

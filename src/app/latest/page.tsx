@@ -7,6 +7,7 @@ import { NewsSidebar } from "@/components/news-sidebar";
 import { Pagination } from "@/components/Pagination";
 import { SnapshotNotice } from "@/components/SnapshotNotice";
 import { hasEditorialPosts } from "@/lib/feed-status";
+import { absoluteUrl } from "@/lib/seo";
 import type { PaginatedPosts, WpCategory, WpTag } from "@/lib/types";
 import { getPosts, getNavCategories, getTags } from "@/lib/wordpress";
 
@@ -15,7 +16,10 @@ export const revalidate = 60;
 export const metadata: Metadata = {
   title: "Latest News",
   description:
-    "The latest English and Urdu reports published by Asghar Ali Mubarak.",
+    "The latest English and Urdu reports published by Asghar Ali Mubarak (AAM News).",
+  alternates: {
+    canonical: absoluteUrl("/latest"),
+  },
 };
 
 type LatestPageProps = {

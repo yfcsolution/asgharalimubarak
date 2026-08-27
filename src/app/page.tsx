@@ -4,29 +4,36 @@ import { AdBanner } from "@/components/ads/AdBanner";
 import { ArticleCard } from "@/components/ArticleCard";
 import { CampaignBanner } from "@/components/CampaignBanner";
 import { CategoryNewsSection } from "@/components/CategoryNewsSection";
-import { CategoryStrip } from "@/components/CategoryStrip";
 import { FeedUnavailablePanel } from "@/components/FeedUnavailablePanel";
 import { LeadStory } from "@/components/LeadStory";
 import { LatestNewsTicker } from "@/components/latest-news-ticker";
 import { NewsSidebar } from "@/components/news-sidebar";
+import { PhotoStoriesSection } from "@/components/PhotoStoriesSection";
 import { SectionHeading } from "@/components/SectionHeading";
 import { SiteEntitiesJsonLd } from "@/components/SiteEntitiesJsonLd";
 import { SnapshotNotice } from "@/components/SnapshotNotice";
 import { VideoCard } from "@/components/VideoCard";
-import { getHomepageSectionCategories } from "@/lib/category-config";
+import {
+  findCategoryByCanonical,
+  getCategoryCanonicalSlug,
+  getHomepageSectionCategories,
+} from "@/lib/category-config";
 import { hasEditorialPosts } from "@/lib/feed-status";
 import {
   HOMEPAGE_DESCRIPTION,
   HOMEPAGE_TITLE,
   absoluteUrl,
 } from "@/lib/seo";
+import { shouldBoostDefenceSection } from "@/lib/seasonal-campaigns";
 import { SITE_NAME } from "@/lib/site";
 import type { Metadata } from "next";
 import type { WpCategory, WpPost } from "@/lib/types";
 import {
+  categoryPath,
   displayTitleForPost,
   formatPakistanDateTime,
   getLatestContentTimestamp,
+  getPostImage,
   postPath,
 } from "@/lib/utils";
 import {
@@ -70,28 +77,67 @@ function postsForCategory(
     .slice(0, limit);
 }
 
+function collectPhotoStories(
+  photoCategory: WpCategory | undefined,
+  homepagePosts: WpPost[],
+  excludeIds: Set<number>,
+  extraPosts: WpPost[] = [],
+): WpPost[] {
+  const pool = [...homepagePosts, ...extraPosts];
+  const seen = new Set<number>();
+  const selected: WpPost[] = [];
+
+  const preferCategory = (post: WpPost) => {
+    if (!photoCategory) return false;
+    return Array.isArray(post.categories) && post.categories.includes(photoCategory.id);
+  };
+
+  const candidates = [
+    ...pool.filter(preferCategory),
+    ...pool.filter((post) => !preferCategory(post) && getPostImage(post)),
+  ];
+
+  for (const post of candidates) {
+    if (excludeIds.has(post.id) || seen.has(post.id)) continue;
+    if (!getPostImage(post)) continue;
+    seen.add(post.id);
+    selected.push(post);
+    if (selected.length >= 7) break;
+  }
+
+  return selected;
+}
+
 async function buildCategorySections(
   categories: WpCategory[],
   homepagePosts: WpPost[],
-  leadId?: number,
+  leadId: number | undefined,
+  boostDefence: boolean,
 ) {
-  const featured = getHomepageSectionCategories(categories);
+  const featured = getHomepageSectionCategories(categories, { boostDefence });
   const excludeIds = new Set<number>();
   if (leadId) excludeIds.add(leadId);
 
-  const sections: { category: WpCategory; posts: WpPost[] }[] = [];
+  const sections: {
+    category: WpCategory;
+    posts: WpPost[];
+    variant: "grid" | "featured";
+  }[] = [];
 
   for (const category of featured) {
-    let posts = postsForCategory(homepagePosts, category.id, excludeIds, 3);
+    const canonical = getCategoryCanonicalSlug(category);
+    const isDefence = canonical === "defence";
+    const limit = isDefence && boostDefence ? 5 : 3;
+    let posts = postsForCategory(homepagePosts, category.id, excludeIds, limit);
 
-    if (posts.length < 3 && category.count > posts.length) {
+    if (posts.length < limit && category.count > posts.length) {
       const fetched = await getPosts({
         categories: category.id,
-        perPage: 4,
+        perPage: limit + 1,
       });
       posts = fetched.posts
         .filter((post) => !excludeIds.has(post.id))
-        .slice(0, 3);
+        .slice(0, limit);
     }
 
     if (posts.length === 0) continue;
@@ -100,15 +146,21 @@ async function buildCategorySections(
       excludeIds.add(post.id);
     }
 
-    sections.push({ category, posts });
+    sections.push({
+      category,
+      posts,
+      variant: isDefence && boostDefence ? "featured" : "grid",
+    });
   }
 
-  return sections;
+  return { sections, excludeIds };
 }
 
 export default async function HomePage() {
+  const boostDefence = shouldBoostDefenceSection();
+
   const [feed, categories, tags, latestVideos] = await Promise.all([
-    getPosts({ page: 1, perPage: 20 }),
+    getPosts({ page: 1, perPage: 24 }),
     getNavCategories(),
     getTags(12),
     getLatestYouTubeVideos(4),
@@ -133,14 +185,37 @@ export default async function HomePage() {
   const [lead, ...rest] = posts;
   const secondary = rest.slice(0, 4);
   const latestGrid = rest.slice(4, 10);
+  const moreLatest = rest.slice(10, 16);
   const sidebarLatest = posts.slice(0, 5);
   const picks = posts.slice(1, 6);
 
-  const categorySections = await buildCategorySections(
+  const { sections: categorySections, excludeIds } = await buildCategorySections(
     categories,
     posts,
     lead?.id,
+    boostDefence,
   );
+
+  const photoCategory = findCategoryByCanonical(categories, "photo-stories");
+  let photoExtra: WpPost[] = [];
+  if (photoCategory && photoCategory.count > 0) {
+    const fetched = await getPosts({
+      categories: photoCategory.id,
+      perPage: 8,
+    });
+    photoExtra = fetched.posts;
+  }
+
+  const photoStories = collectPhotoStories(
+    photoCategory,
+    posts,
+    excludeIds,
+    photoExtra,
+  );
+
+  for (const post of photoStories) {
+    excludeIds.add(post.id);
+  }
 
   const tickerHeadlines = posts.slice(0, 12).map((post) => {
     const title = displayTitleForPost(post);
@@ -156,6 +231,16 @@ export default async function HomePage() {
   const updatedIso =
     getLatestContentTimestamp(posts) ?? new Date().toISOString();
   const updatedLabel = formatPakistanDateTime(updatedIso);
+
+  const opinionIndex = categorySections.findIndex(
+    ({ category }) => getCategoryCanonicalSlug(category) === "opinion",
+  );
+  const beforeOpinion =
+    opinionIndex === -1
+      ? categorySections
+      : categorySections.slice(0, opinionIndex);
+  const opinionAndAfter =
+    opinionIndex === -1 ? [] : categorySections.slice(opinionIndex);
 
   return (
     <>
@@ -194,8 +279,6 @@ export default async function HomePage() {
             </section>
           ) : null}
 
-          <CategoryStrip categories={categories} />
-
           {latestGrid.length > 0 ? (
             <section className="section" aria-labelledby="latest-heading">
               <SectionHeading
@@ -211,6 +294,29 @@ export default async function HomePage() {
               </div>
             </section>
           ) : null}
+
+          {beforeOpinion.map(({ category, posts: sectionPosts, variant }) => (
+            <CategoryNewsSection
+              key={category.id}
+              category={category}
+              posts={sectionPosts}
+              variant={variant}
+              linkLabel={
+                getCategoryCanonicalSlug(category) === "defence"
+                  ? "View all Defence news"
+                  : undefined
+              }
+            />
+          ))}
+
+          <PhotoStoriesSection
+            posts={photoStories}
+            categoryHref={
+              photoCategory
+                ? categoryPath(photoCategory.slug)
+                : "/categories"
+            }
+          />
 
           {latestVideos.length > 0 ? (
             <section className="section" aria-labelledby="videos-heading">
@@ -229,13 +335,31 @@ export default async function HomePage() {
             </section>
           ) : null}
 
-          {categorySections.map(({ category, posts: sectionPosts }) => (
+          {opinionAndAfter.map(({ category, posts: sectionPosts, variant }) => (
             <CategoryNewsSection
               key={category.id}
               category={category}
               posts={sectionPosts}
+              variant={variant}
             />
           ))}
+
+          {moreLatest.length > 0 ? (
+            <section className="section" aria-labelledby="more-latest-heading">
+              <SectionHeading
+                title="More Latest News"
+                titleId="more-latest-heading"
+                description="Continue reading from the newsroom."
+                href="/latest"
+                linkLabel="View all latest"
+              />
+              <div className="article-grid three-col">
+                {moreLatest.map((post) => (
+                  <ArticleCard key={post.id} post={post} />
+                ))}
+              </div>
+            </section>
+          ) : null}
 
           {categories.length === 0 && tags.length > 0 ? (
             <section className="section" aria-labelledby="topics-heading">

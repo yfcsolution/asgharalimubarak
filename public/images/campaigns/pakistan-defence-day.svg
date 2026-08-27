@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="300" viewBox="0 0 1280 300" role="img" aria-label="Pakistan Defence Day decorative backdrop">
+  <defs>
+    <linearGradient id="defenceBg" x1="0" y1="0" x2="1" y2="0.15">
+      <stop offset="0%" stop-color="#00351A"/>
+      <stop offset="42%" stop-color="#01411C"/>
+      <stop offset="100%" stop-color="#00351A"/>
+    </linearGradient>
+    <linearGradient id="defenceFade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#01411C" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#001a0d" stop-opacity="0.45"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="300" fill="url(#defenceBg)"/>
+  <rect x="0" y="0" width="96" height="300" fill="#FFFFFF"/>
+  <!-- Subtle crescent and star (decorative, not an official emblem) -->
+  <g fill="#FFFFFF" opacity="0.92" transform="translate(168,78)">
+    <path d="M72 10a52 52 0 1 0 42 88 44 44 0 1 1-42-88z"/>
+    <path d="M98 48l8 16 18 2-13 12 4 17-17-9-17 9 4-17-13-12 18-2z"/>
+  </g>
+  <!-- Soft memorial skyline silhouettes -->
+  <g fill="#001a0d" opacity="0.35">
+    <rect x="860" y="168" width="28" height="92"/>
+    <rect x="900" y="140" width="36" height="120"/>
+    <rect x="948" y="178" width="24" height="82"/>
+    <path d="M1000 260 V150 L1024 120 L1048 150 V260 Z"/>
+    <rect x="1068" y="190" width="40" height="70"/>
+    <rect x="1120" y="160" width="22" height="100"/>
+    <rect x="1154" y="200" width="50" height="60"/>
+  </g>
+  <rect width="1280" height="300" fill="url(#defenceFade)"/>
+  <line x1="96" y1="268" x2="1240" y2="268" stroke="#C9A24A" stroke-opacity="0.55" stroke-width="1.5"/>
+</svg>

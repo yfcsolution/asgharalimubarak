@@ -39,25 +39,45 @@ export const CATEGORY_ALIASES: Record<string, string> = {
   defense: "defence",
   blogger: "blogger-archive",
   "blogger-archive": "blogger-archive",
+  photos: "photo-stories",
+  "photo-story": "photo-stories",
+  "photo-stories": "photo-stories",
 };
 
-/** Preferred homepage section order. */
+/** Preferred homepage section order (Photo Stories rendered separately). */
 export const HOMEPAGE_SECTION_SLUGS = [
   "breaking-news",
   "pakistan",
-  "politics",
   "world",
+  "politics",
   "diplomacy",
   "defence",
-  "business",
-  "economy",
   "sports",
+  "economy",
+  "business",
   "health",
   "education",
   "science-technology",
   "opinion",
   "interviews",
-  "photo-stories",
+] as const;
+
+/** During Defence Day campaign, elevate Defence after Pakistan. */
+export const HOMEPAGE_SECTION_SLUGS_DEFENCE_BOOST = [
+  "breaking-news",
+  "pakistan",
+  "defence",
+  "world",
+  "politics",
+  "diplomacy",
+  "sports",
+  "economy",
+  "business",
+  "health",
+  "education",
+  "science-technology",
+  "opinion",
+  "interviews",
 ] as const;
 
 /** Preferred desktop primary-nav category order (before More). */
@@ -65,13 +85,15 @@ export const PRIMARY_NAV_CATEGORY_SLUGS = [
   "pakistan",
   "world",
   "politics",
+  "diplomacy",
   "defence",
   "sports",
   "health",
+  "science-technology",
   "opinion",
 ] as const;
 
-export const MAX_PRIMARY_NAV_CATEGORIES = 5;
+export const MAX_PRIMARY_NAV_CATEGORIES = 7;
 export const MAX_SIDEBAR_CATEGORIES = 14;
 export const CATEGORY_CACHE_SECONDS = 300;
 
@@ -157,7 +179,10 @@ export function sortCategoriesEditorially(categories: WpCategory[]): WpCategory[
   });
 }
 
-export function getHomepageSectionCategories(categories: WpCategory[]): WpCategory[] {
+export function getHomepageSectionCategories(
+  categories: WpCategory[],
+  options?: { boostDefence?: boolean },
+): WpCategory[] {
   const sorted = sortCategoriesEditorially(categories.filter(isValidNavCategory));
   const byCanonical = new Map<string, WpCategory>();
   for (const category of sorted) {
@@ -169,8 +194,11 @@ export function getHomepageSectionCategories(categories: WpCategory[]): WpCatego
 
   const featured: WpCategory[] = [];
   const seen = new Set<number>();
+  const order = options?.boostDefence
+    ? HOMEPAGE_SECTION_SLUGS_DEFENCE_BOOST
+    : HOMEPAGE_SECTION_SLUGS;
 
-  for (const slug of HOMEPAGE_SECTION_SLUGS) {
+  for (const slug of order) {
     const match = byCanonical.get(slug);
     if (match && !seen.has(match.id)) {
       seen.add(match.id);
@@ -179,6 +207,15 @@ export function getHomepageSectionCategories(categories: WpCategory[]): WpCatego
   }
 
   return featured;
+}
+
+export function findCategoryByCanonical(
+  categories: WpCategory[],
+  canonicalSlug: string,
+): WpCategory | undefined {
+  return categories.find(
+    (category) => getCategoryCanonicalSlug(category) === canonicalSlug,
+  );
 }
 
 export function splitNavCategories(categories: WpCategory[]): {
